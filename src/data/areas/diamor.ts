@@ -1,0 +1,132 @@
+import type { MapEdge, MapNode, Shop } from '../../domain/types';
+
+/** ディアモール大阪（円形広場と放射状の通路、大阪駅前ビル接続） */
+export const diamorNodes: MapNode[] = [
+  {
+    id: 'dm-circle',
+    kind: 'landmark',
+    name: { ja: '円形広場', en: 'Circular Plaza' },
+    area: 'diamor',
+    x: 150,
+    y: -300,
+  },
+  {
+    id: 'dm-n',
+    kind: 'junction',
+    name: { ja: 'ディアモール北通路', en: 'Diamor North Corridor' },
+    area: 'diamor',
+    x: 150,
+    y: -220,
+  },
+  {
+    id: 'dm-e',
+    kind: 'junction',
+    name: { ja: 'ディアモール東通路', en: 'Diamor East Corridor' },
+    area: 'diamor',
+    x: 250,
+    y: -300,
+  },
+  {
+    id: 'dm-s',
+    kind: 'junction',
+    name: { ja: 'ディアモール南通路', en: 'Diamor South Corridor' },
+    area: 'diamor',
+    x: 150,
+    y: -380,
+  },
+  {
+    id: 'dm-w',
+    kind: 'junction',
+    name: { ja: 'ディアモール西通路', en: 'Diamor West Corridor' },
+    area: 'diamor',
+    x: 30,
+    y: -320,
+  },
+  {
+    id: 'dm-b1',
+    kind: 'landmark',
+    name: { ja: '大阪駅前第1ビル B1', en: 'Ekimae Dai-1 Bldg. B1' },
+    area: 'diamor',
+    x: 300,
+    y: -370,
+  },
+  {
+    id: 'dm-b2',
+    kind: 'landmark',
+    name: { ja: '大阪駅前第2ビル B1', en: 'Ekimae Dai-2 Bldg. B1' },
+    area: 'diamor',
+    x: 210,
+    y: -420,
+  },
+  {
+    id: 'dm-b3',
+    kind: 'landmark',
+    name: { ja: '大阪駅前第3ビル B1', en: 'Ekimae Dai-3 Bldg. B1' },
+    area: 'diamor',
+    x: 120,
+    y: -450,
+  },
+  {
+    id: 'dm-exit-d1',
+    kind: 'exit',
+    name: { ja: '梅田新道 出口', en: 'Umeda-Shindo Exit' },
+    area: 'diamor',
+    x: 100,
+    y: -250,
+    lat: 34.7003,
+    lng: 135.4977,
+    exitNo: 'D-1',
+  },
+  {
+    id: 'dm-exit-d2',
+    kind: 'exit',
+    name: { ja: '曽根崎警察前 出口', en: 'Sonezaki Police Sta. Exit' },
+    area: 'diamor',
+    x: 280,
+    y: -260,
+    lat: 34.6999,
+    lng: 135.4989,
+    exitNo: 'D-2',
+  },
+];
+
+export const diamorEdges: MapEdge[] = [
+  { from: 'dm-n', to: 'dm-circle', distanceM: 80 },
+  { from: 'dm-circle', to: 'dm-e', distanceM: 100 },
+  { from: 'dm-circle', to: 'dm-s', distanceM: 80 },
+  { from: 'dm-circle', to: 'dm-w', distanceM: 120 },
+  { from: 'dm-n', to: 'dm-exit-d1', distanceM: 60, attrs: ['stairs'] },
+  { from: 'dm-e', to: 'dm-exit-d2', distanceM: 50, attrs: ['stairs'] },
+  { from: 'dm-e', to: 'dm-b1', distanceM: 90 },
+  { from: 'dm-s', to: 'dm-b2', distanceM: 70 },
+  { from: 'dm-s', to: 'dm-b3', distanceM: 80 },
+  { from: 'dm-b1', to: 'dm-b2', distanceM: 100 },
+  { from: 'dm-b2', to: 'dm-b3', distanceM: 95 },
+];
+
+export const diamorShops: Shop[] = [
+  {
+    id: 'dm-shop-sunmarc',
+    name: { ja: 'サンマルクカフェ ディアモール大阪店', en: 'Saint Marc Cafe Diamor Osaka' },
+    category: 'cafe',
+    nodeId: 'dm-n',
+  },
+  {
+    id: 'dm-shop-abcmart',
+    name: { ja: 'ABC-MART ディアモール大阪店', en: 'ABC-MART Diamor Osaka' },
+    category: 'fashion',
+    nodeId: 'dm-circle',
+  },
+  {
+    id: 'dm-shop-matsukiyo',
+    name: { ja: 'マツモトキヨシ ディアモール大阪店', en: 'Matsumoto Kiyoshi Diamor Osaka' },
+    category: 'drugstore',
+    nodeId: 'dm-w',
+  },
+  {
+    id: 'dm-shop-3bldg-curry',
+    name: { ja: '駅前第3ビル カレー店街', en: 'Dai-3 Bldg. Curry Shops' },
+    category: 'restaurant',
+    nodeId: 'dm-b3',
+  },
+];
