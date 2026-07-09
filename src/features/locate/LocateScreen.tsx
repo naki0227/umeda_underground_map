@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MapView } from '../../components/MapView';
 import type { Graph } from '../../domain/graph';
 import { locate, type LocationCandidate } from '../../domain/locate';
 import type { NodeId, Shop } from '../../domain/types';
@@ -57,6 +58,8 @@ export function LocateScreen({ graph, shops, onConfirm }: Props) {
     <section className="screen">
       <h2>{t('locate.title')}</h2>
       <p className="description">{t('locate.description')}</p>
+
+      <MapView graph={graph} candidateNodeIds={candidates?.map((c) => c.nodeId)} />
 
       <label className="field">
         <span>{t('locate.entranceLabel')}</span>

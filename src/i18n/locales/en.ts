@@ -53,6 +53,12 @@ export const en: Resource = {
     description: 'If a shop or exit differs from reality, please let us know.',
     link: 'Report an error (Google Form)',
   },
+  map: {
+    title: 'Umeda underground map',
+    you: 'You are here',
+    destination: 'Destination',
+    caption: 'This map is schematic. Distances and positions are approximate.',
+  },
   language: {
     label: 'Language',
   },

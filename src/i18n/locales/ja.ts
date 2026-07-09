@@ -49,6 +49,12 @@ export const ja = {
     description: 'お店や出口の情報が実際と違う場合は、こちらから教えてください。',
     link: '間違いを報告する（Googleフォーム）',
   },
+  map: {
+    title: '梅田地下マップ',
+    you: '現在地',
+    destination: '目的地',
+    caption: 'マップは概略図です。距離・位置関係はおおよその目安です。',
+  },
   language: {
     label: '言語',
   },

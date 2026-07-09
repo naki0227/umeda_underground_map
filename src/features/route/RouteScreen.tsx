@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { WALK_SPEED_M_PER_MIN } from '../../app/config';
+import { MapView } from '../../components/MapView';
 import { buildSteps, type RouteStep } from '../../domain/directions';
 import type { Graph } from '../../domain/graph';
 import { findRoute } from '../../domain/route';
@@ -52,6 +53,13 @@ export function RouteScreen({ graph, fromNodeId, toNodeId, onLost, onNewSearch }
         <br />
         {t('route.to', { name: nodeName(toNodeId) })}
       </p>
+
+      <MapView
+        graph={graph}
+        routeNodeIds={result?.route.nodeIds}
+        currentNodeId={fromNodeId}
+        destinationNodeId={toNodeId}
+      />
 
       {result === null ? (
         <p className="hint warn">{t('route.notFound')}</p>

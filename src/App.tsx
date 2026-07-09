@@ -32,6 +32,7 @@ export default function App() {
           <DestinationScreen
             graph={graph}
             shops={umedaMap.shops}
+            currentNodeId={nav.currentNodeId}
             onChoose={nav.chooseDestination}
           />
         )}

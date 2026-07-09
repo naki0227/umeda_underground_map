@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { MapView } from '../../components/MapView';
 import type { Graph } from '../../domain/graph';
 import type { MapNode, NodeId, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
@@ -7,12 +8,13 @@ import { localized } from '../../i18n';
 interface Props {
   graph: Graph;
   shops: Shop[];
+  currentNodeId: NodeId | null;
   onChoose: (nodeId: NodeId) => void;
 }
 
 type Tab = 'exits' | 'shops';
 
-export function DestinationScreen({ graph, shops, onChoose }: Props) {
+export function DestinationScreen({ graph, shops, currentNodeId, onChoose }: Props) {
   const { t, i18n } = useTranslation();
   const [tab, setTab] = useState<Tab>('exits');
   const [query, setQuery] = useState('');
@@ -39,6 +41,9 @@ export function DestinationScreen({ graph, shops, onChoose }: Props) {
   return (
     <section className="screen">
       <h2>{t('destination.title')}</h2>
+
+      <MapView graph={graph} currentNodeId={currentNodeId} />
+
       <div className="tabs" role="tablist">
         <button
           type="button"
