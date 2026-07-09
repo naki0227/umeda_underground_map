@@ -16,8 +16,8 @@ describe('App user flow', () => {
 
     // 1. 位置確定画面: 近くの店を2つ選ぶ
     expect(screen.getByRole('heading', { name: '現在地を確認する' })).toBeInTheDocument();
-    await user.click(screen.getByLabelText(/マクドナルド ホワイティうめだ店/));
-    await user.click(screen.getByLabelText(/古潭ラーメン ホワイティうめだ店/));
+    await user.click(screen.getByLabelText(/スターバックスコーヒー ホワイティうめだ店/));
+    await user.click(screen.getByLabelText(/古潭 ホワイティうめだ店/));
     await user.click(screen.getByRole('button', { name: '現在地を推定する' }));
 
     // 2. 候補から現在地を確定
@@ -27,7 +27,7 @@ describe('App user flow', () => {
 
     // 3. 目的地を選ぶ（出口タブから泉の広場東出口）
     expect(screen.getByRole('heading', { name: '目的地を選ぶ' })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /M-14 泉の広場東 出口/ }));
+    await user.click(screen.getByRole('button', { name: /H-28 泉の広場東（新御堂筋） 出口/ }));
 
     // 4. 経路が表示される
     expect(screen.getByRole('heading', { name: '道案内' })).toBeInTheDocument();

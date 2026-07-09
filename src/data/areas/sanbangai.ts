@@ -60,6 +60,36 @@ export const sanbangaiShops: Shop[] = [
     nodeId: 'sb-s',
   },
   {
+    id: 'sb-shop-botejyu',
+    name: { ja: 'お好み焼き ぼてぢゅう 阪急三番街店', en: 'Okonomiyaki Botejyu Hankyu Sanbangai' },
+    category: 'restaurant',
+    nodeId: 'sb-s',
+  },
+  {
+    id: 'sb-shop-hokkyokusei',
+    name: { ja: 'レストラン北極星 阪急三番街店', en: 'Restaurant Hokkyokusei Hankyu Sanbangai' },
+    category: 'restaurant',
+    nodeId: 'sb-s',
+  },
+  {
+    id: 'sb-shop-ganko',
+    name: { ja: 'がんこ寿司 阪急三番街店', en: 'Ganko Sushi Hankyu Sanbangai' },
+    category: 'restaurant',
+    nodeId: 'sb-s',
+  },
+  {
+    id: 'sb-shop-seijoishii',
+    name: { ja: '成城石井 阪急三番街店', en: 'Seijo Ishii Hankyu Sanbangai' },
+    category: 'convenience',
+    nodeId: 'sb-s',
+  },
+  {
+    id: 'sb-shop-godiva',
+    name: { ja: 'ゴディバ 阪急三番街店', en: 'GODIVA Hankyu Sanbangai' },
+    category: 'cafe',
+    nodeId: 'sb-s',
+  },
+  {
     id: 'sb-shop-kiddyland',
     name: { ja: 'キディランド 大阪梅田店', en: 'Kiddy Land Osaka Umeda' },
     category: 'goods',
@@ -69,6 +99,24 @@ export const sanbangaiShops: Shop[] = [
     id: 'sb-shop-foodhall',
     name: { ja: 'UMEDA FOOD HALL', en: 'UMEDA FOOD HALL' },
     category: 'restaurant',
+    nodeId: 'sb-n',
+  },
+  {
+    id: 'sb-shop-yabaton',
+    name: { ja: '矢場とん 阪急三番街店', en: 'Yabaton Hankyu Sanbangai' },
+    category: 'restaurant',
+    nodeId: 'sb-n',
+  },
+  {
+    id: 'sb-shop-freshness',
+    name: { ja: 'フレッシュネスバーガー 阪急三番街店', en: 'Freshness Burger Hankyu Sanbangai' },
+    category: 'restaurant',
+    nodeId: 'sb-n',
+  },
+  {
+    id: 'sb-shop-maisonkayser',
+    name: { ja: 'メゾンカイザー 阪急三番街店', en: 'Maison Kayser Hankyu Sanbangai' },
+    category: 'bakery',
     nodeId: 'sb-n',
   },
 ];

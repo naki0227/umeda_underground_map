@@ -33,11 +33,13 @@ const interAreaEdges: MapEdge[] = [
 
 /**
  * 梅田地下全域マップ。
- * 店舗情報は dataVersion 時点のスナップショット（現地未検証の下書き）。
- * 誤りはアプリ内の報告フォームから収集して更新する。
+ * 店舗情報は dataVersion 時点のスナップショットで、各施設の公式サイト
+ * （whity.osaka-chikagai.jp / diamor.jp / h-sanbangai.com / ekimo.jp /
+ * dotica.osaka-chikagai.jp）の掲載内容に基づく。座標・距離・出口番号の
+ * 対応は現地未検証。誤りはアプリ内の報告フォームから収集して更新する。
  */
 export const umedaMap: UndergroundMap = {
-  dataVersion: '2026-07-08-draft',
+  dataVersion: '2026-07-09',
   nodes: [
     ...stationNodes,
     ...whityNodes,

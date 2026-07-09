@@ -106,21 +106,60 @@ export const diamorEdges: MapEdge[] = [
 
 export const diamorShops: Shop[] = [
   {
-    id: 'dm-shop-sunmarc',
-    name: { ja: 'サンマルクカフェ ディアモール大阪店', en: 'Saint Marc Cafe Diamor Osaka' },
+    id: 'dm-shop-godivacafe',
+    name: { ja: 'GODIVA café ディアモール大阪店', en: 'GODIVA café Diamor Osaka' },
     category: 'cafe',
     nodeId: 'dm-n',
   },
   {
-    id: 'dm-shop-abcmart',
-    name: { ja: 'ABC-MART ディアモール大阪店', en: 'ABC-MART Diamor Osaka' },
+    id: 'dm-shop-tullys',
+    name: { ja: 'タリーズコーヒー ディアモール大阪店', en: "Tully's Coffee Diamor Osaka" },
+    category: 'cafe',
+    nodeId: 'dm-circle',
+  },
+  {
+    id: 'dm-shop-urbanresearch',
+    name: {
+      ja: 'アーバンリサーチ ロッソ ディアモール大阪店',
+      en: 'URBAN RESEARCH ROSSO Diamor Osaka',
+    },
     category: 'fashion',
     nodeId: 'dm-circle',
   },
   {
-    id: 'dm-shop-matsukiyo',
-    name: { ja: 'マツモトキヨシ ディアモール大阪店', en: 'Matsumoto Kiyoshi Diamor Osaka' },
-    category: 'drugstore',
+    id: 'dm-shop-jins',
+    name: { ja: 'JINS ディアモール大阪店', en: 'JINS Diamor Osaka' },
+    category: 'goods',
+    nodeId: 'dm-circle',
+  },
+  {
+    id: 'dm-shop-framework',
+    name: { ja: 'フレームワーク ディアモール大阪店', en: 'FRAMeWORK Diamor Osaka' },
+    category: 'fashion',
+    nodeId: 'dm-n',
+  },
+  {
+    id: 'dm-shop-doutor',
+    name: { ja: 'ドトールコーヒーショップ ディアモール大阪店', en: 'Doutor Coffee Diamor Osaka' },
+    category: 'cafe',
+    nodeId: 'dm-w',
+  },
+  {
+    id: 'dm-shop-sunmarc',
+    name: { ja: 'サンマルクカフェ ディアモール大阪店', en: 'Saint Marc Cafe Diamor Osaka' },
+    category: 'cafe',
+    nodeId: 'dm-e',
+  },
+  {
+    id: 'dm-shop-kashiyama',
+    name: { ja: 'KASHIYAMA ディアモール大阪店', en: 'KASHIYAMA Diamor Osaka' },
+    category: 'fashion',
+    nodeId: 'dm-e',
+  },
+  {
+    id: 'dm-shop-docomo',
+    name: { ja: 'ドコモショップ ディアモール大阪店', en: 'docomo Shop Diamor Osaka' },
+    category: 'service',
     nodeId: 'dm-w',
   },
   {

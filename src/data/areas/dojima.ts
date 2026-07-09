@@ -47,15 +47,57 @@ export const dojimaEdges: MapEdge[] = [
 
 export const dojimaShops: Shop[] = [
   {
-    id: 'dj-shop-piccolo',
-    name: { ja: 'カレーショップ ピッコロ ドーチカ店', en: 'Curry Shop Piccolo Dotica' },
+    id: 'dj-shop-indiancurry',
+    name: { ja: 'インデアンカレー 堂島店', en: 'Indian Curry Dojima' },
     category: 'restaurant',
     nodeId: 'dj-2',
   },
   {
+    id: 'dj-shop-kineya',
+    name: { ja: '自家製麺 杵屋 ドーチカ店', en: 'Kineya Udon Dotica' },
+    category: 'restaurant',
+    nodeId: 'dj-2',
+  },
+  {
+    id: 'dj-shop-chuoken',
+    name: { ja: '中央軒 ドーチカ店', en: 'Chuoken Dotica' },
+    category: 'restaurant',
+    nodeId: 'dj-3',
+  },
+  {
     id: 'dj-shop-doutor',
-    name: { ja: 'ドトールコーヒー ドージマ地下センター店', en: 'Doutor Coffee Dojima Underground' },
+    name: { ja: 'ドトールコーヒーショップ ドーチカ店', en: 'Doutor Coffee Dotica' },
     category: 'cafe',
     nodeId: 'dj-1',
+  },
+  {
+    id: 'dj-shop-kiefel',
+    name: { ja: 'KIEFEL COFFEE ドーチカ店', en: 'KIEFEL COFFEE Dotica' },
+    category: 'cafe',
+    nodeId: 'dj-1',
+  },
+  {
+    id: 'dj-shop-daiso',
+    name: { ja: 'ダイソー ドーチカ店', en: 'DAISO Dotica' },
+    category: 'goods',
+    nodeId: 'dj-2',
+  },
+  {
+    id: 'dj-shop-kokumin',
+    name: { ja: 'コクミンドラッグ ドーチカ店', en: 'Kokumin Drug Dotica' },
+    category: 'drugstore',
+    nodeId: 'dj-1',
+  },
+  {
+    id: 'dj-shop-chidoriya',
+    name: { ja: '千鳥屋宗家 堂島店', en: 'Chidoriya Sohke Dojima' },
+    category: 'goods',
+    nodeId: 'dj-3',
+  },
+  {
+    id: 'dj-shop-aburagumi',
+    name: { ja: '東京油組総本店 ドーチカ組', en: 'Tokyo Aburagumi Sohonten Dotica' },
+    category: 'restaurant',
+    nodeId: 'dj-3',
   },
 ];

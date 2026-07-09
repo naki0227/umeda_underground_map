@@ -1,6 +1,10 @@
 import type { MapEdge, MapNode, Shop } from '../../domain/types';
 
-/** ホワイティうめだ（センターモール・ノースモール・サウスモール・泉の広場） */
+/**
+ * ホワイティうめだ。
+ * エリア構成・店舗は公式サイト（whity.osaka-chikagai.jp）2026-07-09時点。
+ * 出口番号はH-xx体系（公式フロアガイド準拠）だが個別の対応は現地未検証。
+ */
 export const whityNodes: MapNode[] = [
   {
     id: 'wt-c1',
@@ -29,7 +33,7 @@ export const whityNodes: MapNode[] = [
   {
     id: 'wt-c4',
     kind: 'junction',
-    name: { ja: 'イーストモール入口', en: 'East Mall Entrance' },
+    name: { ja: 'イーストモール', en: 'East Mall' },
     area: 'whity',
     x: 620,
     y: 0,
@@ -37,7 +41,7 @@ export const whityNodes: MapNode[] = [
   {
     id: 'wt-izumi',
     kind: 'landmark',
-    name: { ja: '泉の広場', en: 'Izumi Plaza (Fountain Square)' },
+    name: { ja: '泉の広場（Water Tree）', en: 'Izumi Plaza (Water Tree)' },
     area: 'whity',
     x: 740,
     y: 10,
@@ -59,6 +63,14 @@ export const whityNodes: MapNode[] = [
     y: 100,
   },
   {
+    id: 'wt-petit',
+    kind: 'junction',
+    name: { ja: 'プチシャン', en: 'Petit Chan' },
+    area: 'whity',
+    x: 630,
+    y: 100,
+  },
+  {
     id: 'wt-s1',
     kind: 'junction',
     name: { ja: 'サウスモール', en: 'South Mall' },
@@ -75,7 +87,7 @@ export const whityNodes: MapNode[] = [
     y: -160,
   },
   {
-    id: 'wt-exit-m2',
+    id: 'wt-exit-h1',
     kind: 'exit',
     name: { ja: '阪急百貨店東 出口', en: 'Hankyu Dept. East Exit' },
     area: 'whity',
@@ -83,10 +95,10 @@ export const whityNodes: MapNode[] = [
     y: 80,
     lat: 34.7031,
     lng: 135.4996,
-    exitNo: 'M-2',
+    exitNo: 'H-1',
   },
   {
-    id: 'wt-exit-m8',
+    id: 'wt-exit-h8',
     kind: 'exit',
     name: { ja: 'HEP FIVE前 出口', en: 'HEP FIVE Exit' },
     area: 'whity',
@@ -94,10 +106,10 @@ export const whityNodes: MapNode[] = [
     y: 170,
     lat: 34.704,
     lng: 135.5007,
-    exitNo: 'M-8',
+    exitNo: 'H-8',
   },
   {
-    id: 'wt-exit-m10',
+    id: 'wt-exit-h16',
     kind: 'exit',
     name: { ja: '阪急東通 出口', en: 'Hankyu Higashi-dori Exit' },
     area: 'whity',
@@ -105,18 +117,18 @@ export const whityNodes: MapNode[] = [
     y: 160,
     lat: 34.704,
     lng: 135.5013,
-    exitNo: 'M-10',
+    exitNo: 'H-16',
   },
   {
-    id: 'wt-exit-m14',
+    id: 'wt-exit-h28',
     kind: 'exit',
-    name: { ja: '泉の広場東 出口', en: 'Izumi Plaza East Exit' },
+    name: { ja: '泉の広場東（新御堂筋） 出口', en: 'Izumi Plaza East (Shin-Midosuji) Exit' },
     area: 'whity',
     x: 790,
     y: -40,
     lat: 34.7029,
     lng: 135.5048,
-    exitNo: 'M-14',
+    exitNo: 'H-28',
   },
 ];
 
@@ -125,52 +137,180 @@ export const whityEdges: MapEdge[] = [
   { from: 'wt-c2', to: 'wt-c3', distanceM: 120 },
   { from: 'wt-c3', to: 'wt-c4', distanceM: 100 },
   { from: 'wt-c4', to: 'wt-izumi', distanceM: 120 },
-  { from: 'wt-c1', to: 'wt-exit-m2', distanceM: 70, attrs: ['stairs'] },
+  { from: 'wt-c1', to: 'wt-exit-h1', distanceM: 70, attrs: ['stairs'] },
   { from: 'wt-c2', to: 'wt-n1', distanceM: 100 },
   { from: 'wt-n1', to: 'wt-n2', distanceM: 110 },
-  { from: 'wt-n1', to: 'wt-exit-m8', distanceM: 60, attrs: ['stairs'] },
-  { from: 'wt-n2', to: 'wt-exit-m10', distanceM: 60, attrs: ['stairs'] },
+  { from: 'wt-n1', to: 'wt-exit-h8', distanceM: 60, attrs: ['stairs'] },
+  { from: 'wt-n2', to: 'wt-exit-h16', distanceM: 60, attrs: ['stairs'] },
   { from: 'wt-n2', to: 'wt-c3', distanceM: 100 },
+  { from: 'wt-n2', to: 'wt-petit', distanceM: 110 },
+  { from: 'wt-petit', to: 'wt-izumi', distanceM: 140 },
   { from: 'wt-c2', to: 'wt-s1', distanceM: 100 },
   { from: 'wt-s1', to: 'wt-s2', distanceM: 70 },
-  { from: 'wt-izumi', to: 'wt-exit-m14', distanceM: 70, attrs: ['stairs'] },
+  { from: 'wt-izumi', to: 'wt-exit-h28', distanceM: 70, attrs: ['stairs'] },
 ];
 
 export const whityShops: Shop[] = [
   {
-    id: 'wt-shop-mcdonalds',
-    name: { ja: 'マクドナルド ホワイティうめだ店', en: "McDonald's Whity Umeda" },
-    category: 'restaurant',
-    nodeId: 'wt-c2',
-  },
-  {
-    id: 'wt-shop-misdo',
-    name: { ja: 'ミスタードーナツ ホワイティうめだ', en: 'Mister Donut Whity Umeda' },
+    id: 'wt-shop-afternoontea',
+    name: { ja: 'Afternoon Tea TEAROOM', en: 'Afternoon Tea TEAROOM' },
     category: 'cafe',
     nodeId: 'wt-c1',
   },
   {
-    id: 'wt-shop-kotan',
-    name: { ja: '古潭ラーメン ホワイティうめだ店', en: 'Kotan Ramen Whity Umeda' },
+    id: 'wt-shop-mitsuya',
+    name: { ja: '心斎橋ミツヤ ホワイティうめだ店', en: 'Shinsaibashi Mitsuya Whity Umeda' },
+    category: 'restaurant',
+    nodeId: 'wt-c1',
+  },
+  {
+    id: 'wt-shop-lindt',
+    name: { ja: 'リンツ ショコラ ブティック', en: 'Lindt Chocolat Boutique' },
+    category: 'cafe',
+    nodeId: 'wt-c2',
+  },
+  {
+    id: 'wt-shop-cafebreak',
+    name: { ja: 'CAFE BREAK', en: 'CAFE BREAK' },
+    category: 'cafe',
+    nodeId: 'wt-c2',
+  },
+  {
+    id: 'wt-shop-rivare',
+    name: { ja: 'ティラミス専門店 リバーレ', en: 'Tiramisu Rivare' },
+    category: 'cafe',
+    nodeId: 'wt-c3',
+  },
+  {
+    id: 'wt-shop-piccolo',
+    name: { ja: 'カレー piccoLo ホワイティうめだ店', en: 'Curry piccoLo Whity Umeda' },
     category: 'restaurant',
     nodeId: 'wt-c3',
   },
   {
-    id: 'wt-shop-sunmarc',
-    name: { ja: 'サンマルクカフェ ホワイティうめだ店', en: 'Saint Marc Cafe Whity Umeda' },
+    id: 'wt-shop-doutor',
+    name: { ja: 'ドトールコーヒーショップ ホワイティうめだ店', en: 'Doutor Coffee Whity Umeda' },
+    category: 'cafe',
+    nodeId: 'wt-n1',
+  },
+  {
+    id: 'wt-shop-31ice',
+    name: { ja: 'サーティワンアイスクリーム', en: 'Baskin-Robbins (31 Ice Cream)' },
+    category: 'cafe',
+    nodeId: 'wt-n1',
+  },
+  {
+    id: 'wt-shop-katsu',
+    name: { ja: '串かつ料理 活', en: 'Kushikatsu Katsu' },
+    category: 'restaurant',
+    nodeId: 'wt-n1',
+  },
+  {
+    id: 'wt-shop-viedefrance',
+    name: { ja: 'VIE DE FRANCE', en: 'VIE DE FRANCE' },
+    category: 'bakery',
+    nodeId: 'wt-n1',
+  },
+  {
+    id: 'wt-shop-daruma',
+    name: { ja: '串かつだるま ホワイティうめだ店', en: 'Kushikatsu Daruma Whity Umeda' },
+    category: 'restaurant',
+    nodeId: 'wt-n2',
+  },
+  {
+    id: 'wt-shop-hemmi',
+    name: { ja: '牛たん焼き 仙台辺見', en: 'Gyutan-yaki Sendai Hemmi' },
+    category: 'restaurant',
+    nodeId: 'wt-n2',
+  },
+  {
+    id: 'wt-shop-daikichi',
+    name: { ja: '天ぷら大吉 ホワイティうめだ店', en: 'Tempura Daikichi Whity Umeda' },
+    category: 'restaurant',
+    nodeId: 'wt-n2',
+  },
+  {
+    id: 'wt-shop-asahiya',
+    name: { ja: '旭屋書店 梅田地下街店', en: 'Asahiya Books Umeda Underground' },
+    category: 'bookstore',
+    nodeId: 'wt-s1',
+  },
+  {
+    id: 'wt-shop-hanshindrug',
+    name: { ja: '阪神ドラッグ 梅田地下店', en: 'Hanshin Drug Umeda Underground' },
+    category: 'drugstore',
+    nodeId: 'wt-s1',
+  },
+  {
+    id: 'wt-shop-tanseido',
+    name: { ja: '丹青堂 ホワイティうめだ店', en: 'Tanseido Whity Umeda' },
+    category: 'goods',
+    nodeId: 'wt-s1',
+  },
+  {
+    id: 'wt-shop-seijoishii',
+    name: { ja: '成城石井 ホワイティうめだ店', en: 'Seijo Ishii Whity Umeda' },
+    category: 'convenience',
+    nodeId: 'wt-c4',
+  },
+  {
+    id: 'wt-shop-starbucks',
+    name: { ja: 'スターバックスコーヒー ホワイティうめだ店', en: 'Starbucks Coffee Whity Umeda' },
     category: 'cafe',
     nodeId: 'wt-c4',
   },
   {
-    id: 'wt-shop-shabutei',
-    name: { ja: 'しゃぶ亭 ホワイティうめだ店', en: 'Shabutei Whity Umeda' },
+    id: 'wt-shop-mos',
+    name: { ja: 'モスバーガー ホワイティうめだ店', en: 'MOS Burger Whity Umeda' },
     category: 'restaurant',
-    nodeId: 'wt-s1',
+    nodeId: 'wt-c4',
   },
   {
-    id: 'wt-shop-matsukiyo',
-    name: { ja: 'マツモトキヨシ ホワイティうめだ店', en: 'Matsumoto Kiyoshi Whity Umeda' },
+    id: 'wt-shop-kotan',
+    name: { ja: '古潭 ホワイティうめだ店', en: 'Kotan Ramen Whity Umeda' },
+    category: 'restaurant',
+    nodeId: 'wt-c4',
+  },
+  {
+    id: 'wt-shop-daikisuisan',
+    name: { ja: '大起水産 回転寿司 ホワイティうめだ店', en: 'Daiki Suisan Sushi Whity Umeda' },
+    category: 'restaurant',
+    nodeId: 'wt-c4',
+  },
+  {
+    id: 'wt-shop-udonoh',
+    name: { ja: 'うどん王 ホワイティうめだ店', en: 'Udon-Oh Whity Umeda' },
+    category: 'restaurant',
+    nodeId: 'wt-c4',
+  },
+  {
+    id: 'wt-shop-kokumin',
+    name: { ja: 'コクミン ホワイティうめだ店', en: 'Kokumin Drug Whity Umeda' },
     category: 'drugstore',
-    nodeId: 'wt-n1',
+    nodeId: 'wt-petit',
+  },
+  {
+    id: 'wt-shop-naturalkitchen',
+    name: { ja: 'NATURAL KITCHEN', en: 'NATURAL KITCHEN' },
+    category: 'goods',
+    nodeId: 'wt-petit',
+  },
+  {
+    id: 'wt-shop-austyle',
+    name: { ja: 'au Style ホワイティうめだ', en: 'au Style Whity Umeda' },
+    category: 'service',
+    nodeId: 'wt-petit',
+  },
+  {
+    id: 'wt-shop-yebisubar',
+    name: { ja: 'YEBISU BAR（NOMOKA）', en: 'YEBISU BAR (NOMOKA)' },
+    category: 'restaurant',
+    nodeId: 'wt-izumi',
+  },
+  {
+    id: 'wt-shop-craftbeer',
+    name: { ja: 'CRAFT BEER MARKET（NOMOKA）', en: 'CRAFT BEER MARKET (NOMOKA)' },
+    category: 'restaurant',
+    nodeId: 'wt-izumi',
   },
 ];
