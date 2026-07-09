@@ -1,7 +1,6 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
 import { WALK_SPEED_M_PER_MIN } from '../../app/config';
-import { MapView } from '../../components/MapView';
 import { buildSteps, type RouteStep } from '../../domain/directions';
 import type { Graph } from '../../domain/graph';
 import { findRoute } from '../../domain/route';
@@ -12,8 +11,10 @@ interface Props {
   graph: Graph;
   fromNodeId: NodeId;
   toNodeId: NodeId;
-  /** 地上スポット名（POI経由で目的地を選んだ場合） */
+  /** 目的地の表示名（POI・店名など）。ノード名で良い場合はnull */
   destinationLabel: LocalizedText | null;
+  /** 目的地が地上スポットなら出口ヒントを出す */
+  aboveGround: boolean;
   onLost: () => void;
   onNewSearch: () => void;
 }
@@ -23,6 +24,7 @@ export function RouteScreen({
   fromNodeId,
   toNodeId,
   destinationLabel,
+  aboveGround,
   onLost,
   onNewSearch,
 }: Props) {
@@ -55,7 +57,7 @@ export function RouteScreen({
   };
 
   return (
-    <section className="screen">
+    <section>
       <h2>{t('route.title')}</h2>
       <p className="description">
         {t('route.from', { name: nodeName(fromNodeId) })}
@@ -68,7 +70,7 @@ export function RouteScreen({
         })}
       </p>
 
-      {destinationLabel !== null && (
+      {aboveGround && destinationLabel !== null && (
         <p className="hint above-ground">
           {t('route.aboveGroundHint', {
             name: localized(destinationLabel, i18n.language),
@@ -76,13 +78,6 @@ export function RouteScreen({
           })}
         </p>
       )}
-
-      <MapView
-        graph={graph}
-        routeNodeIds={result?.route.nodeIds}
-        currentNodeId={fromNodeId}
-        destinationNodeId={toNodeId}
-      />
 
       {result === null ? (
         <p className="hint warn">{t('route.notFound')}</p>

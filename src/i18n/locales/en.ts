@@ -26,14 +26,22 @@ export const en: Resource = {
     noCandidates: 'Could not estimate. Try selecting one or two more shops.',
     confirm: "I'm here",
   },
-  destination: {
-    title: 'Choose a destination',
-    poisTab: 'Places above ground',
-    poisHint: 'Pick where you want to go and we guide you to the nearest exit.',
-    exitsTab: 'Exits & Stations',
-    shopsTab: 'Underground shops',
-    searchPlaceholder: 'Search destination',
-    startNavigation: 'Start navigation',
+  search: {
+    placeholder: 'Search places, shops, exits',
+    kindPoi: 'Above ground',
+    kindShop: 'Shop',
+    kindNode: 'Exit / Station',
+  },
+  place: {
+    goHere: 'Directions',
+    setHere: "I'm here now",
+    aboveGroundNote: 'This place is above ground. We guide you to the nearest exit.',
+  },
+  mapUi: {
+    setLocation: 'Set my location',
+  },
+  sheet: {
+    close: 'Close',
   },
   route: {
     title: 'Directions',
@@ -64,6 +72,9 @@ export const en: Resource = {
     you: 'You are here',
     destination: 'Destination',
     caption: 'This map is schematic. Distances and positions are approximate.',
+    zoomIn: 'Zoom in',
+    zoomOut: 'Zoom out',
+    resetView: 'Fit view',
   },
   language: {
     label: 'Language',

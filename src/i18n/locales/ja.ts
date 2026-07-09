@@ -22,14 +22,22 @@ export const ja = {
     noCandidates: '推定できませんでした。お店をもう1〜2件選んでみてください。',
     confirm: 'ここにいる',
   },
-  destination: {
-    title: '目的地を選ぶ',
-    poisTab: '地上の建物・スポット',
-    poisHint: '行きたい場所を選ぶと、いちばん近い出口まで案内します。',
-    exitsTab: '出口・駅',
-    shopsTab: '地下のお店',
-    searchPlaceholder: '目的地を検索',
-    startNavigation: '案内を開始',
+  search: {
+    placeholder: '場所・お店・出口をさがす',
+    kindPoi: '地上',
+    kindShop: '地下のお店',
+    kindNode: '出口・駅',
+  },
+  place: {
+    goHere: 'ここへ行く',
+    setHere: 'いまここにいる',
+    aboveGroundNote: '地上のスポットです。いちばん近い出口まで案内します。',
+  },
+  mapUi: {
+    setLocation: '現在地を設定する',
+  },
+  sheet: {
+    close: '閉じる',
   },
   route: {
     title: '道案内',
@@ -60,6 +68,9 @@ export const ja = {
     you: '現在地',
     destination: '目的地',
     caption: 'マップは概略図です。距離・位置関係はおおよその目安です。',
+    zoomIn: '拡大',
+    zoomOut: '縮小',
+    resetView: '全体表示',
   },
   language: {
     label: '言語',

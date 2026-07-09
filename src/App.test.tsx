@@ -9,39 +9,57 @@ beforeAll(() => {
   return i18n.changeLanguage('ja');
 });
 
-describe('App user flow', () => {
-  it('locates via nearby shops, chooses a destination and shows directions', async () => {
+describe('App map-first user flow', () => {
+  it('searches a place, sets location via shops, and shows directions', async () => {
     const user = userEvent.setup();
     render(<App />);
 
-    // 1. 位置確定画面: 近くの店を2つ選ぶ
-    expect(screen.getByRole('heading', { name: '現在地を確認する' })).toBeInTheDocument();
+    // 1. 全画面マップと検索バーが出る
+    expect(screen.getByTestId('map-view')).toBeInTheDocument();
+    const search = screen.getByRole('searchbox', { name: '場所・お店・出口をさがす' });
+
+    // 2. 検索して地上スポットを選ぶ
+    await user.type(search, 'HEP');
+    await user.click(screen.getByRole('button', { name: /HEP FIVE（赤い観覧車）/ }));
+
+    // 3. 場所シート → ここへ行く（現在地未設定なので位置確定シートへ）
+    await user.click(screen.getByRole('button', { name: 'ここへ行く' }));
+    expect(screen.getByRole('dialog', { name: '現在地を確認する' })).toBeInTheDocument();
+
+    // 4. 近くの店を2つ選んで推定 → 候補を確定
     await user.click(screen.getByLabelText(/スターバックスコーヒー ホワイティうめだ店/));
     await user.click(screen.getByLabelText(/古潭 ホワイティうめだ店/));
     await user.click(screen.getByRole('button', { name: '現在地を推定する' }));
-
-    // 2. 候補から現在地を確定
-    expect(screen.getByText('このあたりですか？')).toBeInTheDocument();
     const candidates = screen.getAllByRole('button', { name: /確度/ });
     await user.click(candidates[0]);
 
-    // 3. 目的地を選ぶ（デフォルトは地上スポットタブ → HEP FIVEを選ぶ）
-    expect(screen.getByRole('heading', { name: '目的地を選ぶ' })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /HEP FIVE（赤い観覧車）/ }));
-
-    // 4. 経路が表示される（目的地は地上スポット名で表示され、地上ヒントが出る）
-    expect(screen.getByRole('heading', { name: '道案内' })).toBeInTheDocument();
+    // 5. 経路シートが表示される（地上ヒント・迷ったボタン付き）
+    expect(screen.getByRole('dialog', { name: '道案内' })).toBeInTheDocument();
     expect(screen.getByText(/目的地: HEP FIVE（赤い観覧車）/)).toBeInTheDocument();
     expect(screen.getByText(/地上です/)).toBeInTheDocument();
     expect(screen.getByText(/合計 約\d+m/)).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: '迷った' })).toBeInTheDocument();
+    expect(screen.getByTestId('map-route')).toBeInTheDocument();
 
-    // 5. 迷ったボタンで位置確定に戻る
+    // 6. 迷ったボタンで位置確定シートに戻る
     await user.click(screen.getByRole('button', { name: '迷った' }));
-    expect(screen.getByRole('heading', { name: '現在地を確認する' })).toBeInTheDocument();
+    expect(screen.getByRole('dialog', { name: '現在地を確認する' })).toBeInTheDocument();
   });
 
-  it('shows the report link for the current language', () => {
+  it('selects a pin on the map and sets it as current location', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+
+    const pin = container.querySelector('[data-node-id="wt-izumi"]');
+    expect(pin).not.toBeNull();
+    await user.click(pin as Element);
+    expect(screen.getByRole('dialog', { name: /泉の広場/ })).toBeInTheDocument();
+
+    await user.click(screen.getByRole('button', { name: 'いまここにいる' }));
+    // 現在地マーカーがマップに出る
+    expect(screen.getByTestId('map-current')).toBeInTheDocument();
+  });
+
+  it('shows the report link on the welcome sheet', () => {
     render(<App />);
     const link = screen.getByRole('link', { name: /間違いを報告する/ });
     expect(link).toHaveAttribute('href', expect.stringContaining('docs.google.com/forms'));
