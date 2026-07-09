@@ -42,6 +42,6 @@ describe('App user flow', () => {
   it('shows the report link for the current language', () => {
     render(<App />);
     const link = screen.getByRole('link', { name: /間違いを報告する/ });
-    expect(link).toHaveAttribute('href', expect.stringContaining('forms.gle'));
+    expect(link).toHaveAttribute('href', expect.stringContaining('docs.google.com/forms'));
   });
 });
