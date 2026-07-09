@@ -27,6 +27,7 @@ export default function App() {
       <InteractiveMap
         graph={graph}
         shops={umedaMap.shops}
+        pois={umedaMap.pois}
         routeNodeIds={route?.nodeIds}
         currentNodeId={nav.currentNodeId}
         destinationNodeId={nav.destination?.nodeId ?? null}

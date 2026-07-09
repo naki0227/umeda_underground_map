@@ -179,14 +179,14 @@ body {
   margin: 12px 0;
 }
 
-.map-pin circle {
+.map-pin ellipse {
   fill: var(--bg);
   stroke: var(--accent-strong);
   stroke-width: 4;
   cursor: pointer;
 }
 
-.map-pin:hover circle {
+.map-pin:hover ellipse {
   fill: var(--accent-soft);
 }
 
@@ -379,9 +379,66 @@ button.candidate:hover {
 }
 
 .map-edge {
-  stroke: #b9d6e2;
+  stroke: #c9e2ec;
   stroke-width: 14;
   stroke-linecap: round;
+}
+
+.map-edge-side {
+  fill: #93b7c6;
+  stroke: #93b7c6;
+  stroke-width: 12;
+  stroke-linejoin: round;
+}
+
+.stair-link {
+  stroke: var(--accent-strong);
+  stroke-width: 3;
+  stroke-dasharray: 8 7;
+  opacity: 0.55;
+}
+
+.building {
+  cursor: pointer;
+}
+
+.building-top {
+  fill: #ffffff;
+  stroke: #c4d4dc;
+  stroke-width: 2;
+}
+
+.building-right {
+  fill: #d5e5ec;
+  stroke: #c4d4dc;
+  stroke-width: 2;
+}
+
+.building-left {
+  fill: #e9f2f6;
+  stroke: #c4d4dc;
+  stroke-width: 2;
+}
+
+.building:hover .building-top {
+  fill: var(--accent-soft);
+}
+
+.building-label {
+  font-weight: 600;
+  fill: var(--text-strong);
+}
+
+.marker-stem {
+  stroke-width: 4;
+}
+
+.marker-stem.current {
+  stroke: var(--accent-strong);
+}
+
+.marker-stem.destination {
+  stroke: var(--warn);
 }
 
 .map-route {

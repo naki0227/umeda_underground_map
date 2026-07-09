@@ -16,7 +16,14 @@ beforeAll(() => {
 
 describe('InteractiveMap', () => {
   it('renders the network and zoom controls', () => {
-    render(<InteractiveMap graph={graph} shops={umedaMap.shops} onSelectPlace={() => {}} />);
+    render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onSelectPlace={() => {}}
+      />,
+    );
     expect(screen.getByTestId('map-view')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '拡大' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '縮小' })).toBeInTheDocument();
@@ -28,6 +35,7 @@ describe('InteractiveMap', () => {
       <InteractiveMap
         graph={graph}
         shops={umedaMap.shops}
+        pois={umedaMap.pois}
         routeNodeIds={route?.nodeIds}
         currentNodeId="wt-c4"
         destinationNodeId="wt-exit-h28"
@@ -43,7 +51,12 @@ describe('InteractiveMap', () => {
     const user = userEvent.setup();
     const onSelectPlace = vi.fn();
     const { container } = render(
-      <InteractiveMap graph={graph} shops={umedaMap.shops} onSelectPlace={onSelectPlace} />,
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onSelectPlace={onSelectPlace}
+      />,
     );
 
     await user.click(container.querySelector('[data-node-id="wt-izumi"]') as Element);
@@ -53,5 +66,25 @@ describe('InteractiveMap', () => {
 
     await user.click(container.querySelector('[data-shop-id="wt-shop-starbucks"]') as Element);
     expect(onSelectPlace).toHaveBeenLastCalledWith(expect.objectContaining({ nodeId: 'wt-c4' }));
+  });
+
+  it('renders above-ground buildings and selects a POI on click', async () => {
+    const user = userEvent.setup();
+    const onSelectPlace = vi.fn();
+    const { container } = render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onSelectPlace={onSelectPlace}
+      />,
+    );
+
+    const building = container.querySelector('[data-poi-id="poi-hepfive"]');
+    expect(building).not.toBeNull();
+    await user.click(building as Element);
+    expect(onSelectPlace).toHaveBeenCalledWith(
+      expect.objectContaining({ nodeId: 'wt-exit-h8', aboveGround: true }),
+    );
   });
 });
