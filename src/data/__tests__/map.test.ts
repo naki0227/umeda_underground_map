@@ -46,6 +46,15 @@ describe('umedaMap data integrity', () => {
     }
   });
 
+  it('every POI references an existing node and has localized names', () => {
+    const nodeIds = new Set(umedaMap.nodes.map((n) => n.id));
+    for (const poi of umedaMap.pois) {
+      expect(nodeIds.has(poi.nodeId), `poi ${poi.id} -> ${poi.nodeId}`).toBe(true);
+      expect(poi.name.ja.length, `${poi.id} ja`).toBeGreaterThan(0);
+      expect(poi.name.en.length, `${poi.id} en`).toBeGreaterThan(0);
+    }
+  });
+
   it('can route across areas: Izumi Plaza -> Dotica South', () => {
     const graph = buildGraph(umedaMap);
     const route = findRoute(graph, 'wt-izumi', 'dj-3');

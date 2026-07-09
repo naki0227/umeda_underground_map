@@ -236,6 +236,13 @@ button.candidate:hover {
   color: var(--accent-strong);
 }
 
+.hint.above-ground {
+  color: var(--accent-strong);
+  background: var(--accent-soft);
+  padding: 8px 12px;
+  border-radius: var(--radius);
+}
+
 .hint.warn {
   color: var(--warn);
   background: var(--warn-soft);

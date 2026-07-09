@@ -3,17 +3,18 @@ import { useTranslation } from 'react-i18next';
 import { MapView } from '../../components/MapView';
 import type { Graph } from '../../domain/graph';
 import { locate, type LocationCandidate } from '../../domain/locate';
-import type { NodeId, Shop } from '../../domain/types';
+import type { NodeId, Poi, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
 import { useGeolocation } from './useGeolocation';
 
 interface Props {
   graph: Graph;
   shops: Shop[];
+  pois: Poi[];
   onConfirm: (nodeId: NodeId) => void;
 }
 
-export function LocateScreen({ graph, shops, onConfirm }: Props) {
+export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
   const { t, i18n } = useTranslation();
   const gps = useGeolocation();
   const [entranceNodeId, setEntranceNodeId] = useState<string>('');
@@ -65,12 +66,21 @@ export function LocateScreen({ graph, shops, onConfirm }: Props) {
         <span>{t('locate.entranceLabel')}</span>
         <select value={entranceNodeId} onChange={(e) => setEntranceNodeId(e.target.value)}>
           <option value="">{t('locate.entranceNone')}</option>
-          {entrances.map((node) => (
-            <option key={node.id} value={node.id}>
-              {node.exitNo !== undefined ? `${node.exitNo} ` : ''}
-              {localized(node.name, i18n.language)}
-            </option>
-          ))}
+          <optgroup label={t('locate.entrancePoiGroup')}>
+            {pois.map((poi) => (
+              <option key={poi.id} value={poi.nodeId}>
+                {localized(poi.name, i18n.language)}
+              </option>
+            ))}
+          </optgroup>
+          <optgroup label={t('locate.entranceExitGroup')}>
+            {entrances.map((node) => (
+              <option key={node.id} value={node.id}>
+                {node.exitNo !== undefined ? `${node.exitNo} ` : ''}
+                {localized(node.name, i18n.language)}
+              </option>
+            ))}
+          </optgroup>
         </select>
       </label>
 

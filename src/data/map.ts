@@ -5,6 +5,7 @@ import { ekimoEdges, ekimoNodes, ekimoShops } from './areas/ekimo';
 import { sanbangaiEdges, sanbangaiNodes, sanbangaiShops } from './areas/sanbangai';
 import { stationEdges, stationNodes, stationShops } from './areas/station';
 import { whityEdges, whityNodes, whityShops } from './areas/whity';
+import { umedaPois } from './pois';
 
 /** エリアをまたぐ連絡通路 */
 const interAreaEdges: MapEdge[] = [
@@ -65,4 +66,5 @@ export const umedaMap: UndergroundMap = {
     ...ekimoShops,
     ...dojimaShops,
   ],
+  pois: umedaPois,
 };

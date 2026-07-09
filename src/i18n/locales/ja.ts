@@ -7,8 +7,10 @@ export const ja = {
   locate: {
     title: '現在地を確認する',
     description: '入口や近くのお店を選ぶと、いまいる場所を推定します。',
-    entranceLabel: '入ってきた入口・改札（わかれば）',
+    entranceLabel: 'どこから地下に入りましたか？（わかれば）',
     entranceNone: '選択しない',
+    entrancePoiGroup: '地上の建物・スポットから',
+    entranceExitGroup: '出口番号・改札がわかる場合',
     gpsButton: 'おおよその位置情報を使う',
     gpsAcquired: '位置情報を取得しました',
     gpsFailed: '位置情報を取得できませんでした（地下では失敗しやすいです）',
@@ -22,8 +24,10 @@ export const ja = {
   },
   destination: {
     title: '目的地を選ぶ',
+    poisTab: '地上の建物・スポット',
+    poisHint: '行きたい場所を選ぶと、いちばん近い出口まで案内します。',
     exitsTab: '出口・駅',
-    shopsTab: 'お店',
+    shopsTab: '地下のお店',
     searchPlaceholder: '目的地を検索',
     startNavigation: '案内を開始',
   },
@@ -37,6 +41,8 @@ export const ja = {
     actionRight: '「{{name}}」を右へ',
     actionUturn: '「{{name}}」で引き返す',
     actionArrive: '「{{name}}」に到着',
+    aboveGroundHint:
+      '「{{name}}」は地上です。「{{exit}}」まで案内するので、そこから地上へ上がってください。',
     notFound: '経路が見つかりませんでした',
     newSearch: '別の目的地を探す',
   },

@@ -25,12 +25,14 @@ describe('App user flow', () => {
     const candidates = screen.getAllByRole('button', { name: /確度/ });
     await user.click(candidates[0]);
 
-    // 3. 目的地を選ぶ（出口タブから泉の広場東出口）
+    // 3. 目的地を選ぶ（デフォルトは地上スポットタブ → HEP FIVEを選ぶ）
     expect(screen.getByRole('heading', { name: '目的地を選ぶ' })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: /H-28 泉の広場東（新御堂筋） 出口/ }));
+    await user.click(screen.getByRole('button', { name: /HEP FIVE（赤い観覧車）/ }));
 
-    // 4. 経路が表示される
+    // 4. 経路が表示される（目的地は地上スポット名で表示され、地上ヒントが出る）
     expect(screen.getByRole('heading', { name: '道案内' })).toBeInTheDocument();
+    expect(screen.getByText(/目的地: HEP FIVE（赤い観覧車）/)).toBeInTheDocument();
+    expect(screen.getByText(/地上です/)).toBeInTheDocument();
     expect(screen.getByText(/合計 約\d+m/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '迷った' })).toBeInTheDocument();
 

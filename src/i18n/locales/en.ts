@@ -11,8 +11,10 @@ export const en: Resource = {
   locate: {
     title: 'Find where you are',
     description: 'Pick the entrance you used and shops you can see nearby.',
-    entranceLabel: 'Entrance / ticket gate you came from (if known)',
+    entranceLabel: 'Where did you enter the underground? (if known)',
     entranceNone: 'Not selected',
+    entrancePoiGroup: 'From a building / spot above ground',
+    entranceExitGroup: 'If you know the exit number / gate',
     gpsButton: 'Use approximate location',
     gpsAcquired: 'Location acquired',
     gpsFailed: 'Could not get location (GPS is unreliable underground)',
@@ -26,8 +28,10 @@ export const en: Resource = {
   },
   destination: {
     title: 'Choose a destination',
+    poisTab: 'Places above ground',
+    poisHint: 'Pick where you want to go and we guide you to the nearest exit.',
     exitsTab: 'Exits & Stations',
-    shopsTab: 'Shops',
+    shopsTab: 'Underground shops',
     searchPlaceholder: 'Search destination',
     startNavigation: 'Start navigation',
   },
@@ -41,6 +45,8 @@ export const en: Resource = {
     actionRight: 'Turn right at {{name}}',
     actionUturn: 'Turn back at {{name}}',
     actionArrive: 'Arrive at {{name}}',
+    aboveGroundHint:
+      '{{name}} is above ground. We guide you to {{exit}} — go up to street level from there.',
     notFound: 'No route found',
     newSearch: 'Choose another destination',
   },

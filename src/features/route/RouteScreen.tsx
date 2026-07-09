@@ -5,18 +5,27 @@ import { MapView } from '../../components/MapView';
 import { buildSteps, type RouteStep } from '../../domain/directions';
 import type { Graph } from '../../domain/graph';
 import { findRoute } from '../../domain/route';
-import type { NodeId } from '../../domain/types';
+import type { LocalizedText, NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
 
 interface Props {
   graph: Graph;
   fromNodeId: NodeId;
   toNodeId: NodeId;
+  /** 地上スポット名（POI経由で目的地を選んだ場合） */
+  destinationLabel: LocalizedText | null;
   onLost: () => void;
   onNewSearch: () => void;
 }
 
-export function RouteScreen({ graph, fromNodeId, toNodeId, onLost, onNewSearch }: Props) {
+export function RouteScreen({
+  graph,
+  fromNodeId,
+  toNodeId,
+  destinationLabel,
+  onLost,
+  onNewSearch,
+}: Props) {
   const { t, i18n } = useTranslation();
 
   const result = useMemo(() => {
@@ -51,8 +60,22 @@ export function RouteScreen({ graph, fromNodeId, toNodeId, onLost, onNewSearch }
       <p className="description">
         {t('route.from', { name: nodeName(fromNodeId) })}
         <br />
-        {t('route.to', { name: nodeName(toNodeId) })}
+        {t('route.to', {
+          name:
+            destinationLabel !== null
+              ? localized(destinationLabel, i18n.language)
+              : nodeName(toNodeId),
+        })}
       </p>
+
+      {destinationLabel !== null && (
+        <p className="hint above-ground">
+          {t('route.aboveGroundHint', {
+            name: localized(destinationLabel, i18n.language),
+            exit: nodeName(toNodeId),
+          })}
+        </p>
+      )}
 
       <MapView
         graph={graph}

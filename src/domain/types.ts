@@ -65,10 +65,23 @@ export interface Shop {
   nodeId: NodeId;
 }
 
+/**
+ * 地上のスポット（建物・商店街・神社など）。
+ * ユーザーは出口番号を知らないため、地上の目印を選ばせて
+ * 最寄りの地下ノード（出口・改札）へ変換するためのレイヤー。
+ */
+export interface Poi {
+  id: string;
+  name: LocalizedText;
+  /** 最寄りの地下ノード（原則 exit / gate） */
+  nodeId: NodeId;
+}
+
 export interface UndergroundMap {
   /** データ作成時点。店舗情報はこの時点のスナップショット。 */
   dataVersion: string;
   nodes: MapNode[];
   edges: MapEdge[];
   shops: Shop[];
+  pois: Poi[];
 }

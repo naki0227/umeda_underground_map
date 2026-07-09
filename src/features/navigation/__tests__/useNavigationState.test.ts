@@ -45,4 +45,20 @@ describe('useNavigationState', () => {
     expect(result.current.phase).toBe('destination');
     expect(result.current.destinationNodeId).toBeNull();
   });
+
+  it('stores and clears the destination label (POI name)', () => {
+    const { result } = renderHook(() => useNavigationState());
+    act(() => result.current.confirmLocation('wt-c1'));
+    act(() => result.current.chooseDestination('wt-exit-h8', { ja: 'HEP FIVE', en: 'HEP FIVE' }));
+    expect(result.current.destinationLabel?.ja).toBe('HEP FIVE');
+    // 迷っても目的地ラベルは保持される
+    act(() => result.current.markLost());
+    expect(result.current.destinationLabel?.ja).toBe('HEP FIVE');
+    // 目的地を選び直すとクリアされる
+    act(() => result.current.newSearch());
+    expect(result.current.destinationLabel).toBeNull();
+    // ラベルなし選択ではnullのまま
+    act(() => result.current.chooseDestination('dm-circle'));
+    expect(result.current.destinationLabel).toBeNull();
+  });
 });

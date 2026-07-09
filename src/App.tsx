@@ -26,12 +26,18 @@ export default function App() {
 
       <main>
         {nav.phase === 'locate' && (
-          <LocateScreen graph={graph} shops={umedaMap.shops} onConfirm={nav.confirmLocation} />
+          <LocateScreen
+            graph={graph}
+            shops={umedaMap.shops}
+            pois={umedaMap.pois}
+            onConfirm={nav.confirmLocation}
+          />
         )}
         {nav.phase === 'destination' && (
           <DestinationScreen
             graph={graph}
             shops={umedaMap.shops}
+            pois={umedaMap.pois}
             currentNodeId={nav.currentNodeId}
             onChoose={nav.chooseDestination}
           />
@@ -41,6 +47,7 @@ export default function App() {
             graph={graph}
             fromNodeId={nav.currentNodeId}
             toNodeId={nav.destinationNodeId}
+            destinationLabel={nav.destinationLabel}
             onLost={nav.markLost}
             onNewSearch={nav.newSearch}
           />
