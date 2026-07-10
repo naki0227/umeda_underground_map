@@ -27,7 +27,7 @@ export const en: Resource = {
     confirm: "I'm here",
   },
   search: {
-    placeholder: 'Search places, shops, exits',
+    placeholder: 'Enter destination (shops, exits, spots)',
     kindPoi: 'Above ground',
     kindShop: 'Shop',
     kindNode: 'Exit / Station',
@@ -39,6 +39,21 @@ export const en: Resource = {
   },
   mapUi: {
     setLocation: 'Set my location',
+    currentField: 'Current location',
+    notSet: 'Not set (tap to set)',
+    setupPrompt: 'Set your location to get directions',
+  },
+  tabs: {
+    label: 'Main menu',
+    map: 'Map',
+    spots: 'Spots',
+    menu: 'Menu',
+  },
+  spots: {
+    title: 'Recommended spots',
+    description: 'Landmarks above ground. Tap one to get guided to the nearest exit.',
+    aboveGround: 'Above ground',
+    walk: '{{minutes}} min walk / approx. {{distance}}m',
   },
   sheet: {
     close: 'Close',

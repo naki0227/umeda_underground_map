@@ -3,7 +3,7 @@ import type { NodeId } from '../../domain/types';
 import type { Place } from '../map/InteractiveMap';
 
 /** 画面下部に出すシートの種類 */
-export type SheetKind = 'none' | 'place' | 'locate' | 'route';
+export type SheetKind = 'none' | 'place' | 'locate' | 'route' | 'spots' | 'menu';
 
 export interface MapNavigationState {
   sheet: SheetKind;
@@ -23,6 +23,10 @@ export interface MapNavigationActions {
   confirmLocation: (nodeId: NodeId) => void;
   /** 現在地設定シートを開く */
   openLocate: () => void;
+  /** おすすめスポットシートを開く */
+  openSpots: () => void;
+  /** メニューシートを開く */
+  openMenu: () => void;
   /** 迷った: 現在地を破棄して位置確定へ（目的地は保持） */
   markLost: () => void;
   /** 案内を終了して目的地をクリア */
@@ -74,6 +78,8 @@ export function useMapNavigation(): MapNavigationState & MapNavigationActions {
   );
 
   const openLocate = useCallback(() => setSheet('locate'), []);
+  const openSpots = useCallback(() => setSheet('spots'), []);
+  const openMenu = useCallback(() => setSheet('menu'), []);
 
   const markLost = useCallback(() => {
     setCurrentNodeId(null);
@@ -100,6 +106,8 @@ export function useMapNavigation(): MapNavigationState & MapNavigationActions {
     setHereSelected,
     confirmLocation,
     openLocate,
+    openSpots,
+    openMenu,
     markLost,
     clearDestination,
     closeSheet,

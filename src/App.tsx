@@ -1,19 +1,21 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { LanguageSwitcher } from './components/LanguageSwitcher';
-import { ReportLink } from './components/ReportLink';
+import { TabBar } from './components/TabBar';
 import { umedaMap } from './data/map';
 import { buildGraph } from './domain/graph';
 import { findRoute } from './domain/route';
+import { localized } from './i18n';
 import { InteractiveMap } from './features/map/InteractiveMap';
 import { PlaceSheet } from './features/map/PlaceSheet';
+import { MenuSheet } from './features/menu/MenuSheet';
 import { useMapNavigation } from './features/navigation/useMapNavigation';
 import { LocateScreen } from './features/locate/LocateScreen';
 import { RouteScreen } from './features/route/RouteScreen';
 import { SearchBar } from './features/search/SearchBar';
+import { SpotsSheet } from './features/spots/SpotsSheet';
 
 export default function App() {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const graph = useMemo(() => buildGraph(umedaMap), []);
   const nav = useMapNavigation();
 
@@ -21,6 +23,12 @@ export default function App() {
     if (nav.currentNodeId === null || nav.destination === null) return null;
     return findRoute(graph, nav.currentNodeId, nav.destination.nodeId);
   }, [graph, nav.currentNodeId, nav.destination]);
+
+  const currentName = useMemo(() => {
+    if (nav.currentNodeId === null) return null;
+    const node = graph.nodes.get(nav.currentNodeId);
+    return node ? localized(node.name, i18n.language) : null;
+  }, [graph, nav.currentNodeId, i18n.language]);
 
   return (
     <div className="app-map">
@@ -35,14 +43,26 @@ export default function App() {
       />
 
       <div className="map-topbar">
+        <button type="button" className="current-field" onClick={nav.openLocate}>
+          <span className="current-dot" aria-hidden />
+          <span className="current-label">{t('mapUi.currentField')}</span>
+          <span className={currentName === null ? 'current-value empty' : 'current-value'}>
+            {currentName ?? t('mapUi.notSet')}
+          </span>
+        </button>
         <SearchBar
           graph={graph}
           shops={umedaMap.shops}
           pois={umedaMap.pois}
           onPick={nav.selectPlace}
         />
-        <LanguageSwitcher />
       </div>
+
+      {nav.sheet === 'none' && nav.currentNodeId === null && (
+        <button type="button" className="setup-banner" onClick={nav.openLocate}>
+          {t('mapUi.setupPrompt')}
+        </button>
+      )}
 
       {nav.sheet === 'place' && nav.selectedPlace !== null && (
         <PlaceSheet
@@ -89,18 +109,26 @@ export default function App() {
         </div>
       )}
 
-      {nav.sheet === 'none' && (
-        <div className="sheet welcome">
-          <h1>{t('app.title')}</h1>
-          <p className="hint">{t('app.subtitle')}</p>
-          <p className="hint">{t('map.caption')}</p>
-          <button type="button" className="primary" onClick={nav.openLocate}>
-            {t('mapUi.setLocation')}
-          </button>
-          <ReportLink />
-          <p className="hint">{t('app.dataVersionNote', { version: umedaMap.dataVersion })}</p>
-        </div>
+      {nav.sheet === 'spots' && (
+        <SpotsSheet
+          graph={graph}
+          pois={umedaMap.pois}
+          currentNodeId={nav.currentNodeId}
+          onPick={nav.selectPlace}
+          onClose={nav.closeSheet}
+        />
       )}
+
+      {nav.sheet === 'menu' && (
+        <MenuSheet dataVersion={umedaMap.dataVersion} onClose={nav.closeSheet} />
+      )}
+
+      <TabBar
+        sheet={nav.sheet}
+        onMap={nav.closeSheet}
+        onSpots={nav.openSpots}
+        onMenu={nav.openMenu}
+      />
     </div>
   );
 }

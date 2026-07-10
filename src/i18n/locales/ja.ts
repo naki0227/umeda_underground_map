@@ -23,7 +23,7 @@ export const ja = {
     confirm: 'ここにいる',
   },
   search: {
-    placeholder: '場所・お店・出口をさがす',
+    placeholder: '目的地を入力（お店・出口・スポット）',
     kindPoi: '地上',
     kindShop: '地下のお店',
     kindNode: '出口・駅',
@@ -35,6 +35,21 @@ export const ja = {
   },
   mapUi: {
     setLocation: '現在地を設定する',
+    currentField: '現在地',
+    notSet: '未設定（タップして設定）',
+    setupPrompt: '現在地を設定すると道案内できます',
+  },
+  tabs: {
+    label: 'メインメニュー',
+    map: '地図',
+    spots: 'スポット',
+    menu: 'メニュー',
+  },
+  spots: {
+    title: 'おすすめスポット',
+    description: '地上の目印になるスポットです。タップすると最寄り出口まで案内します。',
+    aboveGround: '地上',
+    walk: '徒歩{{minutes}}分・約{{distance}}m',
   },
   sheet: {
     close: '閉じる',

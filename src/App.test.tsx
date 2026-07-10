@@ -16,7 +16,7 @@ describe('App map-first user flow', () => {
 
     // 1. 全画面マップと検索バーが出る
     expect(screen.getByTestId('map-view')).toBeInTheDocument();
-    const search = screen.getByRole('searchbox', { name: '場所・お店・出口をさがす' });
+    const search = screen.getByRole('searchbox', { name: '目的地を入力（お店・出口・スポット）' });
 
     // 2. 検索して地上スポットを選ぶ
     await user.type(search, 'HEP');
@@ -59,9 +59,22 @@ describe('App map-first user flow', () => {
     expect(screen.getByTestId('map-current')).toBeInTheDocument();
   });
 
-  it('shows the report link on the welcome sheet', () => {
+  it('opens spots and menu from the tab bar', async () => {
+    const user = userEvent.setup();
     render(<App />);
+
+    // スポットタブ → おすすめスポットのカード一覧
+    await user.click(screen.getByRole('button', { name: 'スポット' }));
+    expect(screen.getByRole('dialog', { name: 'おすすめスポット' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: /HEP FIVE/ })).toBeInTheDocument();
+
+    // メニュータブ → 報告リンクと言語切替
+    await user.click(screen.getByRole('button', { name: 'メニュー' }));
     const link = screen.getByRole('link', { name: /間違いを報告する/ });
     expect(link).toHaveAttribute('href', expect.stringContaining('docs.google.com/forms'));
+
+    // 地図タブでシートが閉じる
+    await user.click(screen.getByRole('button', { name: '地図' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });
