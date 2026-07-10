@@ -50,6 +50,15 @@ export function RouteScreen({
         return t('route.actionRight', { name });
       case 'u-turn':
         return t('route.actionUturn', { name });
+      case 'floor-change': {
+        const change = step.floorChange;
+        if (change === undefined) return t('route.actionArrive', { name });
+        return t(change.up ? 'route.actionFloorUp' : 'route.actionFloorDown', {
+          name,
+          via: t(`facility.${change.via}`),
+          floor: change.to,
+        });
+      }
       case 'straight':
       case 'arrive':
         return t('route.actionArrive', { name });

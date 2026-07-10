@@ -21,6 +21,19 @@ export type NodeKind =
   | 'gate' // 駅改札
   | 'landmark'; // 広場・目印（泉の広場など）
 
+/** フロア。下から順に並べる（インデックスが高度順） */
+export type FloorId = 'B2' | 'B1' | '1F';
+
+export const FLOOR_ORDER: readonly FloorId[] = ['B2', 'B1', '1F'];
+
+/**
+ * ノードのフロア。省略時は地下街の主フロア B1、
+ * 地上出口ノードは 1F とみなす。
+ */
+export function nodeFloor(node: Pick<MapNode, 'kind' | 'floor'>): FloorId {
+  return node.floor ?? (node.kind === 'exit' ? '1F' : 'B1');
+}
+
 export interface MapNode {
   id: NodeId;
   kind: NodeKind;
@@ -34,6 +47,8 @@ export interface MapNode {
   lng?: number;
   /** 出口番号（例: "C-60"） */
   exitNo?: string;
+  /** フロア。省略時は nodeFloor() の既定値（B1、出口は1F） */
+  floor?: FloorId;
 }
 
 export type EdgeAttr = 'stairs' | 'escalator' | 'elevator' | 'slope';

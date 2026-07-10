@@ -53,6 +53,8 @@ export const en: Resource = {
     actionRight: 'Turn right at {{name}}',
     actionUturn: 'Turn back at {{name}}',
     actionArrive: 'Arrive at {{name}}',
+    actionFloorUp: 'Take the {{via}} at {{name}} up to {{floor}}',
+    actionFloorDown: 'Take the {{via}} at {{name}} down to {{floor}}',
     aboveGroundHint:
       '{{name}} is above ground. We guide you to {{exit}} — go up to street level from there.',
     notFound: 'No route found',
@@ -66,6 +68,12 @@ export const en: Resource = {
     title: 'Something wrong?',
     description: 'If a shop or exit differs from reality, please let us know.',
     link: 'Report an error (Google Form)',
+  },
+  facility: {
+    stairs: 'stairs',
+    escalator: 'escalator',
+    elevator: 'elevator',
+    slope: 'slope',
   },
   map: {
     title: 'Umeda underground map',

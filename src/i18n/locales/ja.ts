@@ -49,6 +49,8 @@ export const ja = {
     actionRight: '「{{name}}」を右へ',
     actionUturn: '「{{name}}」で引き返す',
     actionArrive: '「{{name}}」に到着',
+    actionFloorUp: '「{{name}}」の{{via}}で{{floor}}へ上がる',
+    actionFloorDown: '「{{name}}」の{{via}}で{{floor}}へ下りる',
     aboveGroundHint:
       '「{{name}}」は地上です。「{{exit}}」まで案内するので、そこから地上へ上がってください。',
     notFound: '経路が見つかりませんでした',
@@ -62,6 +64,12 @@ export const ja = {
     title: '情報が違うときは',
     description: 'お店や出口の情報が実際と違う場合は、こちらから教えてください。',
     link: '間違いを報告する（Googleフォーム）',
+  },
+  facility: {
+    stairs: '階段',
+    escalator: 'エスカレーター',
+    elevator: 'エレベーター',
+    slope: 'スロープ',
   },
   map: {
     title: '梅田地下マップ',
