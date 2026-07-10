@@ -75,6 +75,20 @@ export const en: Resource = {
     elevator: 'elevator',
     slope: 'slope',
   },
+  facilityShort: {
+    stairs: 'Stairs',
+    escalator: 'Esc.',
+    elevator: 'EV',
+    slope: 'Slope',
+  },
+  area: {
+    whity: 'Whity Umeda',
+    diamor: 'Diamor Osaka',
+    sanbangai: 'Hankyu Sanbangai',
+    ekimo: 'ekimo Umeda',
+    dojima: 'Dotica',
+    station: 'Station corridors',
+  },
   map: {
     title: 'Umeda underground map',
     you: 'You are here',
@@ -83,6 +97,8 @@ export const en: Resource = {
     zoomIn: 'Zoom in',
     zoomOut: 'Zoom out',
     resetView: 'Fit view',
+    legendUnderground: 'Underground',
+    legendGround: 'Above ground',
   },
   language: {
     label: 'Language',

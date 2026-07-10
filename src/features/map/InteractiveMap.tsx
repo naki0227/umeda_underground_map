@@ -3,7 +3,15 @@ import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
 import type { LocalizedText, NodeId, Poi, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
-import { buildingFaces, GROUND_ELEVATION, project, SLAB_DEPTH } from './iso';
+import { project, SLAB_DEPTH, type ScreenPoint } from './iso';
+import {
+  BUILDING_HALF_WIDTH,
+  BUILDING_HEIGHT,
+  buildBuildings,
+  MapGroundLayer,
+} from './MapGroundLayer';
+import { MapMarkers } from './MapMarkers';
+import { buildAreaZones } from './zones';
 import { useMapViewport, type Bounds } from './useMapViewport';
 
 /** マップ上で選択できる「場所」。POI・店・出口/駅を統一的に扱う */
@@ -25,14 +33,19 @@ interface Props {
 }
 
 const PADDING = 90;
-const BUILDING_HALF_WIDTH = 34;
-const BUILDING_HEIGHT = 40;
 
 /** 同一ノードに複数の店ピンが重ならないよう円周上にずらす */
 function shopOffset(index: number, count: number): { dx: number; dy: number } {
   if (count === 1) return { dx: 0, dy: 18 };
   const angle = (index / count) * Math.PI * 2;
   return { dx: Math.cos(angle) * 24, dy: Math.sin(angle) * 14 + 6 };
+}
+
+/** バッジ・チップの幅をテキストから概算する（全角=21px / 半角=12px 相当） */
+function chipWidth(text: string): number {
+  let width = 0;
+  for (const ch of text) width += ch.charCodeAt(0) > 0xff ? 21 : 12;
+  return width + 18;
 }
 
 export function InteractiveMap({
@@ -48,38 +61,20 @@ export function InteractiveMap({
   const nodes = useMemo(() => [...graph.nodes.values()], [graph]);
 
   const screenOf = useMemo(() => {
-    const map = new Map<NodeId, { px: number; py: number }>();
+    const map = new Map<NodeId, ScreenPoint>();
     for (const node of nodes) map.set(node.id, project(node.x, node.y));
     return map;
   }, [nodes]);
 
-  const at = (id: NodeId) => screenOf.get(id) as { px: number; py: number };
+  const at = (id: NodeId) => screenOf.get(id) as ScreenPoint;
 
-  /** 地上の建物: POIをノードごとにまとめて横に並べる */
-  const buildings = useMemo(() => {
-    const byNode = new Map<NodeId, Poi[]>();
-    for (const poi of pois) {
-      const list = byNode.get(poi.nodeId);
-      if (list) list.push(poi);
-      else byNode.set(poi.nodeId, [poi]);
-    }
-    const result: {
-      poi: Poi;
-      base: { px: number; py: number };
-      anchor: { px: number; py: number };
-    }[] = [];
-    for (const [nodeId, group] of byNode) {
-      const node = graph.nodes.get(nodeId);
-      if (!node) continue;
-      const anchor = project(node.x, node.y);
-      group.forEach((poi, index) => {
-        const spread = (index - (group.length - 1) / 2) * (BUILDING_HALF_WIDTH * 2.4);
-        const base = project(node.x, node.y, GROUND_ELEVATION);
-        result.push({ poi, base: { px: base.px + spread, py: base.py }, anchor });
-      });
-    }
-    return result.sort((a, b) => a.base.py - b.base.py);
-  }, [pois, graph]);
+  const buildings = useMemo(() => buildBuildings(graph, pois), [graph, pois]);
+
+  const zones = useMemo(() => {
+    const list = buildAreaZones(nodes);
+    // 駅構内ゾーンは広く重なるので最背面に敷く
+    return list.sort((a, b) => (a.area === 'station' ? -1 : b.area === 'station' ? 1 : 0));
+  }, [nodes]);
 
   const bounds = useMemo<Bounds>(() => {
     const xs: number[] = [];
@@ -106,8 +101,7 @@ export function InteractiveMap({
 
   /** 通路スラブ。奥→手前の順に描く */
   const slabs = useMemo(() => {
-    const result: { key: string; a: { px: number; py: number }; b: { px: number; py: number } }[] =
-      [];
+    const result: { key: string; a: ScreenPoint; b: ScreenPoint }[] = [];
     for (const [fromId, edges] of graph.adjacency) {
       for (const edge of edges) {
         if (fromId >= edge.to) continue;
@@ -120,11 +114,34 @@ export function InteractiveMap({
     return result.sort((s, u) => Math.max(s.a.py, s.b.py) - Math.max(u.a.py, u.b.py));
   }, [graph, screenOf]);
 
+  /** エスカレーター・エレベーター・階段のあるエッジの中点チップ */
+  const facilities = useMemo(() => {
+    const result: { key: string; label: string; mid: ScreenPoint }[] = [];
+    for (const [fromId, edges] of graph.adjacency) {
+      for (const edge of edges) {
+        if (fromId >= edge.to) continue;
+        const attr = (['escalator', 'elevator', 'stairs'] as const).find((a) =>
+          edge.attrs.includes(a),
+        );
+        if (attr === undefined) continue;
+        const a = screenOf.get(fromId);
+        const b = screenOf.get(edge.to);
+        if (!a || !b) continue;
+        result.push({
+          key: `${fromId}--${edge.to}`,
+          label: t(`facilityShort.${attr}`),
+          mid: { px: (a.px + b.px) / 2, py: (a.py + b.py) / 2 },
+        });
+      }
+    }
+    return result;
+  }, [graph, screenOf, t]);
+
   const routePoints = useMemo(() => {
     if (!routeNodeIds || routeNodeIds.length < 2) return null;
     return routeNodeIds
       .map((id) => screenOf.get(id))
-      .filter((p): p is { px: number; py: number } => p !== undefined)
+      .filter((p): p is ScreenPoint => p !== undefined)
       .map((p) => `${p.px},${p.py}`)
       .join(' ');
   }, [routeNodeIds, screenOf]);
@@ -144,11 +161,8 @@ export function InteractiveMap({
     onSelectPlace(place);
   };
 
-  const current = currentNodeId ? at(currentNodeId) : undefined;
-  const destination = destinationNodeId ? at(destinationNodeId) : undefined;
-  const selectable = nodes.filter(
-    (n) => n.kind === 'exit' || n.kind === 'gate' || n.kind === 'landmark',
-  );
+  const exits = nodes.filter((n) => n.kind === 'exit');
+  const pins = nodes.filter((n) => n.kind === 'gate' || n.kind === 'landmark');
 
   return (
     <div className="interactive-map">
@@ -160,6 +174,29 @@ export function InteractiveMap({
         data-testid="map-view"
         {...viewport.handlers}
       >
+        {/* エリアの地下ゾーン */}
+        {zones.map((zone) => (
+          <polygon
+            key={zone.area}
+            className={`map-zone zone-${zone.area}`}
+            data-area={zone.area}
+            points={zone.points}
+          />
+        ))}
+        {zones
+          .filter((zone) => zone.area !== 'station')
+          .map((zone) => (
+            <text
+              key={`label-${zone.area}`}
+              className="map-zone-label"
+              x={zone.center.px}
+              y={zone.center.py}
+              textAnchor="middle"
+            >
+              {t(`area.${zone.area}`)}
+            </text>
+          ))}
+
         {/* 地下フロア: 通路スラブ（側面→上面） */}
         {slabs.map(({ key, a, b }) => (
           <polygon
@@ -182,6 +219,17 @@ export function InteractiveMap({
               <ellipse key={node.id} className="map-node" cx={p.px} cy={p.py} rx={6} ry={3.5} />
             );
           })}
+        {facilities.map(({ key, label, mid }) => {
+          const width = chipWidth(label);
+          return (
+            <g key={key} className="map-facility">
+              <rect x={mid.px - width / 2} y={mid.py - 14} width={width} height={28} rx={14} />
+              <text x={mid.px} y={mid.py + 7}>
+                {label}
+              </text>
+            </g>
+          );
+        })}
         {[...shopsByNode.entries()].flatMap(([nodeId, group]) => {
           const p = screenOf.get(nodeId);
           if (!p) return [];
@@ -203,7 +251,7 @@ export function InteractiveMap({
             );
           });
         })}
-        {selectable.map((node) => {
+        {pins.map((node) => {
           const p = at(node.id);
           return (
             <g
@@ -214,87 +262,47 @@ export function InteractiveMap({
             >
               <ellipse cx={p.px} cy={p.py} rx={12} ry={7} />
               <text className="map-label" x={p.px + 16} y={p.py - 8}>
-                {node.exitNo !== undefined ? node.exitNo : localized(node.name, i18n.language)}
+                {localized(node.name, i18n.language)}
               </text>
             </g>
           );
         })}
-
-        {/* 地上レイヤー: 階段リンクと建物 */}
-        {buildings.map(({ poi, base, anchor }) => (
-          <line
-            key={`link-${poi.id}`}
-            className="stair-link"
-            x1={anchor.px}
-            y1={anchor.py}
-            x2={base.px}
-            y2={base.py + 2}
-          />
-        ))}
-        {buildings.map(({ poi, base }) => {
-          const faces = buildingFaces(base, BUILDING_HALF_WIDTH, BUILDING_HEIGHT);
+        {exits.map((node) => {
+          const p = at(node.id);
+          const label = node.exitNo ?? localized(node.name, i18n.language);
+          const width = chipWidth(label);
           return (
             <g
-              key={poi.id}
-              className="building"
-              data-poi-id={poi.id}
-              onClick={() => pick({ nodeId: poi.nodeId, name: poi.name, aboveGround: true })}
+              key={node.id}
+              className="map-exit-badge"
+              data-node-id={node.id}
+              onClick={() => pick({ nodeId: node.id, name: node.name, aboveGround: false })}
             >
-              <polygon className="building-left" points={faces.left} />
-              <polygon className="building-right" points={faces.right} />
-              <polygon className="building-top" points={faces.top} />
-              <text
-                className="map-label building-label"
-                x={base.px}
-                y={base.py - BUILDING_HEIGHT - BUILDING_HALF_WIDTH * 0.5 - 10}
-                textAnchor="middle"
-              >
-                {localized(poi.name, i18n.language)}
+              <rect x={p.px - width / 2} y={p.py - 16} width={width} height={32} rx={9} />
+              <text x={p.px} y={p.py + 7} textAnchor="middle">
+                {label}
               </text>
+              <title>{localized(node.name, i18n.language)}</title>
             </g>
           );
         })}
 
-        {destination !== undefined && (
-          <g data-testid="map-destination">
-            <line
-              className="marker-stem destination"
-              x1={destination.px}
-              y1={destination.py}
-              x2={destination.px}
-              y2={destination.py - 34}
-            />
-            <circle
-              className="map-marker destination"
-              cx={destination.px}
-              cy={destination.py - 42}
-              r={13}
-            />
-            <text
-              className="map-marker-label destination"
-              x={destination.px + 18}
-              y={destination.py - 38}
-            >
-              {t('map.destination')}
-            </text>
-          </g>
-        )}
-        {current !== undefined && (
-          <g data-testid="map-current">
-            <line
-              className="marker-stem current"
-              x1={current.px}
-              y1={current.py}
-              x2={current.px}
-              y2={current.py - 34}
-            />
-            <circle className="map-marker current" cx={current.px} cy={current.py - 42} r={13} />
-            <text className="map-marker-label current" x={current.px + 18} y={current.py - 38}>
-              {t('map.you')}
-            </text>
-          </g>
-        )}
+        <MapGroundLayer buildings={buildings} onPick={pick} />
+        <MapMarkers
+          current={currentNodeId ? at(currentNodeId) : undefined}
+          destination={destinationNodeId ? at(destinationNodeId) : undefined}
+        />
       </svg>
+      <div className="map-legend" data-testid="map-legend">
+        <span>
+          <i className="swatch underground" />
+          {t('map.legendUnderground')}
+        </span>
+        <span>
+          <i className="swatch ground" />
+          {t('map.legendGround')}
+        </span>
+      </div>
       <div className="map-zoom-controls">
         <button type="button" aria-label={t('map.zoomIn')} onClick={viewport.zoomIn}>
           ＋

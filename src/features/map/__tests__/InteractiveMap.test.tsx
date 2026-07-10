@@ -68,6 +68,23 @@ describe('InteractiveMap', () => {
     expect(onSelectPlace).toHaveBeenLastCalledWith(expect.objectContaining({ nodeId: 'wt-c4' }));
   });
 
+  it('renders area zones, exit badges and the legend', () => {
+    const { container } = render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onSelectPlace={() => {}}
+      />,
+    );
+    expect(container.querySelector('[data-area="whity"]')).not.toBeNull();
+    // 出口はバッジ（出口番号入りチップ）で表示される
+    const badge = container.querySelector('.map-exit-badge[data-node-id="wt-exit-h8"]');
+    expect(badge).not.toBeNull();
+    expect(badge).toHaveTextContent('H-8');
+    expect(screen.getByTestId('map-legend')).toHaveTextContent('地下街');
+  });
+
   it('renders above-ground buildings and selects a POI on click', async () => {
     const user = userEvent.setup();
     const onSelectPlace = vi.fn();

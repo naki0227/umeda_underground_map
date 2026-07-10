@@ -128,7 +128,9 @@ export function buildSteps(graph: Graph, route: Route): RouteStep[] {
   const lastNodeId = nodeIds[nodeIds.length - 1];
   const lastStep = steps[steps.length - 1];
   const endedWithFloorChange =
-    lastStep !== undefined && lastStep.action === 'floor-change' && lastStep.atNodeId === lastNodeId;
+    lastStep !== undefined &&
+    lastStep.action === 'floor-change' &&
+    lastStep.atNodeId === lastNodeId;
   if (!endedWithFloorChange) {
     steps.push({
       fromNodeId: segmentStart,

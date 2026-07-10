@@ -71,6 +71,20 @@ export const ja = {
     elevator: 'エレベーター',
     slope: 'スロープ',
   },
+  facilityShort: {
+    stairs: '階段',
+    escalator: 'エスカ',
+    elevator: 'EV',
+    slope: 'スロープ',
+  },
+  area: {
+    whity: 'ホワイティうめだ',
+    diamor: 'ディアモール大阪',
+    sanbangai: '阪急三番街',
+    ekimo: 'ekimo梅田',
+    dojima: 'ドーチカ',
+    station: '駅構内・連絡通路',
+  },
   map: {
     title: '梅田地下マップ',
     you: '現在地',
@@ -79,6 +93,8 @@ export const ja = {
     zoomIn: '拡大',
     zoomOut: '縮小',
     resetView: '全体表示',
+    legendUnderground: '地下街',
+    legendGround: '地上',
   },
   language: {
     label: '言語',
