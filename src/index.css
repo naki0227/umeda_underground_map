@@ -398,6 +398,67 @@ button.warn {
   font-weight: 600;
 }
 
+.quick-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+button.chip {
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  color: var(--text-strong);
+  font-size: 0.85rem;
+}
+
+button.chip.active {
+  background: var(--accent);
+  border-color: var(--accent-strong);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.estimate-card {
+  margin-top: 16px;
+  padding: 14px 16px;
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  background: var(--accent-soft);
+}
+
+.estimate-title {
+  margin: 0;
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--accent-strong);
+}
+
+.estimate-place {
+  margin: 4px 0 6px;
+  font-size: 1.05rem;
+  font-weight: 700;
+  color: var(--text-strong);
+}
+
+.estimate-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0 0 10px;
+}
+
+.floor-badge {
+  display: inline-block;
+  padding: 1px 10px;
+  border-radius: 999px;
+  background: var(--accent-strong);
+  color: #ffffff;
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
 .choice-list {
   list-style: none;
   margin: 10px 0 0;

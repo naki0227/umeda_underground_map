@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
 import { locate, type LocationCandidate } from '../../domain/locate';
-import type { NodeId, Poi, Shop } from '../../domain/types';
+import { nodeFloor, type NodeId, type Poi, type Shop } from '../../domain/types';
 import { localized } from '../../i18n';
 import { useGeolocation } from './useGeolocation';
 
@@ -12,6 +12,8 @@ interface Props {
   pois: Poi[];
   onConfirm: (nodeId: NodeId) => void;
 }
+
+const QUICK_PICK_COUNT = 8;
 
 export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
   const { t, i18n } = useTranslation();
@@ -23,6 +25,15 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
 
   const entrances = useMemo(
     () => [...graph.nodes.values()].filter((n) => n.kind === 'exit' || n.kind === 'gate'),
+    [graph],
+  );
+
+  /** よく使う目印: 広場・改札をチップで即選択できるようにする */
+  const quickPicks = useMemo(
+    () =>
+      [...graph.nodes.values()]
+        .filter((n) => n.kind === 'landmark' || n.kind === 'gate')
+        .slice(0, QUICK_PICK_COUNT),
     [graph],
   );
 
@@ -54,9 +65,32 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
     return node ? localized(node.name, i18n.language) : nodeId;
   };
 
+  const floorOf = (nodeId: NodeId) => {
+    const node = graph.nodes.get(nodeId);
+    return node ? nodeFloor(node) : 'B1';
+  };
+
+  const top = candidates !== null && candidates.length > 0 ? candidates[0] : null;
+
   return (
     <section>
       <p className="description">{t('locate.description')}</p>
+
+      <div className="field">
+        <span>{t('locate.quickLabel')}</span>
+        <div className="quick-chips">
+          {quickPicks.map((node) => (
+            <button
+              key={node.id}
+              type="button"
+              className={entranceNodeId === node.id ? 'chip active' : 'chip'}
+              onClick={() => setEntranceNodeId((prev) => (prev === node.id ? '' : node.id))}
+            >
+              {localized(node.name, i18n.language)}
+            </button>
+          ))}
+        </div>
+      </div>
 
       <label className="field">
         <span>{t('locate.entranceLabel')}</span>
@@ -119,11 +153,29 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
       {candidates !== null && candidates.length === 0 && (
         <p className="hint warn">{t('locate.noCandidates')}</p>
       )}
-      {candidates !== null && candidates.length > 0 && (
+      {top !== null && (
+        <div className="estimate-card">
+          <p className="estimate-title">{t('locate.estimatedTitle')}</p>
+          <p className="estimate-place">
+            {t('locate.estimatedNear', { name: nodeName(top.nodeId) })}
+          </p>
+          <p className="estimate-meta">
+            <span className="floor-badge">{floorOf(top.nodeId)}</span>
+            <span className="confidence">
+              {t('locate.candidateConfidence', { percent: Math.round(top.confidence * 100) })}
+            </span>
+          </p>
+          <button type="button" className="primary" onClick={() => onConfirm(top.nodeId)}>
+            {t('locate.startHere')}
+          </button>
+          <p className="hint">{t('locate.fixedNote')}</p>
+        </div>
+      )}
+      {candidates !== null && candidates.length > 1 && (
         <div className="candidates">
           <h3>{t('locate.candidatesTitle')}</h3>
           <ul className="choice-list">
-            {candidates.map((c) => (
+            {candidates.slice(1).map((c) => (
               <li key={c.nodeId}>
                 <button type="button" className="candidate" onClick={() => onConfirm(c.nodeId)}>
                   <span>{nodeName(c.nodeId)}</span>

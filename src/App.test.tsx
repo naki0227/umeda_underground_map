@@ -26,12 +26,12 @@ describe('App map-first user flow', () => {
     await user.click(screen.getByRole('button', { name: 'ここへ行く' }));
     expect(screen.getByRole('dialog', { name: '現在地を確認する' })).toBeInTheDocument();
 
-    // 4. 近くの店を2つ選んで推定 → 候補を確定
+    // 4. 近くの店を2つ選んで推定 → 推定位置カードから案内開始
     await user.click(screen.getByLabelText(/スターバックスコーヒー ホワイティうめだ店/));
     await user.click(screen.getByLabelText(/古潭 ホワイティうめだ店/));
     await user.click(screen.getByRole('button', { name: '現在地を推定する' }));
-    const candidates = screen.getAllByRole('button', { name: /確度/ });
-    await user.click(candidates[0]);
+    expect(screen.getByText('推定位置')).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: 'この位置で案内開始' }));
 
     // 5. 経路シートが表示される（地上ヒント・迷ったボタン付き）
     expect(screen.getByRole('dialog', { name: '道案内' })).toBeInTheDocument();
