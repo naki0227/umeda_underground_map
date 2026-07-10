@@ -4,12 +4,8 @@ import type { Graph } from '../../domain/graph';
 import type { LocalizedText, NodeId, Poi, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
 import { project, SLAB_DEPTH, type ScreenPoint } from './iso';
-import {
-  BUILDING_HALF_WIDTH,
-  BUILDING_HEIGHT,
-  buildBuildings,
-  MapGroundLayer,
-} from './MapGroundLayer';
+import { BUILDING_HALF_WIDTH, BUILDING_HEIGHT, buildBuildings } from './ground';
+import { MapGroundLayer } from './MapGroundLayer';
 import { MapMarkers } from './MapMarkers';
 import { buildAreaZones } from './zones';
 import { useMapViewport, type Bounds } from './useMapViewport';
