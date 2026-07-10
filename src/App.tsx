@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { TabBar } from './components/TabBar';
 import { umedaMap } from './data/map';
@@ -18,11 +18,12 @@ export default function App() {
   const { t, i18n } = useTranslation();
   const graph = useMemo(() => buildGraph(umedaMap), []);
   const nav = useMapNavigation();
+  const [avoidStairs, setAvoidStairs] = useState(false);
 
   const route = useMemo(() => {
     if (nav.currentNodeId === null || nav.destination === null) return null;
-    return findRoute(graph, nav.currentNodeId, nav.destination.nodeId);
-  }, [graph, nav.currentNodeId, nav.destination]);
+    return findRoute(graph, nav.currentNodeId, nav.destination.nodeId, { avoidStairs });
+  }, [graph, nav.currentNodeId, nav.destination, avoidStairs]);
 
   const currentName = useMemo(() => {
     if (nav.currentNodeId === null) return null;
@@ -103,8 +104,10 @@ export default function App() {
             toNodeId={nav.destination.nodeId}
             destinationLabel={nav.destination.name}
             aboveGround={nav.destination.aboveGround}
+            avoidStairs={avoidStairs}
+            onToggleAvoidStairs={() => setAvoidStairs((v) => !v)}
             onLost={nav.markLost}
-            onNewSearch={nav.clearDestination}
+            onFinish={nav.clearDestination}
           />
         </div>
       )}

@@ -76,6 +76,12 @@ export const ja = {
       '「{{name}}」は地上です。「{{exit}}」まで案内するので、そこから地上へ上がってください。',
     notFound: '経路が見つかりませんでした',
     newSearch: '別の目的地を探す',
+    eta: '到着まで 約{{minutes}}分・{{distance}}m',
+    avoidStairs: '階段を避ける',
+    finish: '終了',
+    floorNow: '現在:{{floor}}',
+    floorNext: '次:{{floor}}',
+    estimateNote: '現在地は開始時の推定位置です。ずれてきたら「迷った」で再測位してください。',
   },
   lost: {
     button: '迷った',

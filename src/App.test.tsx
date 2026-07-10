@@ -37,7 +37,8 @@ describe('App map-first user flow', () => {
     expect(screen.getByRole('dialog', { name: '道案内' })).toBeInTheDocument();
     expect(screen.getByText(/目的地: HEP FIVE（赤い観覧車）/)).toBeInTheDocument();
     expect(screen.getByText(/地上です/)).toBeInTheDocument();
-    expect(screen.getByText(/合計 約\d+m/)).toBeInTheDocument();
+    expect(screen.getByText(/到着まで 約\d+分・\d+m/)).toBeInTheDocument();
+    expect(screen.getByTestId('next-step')).toBeInTheDocument();
     expect(screen.getByTestId('map-route')).toBeInTheDocument();
 
     // 6. 迷ったボタンで位置確定シートに戻る

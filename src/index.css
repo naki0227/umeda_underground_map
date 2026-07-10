@@ -522,7 +522,29 @@ button.candidate:hover {
 
 .steps li {
   display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 6px 8px;
+  border-radius: var(--radius);
+}
+
+.steps li.current {
+  background: var(--accent-soft);
+  border: 1px solid var(--accent);
+}
+
+.step-icon {
+  font-size: 1.1rem;
+  color: var(--accent-strong);
+  flex-shrink: 0;
+  width: 1.4em;
+  text-align: center;
+}
+
+.step-body {
+  display: flex;
   flex-direction: column;
+  flex: 1;
 }
 
 .step-distance {
@@ -532,6 +554,71 @@ button.candidate:hover {
 .step-action {
   font-weight: 600;
   color: var(--text-strong);
+}
+
+.floor-move {
+  flex-shrink: 0;
+  padding: 1px 8px;
+  border-radius: 999px;
+  background: var(--warn-soft);
+  border: 1px solid var(--warn);
+  color: var(--warn);
+  font-size: 0.75rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.next-step-card {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 12px 0 8px;
+  padding: 14px 16px;
+  background: var(--accent-strong);
+  color: #ffffff;
+  border-radius: 14px;
+  box-shadow: 0 4px 14px rgba(47, 143, 174, 0.35);
+}
+
+.next-icon {
+  font-size: 1.8rem;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.next-body {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.next-distance {
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
+.next-action {
+  font-weight: 700;
+  font-size: 1.02rem;
+}
+
+.next-floors {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  flex-shrink: 0;
+}
+
+.next-step-card .floor-badge {
+  background: rgba(255, 255, 255, 0.22);
+}
+
+.next-step-card .floor-badge.to {
+  background: var(--warn);
+}
+
+.total.eta {
+  font-size: 1.02rem;
 }
 
 .route-actions {

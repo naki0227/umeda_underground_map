@@ -80,6 +80,13 @@ export const en: Resource = {
       '{{name}} is above ground. We guide you to {{exit}} — go up to street level from there.',
     notFound: 'No route found',
     newSearch: 'Choose another destination',
+    eta: 'Arrive in approx. {{minutes}} min / {{distance}}m',
+    avoidStairs: 'Avoid stairs',
+    finish: 'End',
+    floorNow: 'Now: {{floor}}',
+    floorNext: 'Next: {{floor}}',
+    estimateNote:
+      'Your position is the estimate from when guidance started. Tap "I\'m lost" if it drifts.',
   },
   lost: {
     button: "I'm lost",

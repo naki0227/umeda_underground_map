@@ -28,14 +28,13 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
     [graph],
   );
 
-  /** よく使う目印: 広場・改札をチップで即選択できるようにする */
-  const quickPicks = useMemo(
-    () =>
-      [...graph.nodes.values()]
-        .filter((n) => n.kind === 'landmark' || n.kind === 'gate')
-        .slice(0, QUICK_PICK_COUNT),
-    [graph],
-  );
+  /** よく使う目印: 広場（ランドマーク）を先頭に、続けて改札をチップで出す */
+  const quickPicks = useMemo(() => {
+    const nodes = [...graph.nodes.values()];
+    const landmarks = nodes.filter((n) => n.kind === 'landmark');
+    const gates = nodes.filter((n) => n.kind === 'gate');
+    return [...landmarks, ...gates].slice(0, QUICK_PICK_COUNT);
+  }, [graph]);
 
   const filteredShops = useMemo(() => {
     const query = shopQuery.trim().toLowerCase();
