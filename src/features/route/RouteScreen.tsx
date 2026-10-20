@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import {
   ABOVE_GROUND_MIN_STRAIGHT_M,
@@ -12,6 +12,7 @@ import type { Graph } from '../../domain/graph';
 import { findRoute, routeUsesStairs } from '../../domain/route';
 import { nodeFloor, type LocalizedText, type NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
+import { useSpeech } from './useSpeech';
 
 interface Props {
   graph: Graph;
@@ -152,6 +153,24 @@ export function RouteScreen({
       : 0;
   const selectStep = (index: number) => onStepChange?.(index);
 
+  // 音声案内: オンの間、表示中の「次の動作」を読み上げる（ステップが変わるたび）
+  const speech = useSpeech();
+  const [voiceOn, setVoiceOn] = useState(false);
+  const spokenText =
+    next === null
+      ? null
+      : t('route.spokenStep', {
+          go: t('route.stepGo', { distance: next.distanceM }),
+          action: actionText(next),
+        });
+  useEffect(() => {
+    if (voiceOn && spokenText !== null) speech.speak(spokenText, i18n.language);
+  }, [voiceOn, spokenText, speech, i18n.language]);
+  const toggleVoice = () => {
+    if (voiceOn) speech.cancel();
+    setVoiceOn((on) => !on);
+  };
+
   return (
     <section>
       <div className="sheet-header">
@@ -164,6 +183,16 @@ export function RouteScreen({
         >
           {t('route.avoidStairs')}
         </button>
+        {speech.supported && (
+          <button
+            type="button"
+            className={voiceOn ? 'chip active' : 'chip'}
+            aria-pressed={voiceOn}
+            onClick={toggleVoice}
+          >
+            {t('route.voice')}
+          </button>
+        )}
         <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>
           ×
         </button>
