@@ -22,6 +22,7 @@ export const zh: Resource = {
     gpsFailed: '无法获取位置信息（地下容易失败）',
     shopsLabel: '附近能看到的店铺（可多选）',
     shopsPlaceholder: '搜索店名',
+    shopsHint: '输入店名的一部分即可显示候选',
     locateButton: '推测当前位置',
     quickLabel: '从常用地标中选择（点击）',
     estimatedTitle: '推测位置',
@@ -146,6 +147,12 @@ export const zh: Resource = {
     resetView: '显示全部',
     legendUnderground: '地下街',
     legendGround: '地面',
+  },
+  attribution: {
+    title: '数据来源',
+    osm: '通道、出口、地下店铺和地面景点的位置：',
+    official:
+      '部分店名参考了各地下街官方网站（Whity梅田、Diamor大阪、阪急三番街、ekimo梅田、堂岛地下中心）的公开信息。',
   },
   language: {
     label: '语言',

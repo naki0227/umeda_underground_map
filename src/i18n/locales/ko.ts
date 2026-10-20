@@ -22,6 +22,7 @@ export const ko: Resource = {
     gpsFailed: '위치 정보를 가져오지 못했습니다 (지하에서는 실패하기 쉽습니다)',
     shopsLabel: '근처에 보이는 가게 (여러 개 선택 가능)',
     shopsPlaceholder: '가게 이름 검색',
+    shopsHint: '가게 이름의 일부를 입력하면 후보가 표시됩니다',
     locateButton: '현재 위치 추정',
     quickLabel: '자주 쓰는 랜드마크에서 선택 (탭)',
     estimatedTitle: '추정 위치',
@@ -151,6 +152,12 @@ export const ko: Resource = {
     resetView: '전체 보기',
     legendUnderground: '지하상가',
     legendGround: '지상',
+  },
+  attribution: {
+    title: '데이터 출처',
+    osm: '통로·출구·지하 가게·지상 장소의 위치:',
+    official:
+      '일부 가게 이름은 각 지하상가 공식 웹사이트(화이티 우메다, 디아모르 오사카, 한큐 산반가이, ekimo 우메다, 도지마 지하센터)의 정보를 참고했습니다.',
   },
   language: {
     label: '언어',

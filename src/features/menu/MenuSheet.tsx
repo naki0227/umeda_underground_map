@@ -27,6 +27,17 @@ export function MenuSheet({ dataVersion, onClose }: Props) {
       </div>
       <ReportLink />
       <p className="hint">{t('app.dataVersionNote', { version: dataVersion })}</p>
+      <div className="attribution" data-testid="attribution">
+        <h3>{t('attribution.title')}</h3>
+        <p className="hint">
+          {t('attribution.osm')}{' '}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+            © OpenStreetMap contributors
+          </a>{' '}
+          (ODbL)
+        </p>
+        <p className="hint">{t('attribution.official')}</p>
+      </div>
     </BottomSheet>
   );
 }
