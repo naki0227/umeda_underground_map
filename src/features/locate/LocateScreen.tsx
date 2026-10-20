@@ -12,6 +12,8 @@ interface Props {
   pois: Poi[];
   /** 「迷った」から開いたとき true。再測位の説明を出す */
   lost?: boolean;
+  /** 起動時に取れた GPS 位置。あれば位置推定のヒントに使う */
+  initialGps?: { lat: number; lng: number } | null;
   onConfirm: (nodeId: NodeId) => void;
 }
 
@@ -22,8 +24,17 @@ interface Props {
 type EntranceKey = '' | `poi:${string}` | `node:${string}`;
 
 const QUICK_PICK_COUNT = 8;
+/** 店の候補は数百件あるため、入力した文字に合うものだけをこの件数まで出す */
+const MAX_SHOP_RESULTS = 30;
 
-export function LocateScreen({ graph, shops, pois, lost = false, onConfirm }: Props) {
+export function LocateScreen({
+  graph,
+  shops,
+  pois,
+  lost = false,
+  initialGps = null,
+  onConfirm,
+}: Props) {
   const { t, i18n } = useTranslation();
   const gps = useGeolocation();
   const [entranceKey, setEntranceKey] = useState<EntranceKey>('');
@@ -60,13 +71,19 @@ export function LocateScreen({ graph, shops, pois, lost = false, onConfirm }: Pr
     return [...landmarks, ...gates].slice(0, QUICK_PICK_COUNT);
   }, [graph]);
 
+  /** 選んだ店（常に表示）＋ 入力に合う店（最大 MAX_SHOP_RESULTS 件） */
   const filteredShops = useMemo(() => {
     const query = shopQuery.trim().toLowerCase();
-    if (query === '') return shops;
-    return shops.filter(
-      (s) => s.name.ja.toLowerCase().includes(query) || s.name.en.toLowerCase().includes(query),
-    );
-  }, [shops, shopQuery]);
+    const selected = shops.filter((s) => selectedShopIds.includes(s.id));
+    if (query === '') return selected;
+    const matches = shops
+      .filter((s) => !selectedShopIds.includes(s.id))
+      .filter(
+        (s) => s.name.ja.toLowerCase().includes(query) || s.name.en.toLowerCase().includes(query),
+      )
+      .slice(0, MAX_SHOP_RESULTS);
+    return [...selected, ...matches];
+  }, [shops, shopQuery, selectedShopIds]);
 
   const toggleShop = (shopId: string) => {
     setSelectedShopIds((prev) =>
@@ -77,7 +94,7 @@ export function LocateScreen({ graph, shops, pois, lost = false, onConfirm }: Pr
   const runLocate = () => {
     const result = locate(graph, shops, {
       entranceNodeId: entranceNodeId === '' ? undefined : entranceNodeId,
-      gps: gps.position ?? undefined,
+      gps: gps.position ?? initialGps ?? undefined,
       nearbyShopIds: selectedShopIds,
     });
     setCandidates(result);
@@ -163,6 +180,9 @@ export function LocateScreen({ graph, shops, pois, lost = false, onConfirm }: Pr
           placeholder={t('locate.shopsPlaceholder')}
           onChange={(e) => setShopQuery(e.target.value)}
         />
+        {shopQuery.trim() === '' && selectedShopIds.length === 0 && (
+          <p className="hint">{t('locate.shopsHint')}</p>
+        )}
         <ul className="choice-list">
           {filteredShops.map((shop) => (
             <li key={shop.id}>

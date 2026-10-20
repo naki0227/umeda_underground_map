@@ -27,6 +27,9 @@ jobs:
         run: npm ci
       - name: Build
         run: npm run build
+        env:
+          # 独自ドメインを使う場合はリポジトリ変数 BASE_PATH に / を設定する（docs/DEPLOY.md）
+          BASE_PATH: ${{ vars.BASE_PATH || '/umeda_underground_map/' }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

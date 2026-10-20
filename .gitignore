@@ -23,3 +23,6 @@ dist-ssr
 *.sln
 *.sw?
 .claude/USER_CONTEXT.md
+
+# OpenStreetMap の抽出データ（scripts/osm/README.md）
+.osm/
