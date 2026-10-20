@@ -41,6 +41,43 @@ export function fitViewBox(bounds: Bounds, pixel: { width: number; height: numbe
   return { x: cx - w / 2, y: cy - h / 2, w, h };
 }
 
+/** 画面のうち地図が隠れずに見える縦の範囲（上下から隠れる割合） */
+export interface ViewInsets {
+  top: number;
+  bottom: number;
+}
+
+export interface Rect {
+  minX: number;
+  minY: number;
+  maxX: number;
+  maxY: number;
+}
+
+/** 矩形のまわりに取る余白（矩形の大きさに対する割合） */
+const FIT_PADDING_RATIO = 0.15;
+
+/**
+ * 矩形（経路や区間）が、上下の UI に隠れない範囲にちょうど収まる表示範囲。
+ * 小さすぎる矩形は最大拡大（minWidth）で止め、大きすぎる場合は maxWidth まで。
+ */
+export function fitRectViewBox(
+  rect: Rect,
+  pixel: { width: number; height: number },
+  insets: ViewInsets,
+  limits: { minWidth: number; maxWidth: number },
+): ViewBox {
+  const aspect = pixel.height / pixel.width;
+  const band = Math.max(0.2, 1 - insets.top - insets.bottom);
+  const rw = (rect.maxX - rect.minX) * (1 + FIT_PADDING_RATIO * 2);
+  const rh = (rect.maxY - rect.minY) * (1 + FIT_PADDING_RATIO * 2);
+  const w = Math.min(limits.maxWidth, Math.max(limits.minWidth, rw, rh / band / aspect));
+  const h = w * aspect;
+  const cx = (rect.minX + rect.maxX) / 2;
+  const cy = (rect.minY + rect.maxY) / 2;
+  return { x: cx - w / 2, y: cy - h * (insets.top + band / 2), w, h };
+}
+
 /**
  * SVGマップのパン・ズーム（ドラッグ / ホイール / ピンチ / ボタン）を管理する。
  * ドラッグ直後のクリックをピン選択と誤認しないよう isDragging も提供する。
@@ -149,9 +186,24 @@ export function useMapViewport(bounds: Bounds) {
   const isDragging = useCallback(() => dragged.current, []);
   const zoomIn = useCallback(() => zoomBy(0.75), [zoomBy]);
   const zoomOut = useCallback(() => zoomBy(1.33), [zoomBy]);
-  /** 表示倍率はそのままで、指定したスクリーン座標を中心に寄せる */
-  const centerOn = useCallback((point: { px: number; py: number }) => {
-    setViewBox((vb) => ({ ...vb, x: point.px - vb.w / 2, y: point.py - vb.h / 2 }));
+  /** 矩形が上下の UI に隠れずに収まるよう、拡大率と位置を合わせる */
+  const fitRect = useCallback(
+    (rect: Rect, insets: ViewInsets) =>
+      setViewBox(
+        fitRectViewBox(rect, pixelSize, insets, {
+          minWidth: MIN_WIDTH_M,
+          maxWidth: bounds.width * MAX_SCALE_FACTOR,
+        }),
+      ),
+    [pixelSize, bounds.width],
+  );
+
+  /**
+   * 表示倍率はそのままで、指定したスクリーン座標が見えるように寄せる。
+   * anchorY は表示領域の上から何割の高さに置くか（下にシートがあるときは小さくする）。
+   */
+  const centerOn = useCallback((point: { px: number; py: number }, anchorY = 0.5) => {
+    setViewBox((vb) => ({ ...vb, x: point.px - vb.w / 2, y: point.py - vb.h * anchorY }));
   }, []);
   const reset = useCallback(() => setViewBox(fitViewBox(bounds, pixelSize)), [bounds, pixelSize]);
 
@@ -167,5 +219,6 @@ export function useMapViewport(bounds: Bounds) {
     zoomOut,
     reset,
     centerOn,
+    fitRect,
   };
 }

@@ -13,11 +13,34 @@ export interface MapPoint {
 const METERS_PER_DEG_LAT = 111_320;
 
 /**
- * 緯度経度 → マップ平面座標（x=東 / y=北、メートル相当）の変換。
+ * マップ平面座標の原点（JR大阪駅 御堂筋口付近）。x=東, y=北 のメートル。
+ * scripts/osm/overlay.mjs の ORIGIN と同じ値にすること。
+ */
+export const PLANE_ORIGIN: LatLng = { lat: 34.7025, lng: 135.4959 };
+
+/**
+ * 緯度経度 → マップ平面座標（正距円筒図法の近似。梅田の範囲なら誤差は数cm）。
+ * マップデータの x, y はすべてこれで計算する。
+ */
+export function projectToPlane(p: LatLng): MapPoint {
+  const cos0 = Math.cos((PLANE_ORIGIN.lat * Math.PI) / 180);
+  return {
+    x: (p.lng - PLANE_ORIGIN.lng) * METERS_PER_DEG_LAT * cos0,
+    y: (p.lat - PLANE_ORIGIN.lat) * METERS_PER_DEG_LAT,
+  };
+}
+
+export interface GeoTransform {
+  toMap: (p: LatLng) => MapPoint;
+  toGeo: (p: MapPoint) => LatLng;
+}
+
+/**
+ * 緯度経度 ⇔ マップ平面座標（x=東 / y=北、メートル相当）の変換。
  * 緯度経度と平面座標の両方を持つノード（出口・改札）から最小二乗で
  * アフィン変換を求める。対応点が3つ未満、または一直線上なら null。
  */
-export function fitGeoToMap(nodes: MapNode[]): ((p: LatLng) => MapPoint) | null {
+export function fitGeoTransform(nodes: MapNode[]): GeoTransform | null {
   const pairs = nodes.filter(
     (n): n is MapNode & LatLng => n.lat !== undefined && n.lng !== undefined,
   );
@@ -53,9 +76,22 @@ export function fitGeoToMap(nodes: MapNode[]): ((p: LatLng) => MapPoint) | null 
   const wy = solve3(ata, aty);
   if (wx === null || wy === null) return null;
 
-  return (p: LatLng) => {
-    const { e, n } = local(p);
-    return { x: wx[0] * e + wx[1] * n + wx[2], y: wy[0] * e + wy[1] * n + wy[2] };
+  // 逆変換: [x - cx, y - cy] = M [e, n] を解く
+  const det = wx[0] * wy[1] - wx[1] * wy[0];
+  if (Math.abs(det) < 1e-12) return null;
+
+  return {
+    toMap: (p: LatLng) => {
+      const { e, n } = local(p);
+      return { x: wx[0] * e + wx[1] * n + wx[2], y: wy[0] * e + wy[1] * n + wy[2] };
+    },
+    toGeo: (p: MapPoint) => {
+      const dx = p.x - wx[2];
+      const dy = p.y - wy[2];
+      const e = (wy[1] * dx - wx[1] * dy) / det;
+      const n = (-wy[0] * dx + wx[0] * dy) / det;
+      return { lat: lat0 + n / METERS_PER_DEG_LAT, lng: lng0 + e / (METERS_PER_DEG_LAT * cosLat) };
+    },
   };
 }
 

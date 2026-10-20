@@ -1,23 +1,27 @@
-import { useEffect, useMemo, type ReactNode } from 'react';
+import { memo, useEffect, useMemo, useRef, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
 import type { LocalizedText, MapNode, NodeId, Poi, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
+import { detailLevel } from './detail';
+import { buildBuildings } from './ground';
 import { project, SLAB_DEPTH, type ScreenPoint } from './iso';
-import { BUILDING_HALF_WIDTH, BUILDING_HEIGHT, buildBuildings } from './ground';
-import { MapGroundLayer } from './MapGroundLayer';
 import { placeLabels } from './labelLayout';
+import { MapGroundLayer } from './MapGroundLayer';
 import {
   buildMapLabelBoxes,
   chipWidthPx,
   EXIT_BADGE_HEIGHT_PX,
   EXIT_FONT_PX,
   FACILITY_FONT_PX,
+  SHOP_LABEL_FONT_PX,
+  SHOP_LABEL_OFFSET_PX,
 } from './mapLabels';
 import { MapMarkers } from './MapMarkers';
 import { pressable } from './pressable';
+import { routeArrows } from './routeArrows';
+import { useMapViewport, type Bounds, type Rect, type ViewInsets } from './useMapViewport';
 import { buildAreaZones } from './zones';
-import { useMapViewport, type Bounds } from './useMapViewport';
 
 /** マップ上で選択できる「場所」。POI・店・出口/駅を統一的に扱う */
 export interface Place {
@@ -32,8 +36,16 @@ interface Props {
   shops: Shop[];
   pois: Poi[];
   routeNodeIds?: NodeId[];
+  /** 案内中のいまのステップが通るノード。強調表示し、地図をそこへ合わせ、沿道の店名を出す */
+  focusNodeIds?: NodeId[];
   currentNodeId?: NodeId | null;
   destinationNodeId?: NodeId | null;
+  /** 選んでいる場所（場所シートを開いている）。地図をそこへ寄せて目印を出す */
+  selectedNodeId?: NodeId | null;
+  /** 最寄り出口までの点線を出す地上スポット（選択中・目的地） */
+  linkedPoiIds?: string[];
+  /** 画面下のシートが地図を隠している割合（0〜1）。地図を寄せるときに避ける */
+  bottomInset?: number;
   /** GPS による大まかな現在地（マップ平面座標と誤差半径）。表示しないなら null */
   gpsHint?: { x: number; y: number; accuracyM: number } | null;
   /** GPS の大まかな現在地をタップしたとき */
@@ -44,6 +56,14 @@ interface Props {
   onSelectPlace: (place: Place) => void;
 }
 
+/** 画面上部の検索バーが隠す割合 */
+const TOP_INSET = 0.16;
+/** 場所を選んだとき、これより引いた表示（k が大きい）なら寄せて拡大する */
+const SELECT_ZOOM_K = 1.0;
+/** 場所を選んで拡大するときに見せる範囲（マップ単位） */
+const SELECT_VIEW_RADIUS = 110;
+/** 経路の進行方向の矢印の間隔（画面 px） */
+const ARROW_SPACING_PX = 70;
 /** GPS 誤差円の表示上の最小・最大半径（m） */
 const GPS_RADIUS_MIN_M = 20;
 const GPS_RADIUS_MAX_M = 300;
@@ -54,8 +74,8 @@ const ISO_CIRCLE_RY = Math.SQRT2 * 0.5;
 const PADDING = 90;
 
 /*
- * ラベル・バッジ・ピンは画面上で一定サイズ（px）で描く。
- * 以下の寸法はすべて画面 px。<Fixed> の中で unitsPerPixel 倍してマップ座標に置く。
+ * ラベル・バッジ・ピン・建物アイコンは画面上で一定サイズ（px）で描く。
+ * <Fixed> の中の寸法はすべて画面 px で、unitsPerPixel 倍してマップ座標に置く。
  */
 
 /** 同一ノードに複数の店ピンが重ならないよう円周上にずらす（px） */
@@ -70,13 +90,27 @@ function Fixed({ at, k, children }: { at: ScreenPoint; k: number; children: Reac
   return <g transform={`translate(${at.px} ${at.py}) scale(${k})`}>{children}</g>;
 }
 
-export function InteractiveMap({
+function rectOf(points: ScreenPoint[]): Rect | null {
+  if (points.length === 0) return null;
+  return {
+    minX: Math.min(...points.map((p) => p.px)),
+    maxX: Math.max(...points.map((p) => p.px)),
+    minY: Math.min(...points.map((p) => p.py)),
+    maxY: Math.max(...points.map((p) => p.py)),
+  };
+}
+
+function InteractiveMapView({
   graph,
   shops,
   pois,
   routeNodeIds,
+  focusNodeIds,
   currentNodeId,
   destinationNodeId,
+  selectedNodeId = null,
+  linkedPoiIds,
+  bottomInset = 0.1,
   gpsHint = null,
   onSelectGpsHint,
   onLocateGps,
@@ -93,6 +127,8 @@ export function InteractiveMap({
   }, [nodes]);
 
   const at = (id: NodeId) => screenOf.get(id) as ScreenPoint;
+  const pointsOf = (ids: NodeId[]) =>
+    ids.map((id) => screenOf.get(id)).filter((p): p is ScreenPoint => p !== undefined);
 
   const buildings = useMemo(() => buildBuildings(graph, pois), [graph, pois]);
 
@@ -110,8 +146,8 @@ export function InteractiveMap({
       ys.push(py);
     }
     for (const b of buildings) {
-      xs.push(b.base.px - BUILDING_HALF_WIDTH, b.base.px + BUILDING_HALF_WIDTH);
-      ys.push(b.base.py - BUILDING_HEIGHT - BUILDING_HALF_WIDTH);
+      xs.push(b.base.px);
+      ys.push(b.base.py);
     }
     const minX = Math.min(...xs) - PADDING;
     const minY = Math.min(...ys) - PADDING;
@@ -124,7 +160,59 @@ export function InteractiveMap({
   }, [screenOf, buildings]);
 
   const viewport = useMapViewport(bounds);
-  const { centerOn } = viewport;
+  const { centerOn, fitRect } = viewport;
+  const k = viewport.unitsPerPixel;
+  const level = detailLevel(k);
+  const insets: ViewInsets = { top: TOP_INSET, bottom: bottomInset };
+
+  // 地図を寄せる処理は、最新の表示範囲・余白を参照するため ref 経由で呼ぶ
+  const latest = useRef({ k, insets, fitRect, centerOn });
+  latest.current = { k, insets, fitRect, centerOn };
+
+  // 経路が新しく出たら経路全体、ステップを送ったらその区間が収まるように合わせる
+  const routeKey = routeNodeIds?.join('>') ?? '';
+  const focusKey = focusNodeIds?.join('>') ?? '';
+  const shownRouteKey = useRef('');
+  useEffect(() => {
+    const { fitRect: fit, insets: inset } = latest.current;
+    const pointsOfKey = (key: string) =>
+      key
+        .split('>')
+        .map((id) => screenOf.get(id))
+        .filter((p): p is ScreenPoint => p !== undefined);
+    if (routeKey !== '' && routeKey !== shownRouteKey.current) {
+      shownRouteKey.current = routeKey;
+      const rect = rectOf(pointsOfKey(routeKey));
+      if (rect) fit(rect, inset);
+      return;
+    }
+    if (routeKey === '') shownRouteKey.current = '';
+    if (focusKey === '') return;
+    const rect = rectOf(pointsOfKey(focusKey));
+    if (rect) fit(rect, inset);
+  }, [routeKey, focusKey, screenOf]);
+
+  // 場所を選んだら、そこが見えるように寄せる（引きすぎていれば拡大も）
+  useEffect(() => {
+    if (selectedNodeId === null) return;
+    const p = screenOf.get(selectedNodeId);
+    if (!p) return;
+    const { k: currentK, insets: inset, fitRect: fit, centerOn: center } = latest.current;
+    if (currentK > SELECT_ZOOM_K) {
+      fit(
+        {
+          minX: p.px - SELECT_VIEW_RADIUS,
+          maxX: p.px + SELECT_VIEW_RADIUS,
+          minY: p.py - SELECT_VIEW_RADIUS,
+          maxY: p.py + SELECT_VIEW_RADIUS,
+        },
+        inset,
+      );
+    } else {
+      const band = 1 - inset.top - inset.bottom;
+      center(p, inset.top + band / 2);
+    }
+  }, [selectedNodeId, screenOf]);
 
   // GPS の大まかな位置が取れたら、そこが見えるように寄せる
   const gpsX = gpsHint?.x;
@@ -133,6 +221,11 @@ export function InteractiveMap({
     if (gpsX === undefined || gpsY === undefined) return;
     centerOn(project(gpsX, gpsY));
   }, [gpsX, gpsY, centerOn]);
+
+  const fitWholeRoute = () => {
+    const rect = rectOf(pointsOf(routeNodeIds ?? []));
+    if (rect) fitRect(rect, insets);
+  };
 
   /** 通路スラブ。奥→手前の順に描く */
   const slabs = useMemo(() => {
@@ -172,14 +265,43 @@ export function InteractiveMap({
     return result;
   }, [graph, screenOf, t]);
 
-  const routePoints = useMemo(() => {
-    if (!routeNodeIds || routeNodeIds.length < 2) return null;
-    return routeNodeIds
+  const routeScreen = useMemo(
+    () =>
+      routeNodeIds && routeNodeIds.length >= 2
+        ? routeNodeIds
+            .map((id) => screenOf.get(id))
+            .filter((p): p is ScreenPoint => p !== undefined)
+        : null,
+    [routeNodeIds, screenOf],
+  );
+  const routePoints = routeScreen?.map((p) => `${p.px},${p.py}`).join(' ') ?? null;
+  const arrows = useMemo(
+    () => (routeScreen ? routeArrows(routeScreen, ARROW_SPACING_PX * k) : []),
+    [routeScreen, k],
+  );
+
+  const focusPoints = useMemo(() => {
+    if (!focusNodeIds || focusNodeIds.length < 2) return null;
+    return focusNodeIds
       .map((id) => screenOf.get(id))
       .filter((p): p is ScreenPoint => p !== undefined)
       .map((p) => `${p.px},${p.py}`)
       .join(' ');
-  }, [routeNodeIds, screenOf]);
+  }, [focusNodeIds, screenOf]);
+
+  /** 店名を出す店。案内中はいまの区間沿い、詳細表示ではすべて */
+  const labelShops = useMemo(() => {
+    const onSegment = new Set(focusNodeIds ?? []);
+    const focus = shops.filter((shop) => onSegment.has(shop.nodeId));
+    const focusIds = new Set(focus.map((shop) => shop.id));
+    const others =
+      level === 'detail' ? shops.filter((shop) => !focusIds.has(shop.id)) : ([] as Shop[]);
+    return { focus, others };
+  }, [focusNodeIds, shops, level]);
+  const orderedLabelShops = useMemo(
+    () => [...labelShops.focus, ...labelShops.others],
+    [labelShops],
+  );
 
   const shopsByNode = useMemo(() => {
     const groups = new Map<NodeId, Shop[]>();
@@ -201,29 +323,41 @@ export function InteractiveMap({
     () => nodes.filter((n) => n.kind === 'gate' || n.kind === 'landmark'),
     [nodes],
   );
-  const k = viewport.unitsPerPixel;
+  const routeSet = useMemo(() => new Set(routeNodeIds ?? []), [routeNodeIds]);
   const language = i18n.language;
   const nameOf = (text: LocalizedText) => localized(text, language);
   const exitLabel = (node: MapNode) => node.exitNo ?? localized(node.name, language);
+  const linked = useMemo(() => new Set(linkedPoiIds ?? []), [linkedPoiIds]);
 
   /**
-   * 重なるラベルを間引く。優先度: 出口番号 > 建物名 > 改札・広場名 > エリア名。
+   * 重なるラベルを間引く。優先度: 出口番号 > 案内中の店名 > 建物名 > 広場・改札名 >
+   * 設備 > 店名（詳細表示）> エリア名。全体表示では出口番号は出さない（点だけ）。
    * 画面 px での判定なので、ズーム倍率（k）が変わったときだけ計算し直す。
    */
   const visibleLabels = useMemo(() => {
+    const toLabel = (shop: Shop) => ({
+      id: shop.id,
+      name: shop.name,
+      at: screenOf.get(shop.nodeId) as ScreenPoint,
+    });
     const boxes = buildMapLabelBoxes({
       k,
       language,
-      exits,
+      exits: level === 'overview' ? [] : exits,
       pins,
       screenOf,
       buildings,
-      facilities,
+      facilities: level === 'overview' ? [] : facilities,
       zones,
       areaName: (area) => t(`area.${area}`),
+      focusShops: labelShops.focus.map(toLabel),
+      otherShops: labelShops.others.map(toLabel),
     });
     return placeLabels(boxes);
-  }, [k, exits, pins, screenOf, buildings, facilities, zones, language, t]);
+  }, [k, level, exits, pins, screenOf, buildings, facilities, zones, labelShops, language, t]);
+
+  const hasRoute = routePoints !== null;
+  const selectedPoint = selectedNodeId !== null ? screenOf.get(selectedNodeId) : undefined;
 
   return (
     <div className="interactive-map">
@@ -233,6 +367,8 @@ export function InteractiveMap({
         role="group"
         aria-label={t('map.title')}
         data-testid="map-view"
+        data-detail={level}
+        className={hasRoute ? 'has-route' : undefined}
         {...viewport.handlers}
       >
         {/* エリアの地下ゾーン */}
@@ -255,62 +391,117 @@ export function InteractiveMap({
           ))}
 
         {/* 地下フロア: 通路スラブ（側面→上面） */}
-        {slabs.map(({ key, a, b }) => (
-          <polygon
-            key={`side-${key}`}
-            className="map-edge-side"
-            points={`${a.px},${a.py} ${b.px},${b.py} ${b.px},${b.py + SLAB_DEPTH} ${a.px},${a.py + SLAB_DEPTH}`}
-          />
-        ))}
-        {slabs.map(({ key, a, b }) => (
-          <line key={`top-${key}`} className="map-edge" x1={a.px} y1={a.py} x2={b.px} y2={b.py} />
-        ))}
-        {routePoints !== null && (
-          <polyline className="map-route" points={routePoints} data-testid="map-route" />
-        )}
-        {nodes
-          .filter((n) => n.kind === 'junction')
-          .map((node) => (
-            <Fixed key={node.id} at={at(node.id)} k={k}>
-              <ellipse className="map-node" rx={4} ry={2.5} />
-            </Fixed>
+        <g className="map-network">
+          {slabs.map(({ key, a, b }) => (
+            <polygon
+              key={`side-${key}`}
+              className="map-edge-side"
+              points={`${a.px},${a.py} ${b.px},${b.py} ${b.px},${b.py + SLAB_DEPTH} ${a.px},${a.py + SLAB_DEPTH}`}
+            />
           ))}
-        {facilities
-          .filter(({ key }) => visibleLabels.has(`facility:${key}`))
-          .map(({ key, label, mid }) => {
-            const width = chipWidthPx(label, FACILITY_FONT_PX);
-            return (
-              <Fixed key={key} at={mid} k={k}>
-                <g className="map-facility">
-                  <rect x={-width / 2} y={-8} width={width} height={16} rx={8} />
-                  <text y={4}>{label}</text>
-                </g>
+          {slabs.map(({ key, a, b }) => (
+            <line key={`top-${key}`} className="map-edge" x1={a.px} y1={a.py} x2={b.px} y2={b.py} />
+          ))}
+        </g>
+        {routePoints !== null && (
+          <>
+            <polyline
+              className="map-route-casing"
+              points={routePoints}
+              vectorEffect="non-scaling-stroke"
+            />
+            <polyline
+              className="map-route"
+              points={routePoints}
+              data-testid="map-route"
+              vectorEffect="non-scaling-stroke"
+            />
+          </>
+        )}
+        {focusPoints !== null && (
+          <polyline
+            className="map-route-focus"
+            points={focusPoints}
+            data-testid="map-route-focus"
+            vectorEffect="non-scaling-stroke"
+          />
+        )}
+        {arrows.map(({ at: p, angleDeg }, index) => (
+          <g
+            key={`arrow-${index}`}
+            className="map-route-arrow"
+            data-testid="map-route-arrow"
+            transform={`translate(${p.px} ${p.py}) rotate(${angleDeg}) scale(${k})`}
+          >
+            <path d="M -4 -5 L 3 0 L -4 5" />
+          </g>
+        ))}
+        {level === 'detail' &&
+          nodes
+            .filter((n) => n.kind === 'junction')
+            .map((node) => (
+              <Fixed key={node.id} at={at(node.id)} k={k}>
+                <ellipse className="map-node" rx={4} ry={2.5} />
               </Fixed>
-            );
+            ))}
+        {level !== 'overview' &&
+          facilities
+            .filter(({ key }) => visibleLabels.has(`facility:${key}`))
+            .map(({ key, label, mid }) => {
+              const width = chipWidthPx(label, FACILITY_FONT_PX);
+              return (
+                <Fixed key={key} at={mid} k={k}>
+                  <g className="map-facility">
+                    <rect x={-width / 2} y={-8} width={width} height={16} rx={8} />
+                    <text y={4}>{label}</text>
+                  </g>
+                </Fixed>
+              );
+            })}
+        {level !== 'overview' &&
+          [...shopsByNode.entries()].flatMap(([nodeId, group]) => {
+            const p = screenOf.get(nodeId);
+            if (!p) return [];
+            return group.map((shop, index) => {
+              const { dx, dy } = shopOffset(index, group.length);
+              return (
+                <Fixed key={shop.id} at={p} k={k}>
+                  <ellipse
+                    className="map-shop-pin"
+                    data-shop-id={shop.id}
+                    cx={dx}
+                    cy={dy}
+                    rx={6}
+                    ry={3.5}
+                    {...pressable(nameOf(shop.name), () =>
+                      pick({ nodeId, name: shop.name, aboveGround: false }),
+                    )}
+                  >
+                    <title>{nameOf(shop.name)}</title>
+                  </ellipse>
+                </Fixed>
+              );
+            });
           })}
-        {[...shopsByNode.entries()].flatMap(([nodeId, group]) => {
-          const p = screenOf.get(nodeId);
-          if (!p) return [];
-          return group.map((shop, index) => {
-            const { dx, dy } = shopOffset(index, group.length);
-            return (
-              <Fixed key={shop.id} at={p} k={k}>
-                <ellipse
-                  className="map-shop-pin"
-                  data-shop-id={shop.id}
-                  cx={dx}
-                  cy={dy}
-                  rx={6}
-                  ry={3.5}
-                  {...pressable(nameOf(shop.name), () =>
-                    pick({ nodeId, name: shop.name, aboveGround: false }),
-                  )}
-                >
-                  <title>{nameOf(shop.name)}</title>
-                </ellipse>
-              </Fixed>
-            );
-          });
+        {orderedLabelShops.map((shop, index) => {
+          // 同じノードの店名は縦に並べる（mapLabels の判定と同じ並び）
+          const row = orderedLabelShops
+            .slice(0, index)
+            .filter((other) => other.nodeId === shop.nodeId).length;
+          if (!visibleLabels.has(`shop:${shop.id}`)) return null;
+          return (
+            <Fixed key={`label-${shop.id}`} at={screenOf.get(shop.nodeId) as ScreenPoint} k={k}>
+              <text
+                className="map-shop-label"
+                data-testid="map-shop-label"
+                x={SHOP_LABEL_OFFSET_PX.x}
+                y={SHOP_LABEL_OFFSET_PX.y + row * (SHOP_LABEL_FONT_PX + 4)}
+                pointerEvents="none"
+              >
+                {nameOf(shop.name)}
+              </text>
+            </Fixed>
+          );
         })}
         {pins.map((node) => (
           <Fixed key={node.id} at={at(node.id)} k={k}>
@@ -334,10 +525,14 @@ export function InteractiveMap({
           const label = exitLabel(node);
           const width = chipWidthPx(label, EXIT_FONT_PX);
           const showBadge = visibleLabels.has(`exit:${node.id}`);
+          const onRoute = routeSet.has(node.id);
+          const classes = ['map-exit-badge'];
+          if (!showBadge) classes.push('compact');
+          if (onRoute) classes.push('on-route');
           return (
             <Fixed key={node.id} at={at(node.id)} k={k}>
               <g
-                className={showBadge ? 'map-exit-badge' : 'map-exit-badge compact'}
+                className={classes.join(' ')}
                 data-node-id={node.id}
                 {...pressable(
                   node.exitNo !== undefined
@@ -360,7 +555,11 @@ export function InteractiveMap({
                     </text>
                   </>
                 ) : (
-                  <circle r={5} />
+                  <>
+                    {/* 小さな点でも押せるよう、透明な当たり判定を広めに取る */}
+                    <circle className="hit-area" r={11} />
+                    <circle r={level === 'overview' ? 3.5 : 5} />
+                  </>
                 )}
                 <title>{nameOf(node.name)}</title>
               </g>
@@ -372,8 +571,16 @@ export function InteractiveMap({
           buildings={buildings}
           unitsPerPixel={k}
           visibleLabelIds={visibleLabels}
+          linkedPoiIds={linked}
           onPick={pick}
         />
+        {selectedPoint !== undefined && (
+          <Fixed at={selectedPoint} k={k}>
+            <g className="selection-ring" data-testid="map-selection" pointerEvents="none">
+              <ellipse rx={20} ry={12} />
+            </g>
+          </Fixed>
+        )}
         {gpsHint !== null && (
           <GpsHint hint={gpsHint} k={k} label={t('map.gpsHint')} onSelect={onSelectGpsHint} />
         )}
@@ -392,6 +599,12 @@ export function InteractiveMap({
           <i className="swatch ground" />
           {t('map.legendGround')}
         </span>
+        {hasRoute && (
+          <span>
+            <i className="swatch route" />
+            {t('map.legendRoute')}
+          </span>
+        )}
       </div>
       <div className="map-zoom-controls">
         <button type="button" aria-label={t('map.zoomIn')} onClick={viewport.zoomIn}>
@@ -400,6 +613,11 @@ export function InteractiveMap({
         <button type="button" aria-label={t('map.zoomOut')} onClick={viewport.zoomOut}>
           −
         </button>
+        {hasRoute && (
+          <button type="button" aria-label={t('map.fitRoute')} onClick={fitWholeRoute}>
+            ⤢
+          </button>
+        )}
         {onLocateGps !== undefined && (
           <button
             type="button"
@@ -418,6 +636,12 @@ export function InteractiveMap({
     </div>
   );
 }
+
+/**
+ * 全画面マップ。要素が多い（数百のピン・ラベル）ため、props が変わらない限り
+ * 描き直さない（シートの開閉などで App が再描画されても地図はそのまま）。
+ */
+export const InteractiveMap = memo(InteractiveMapView);
 
 /** GPS による大まかな現在地: 誤差円（地面の円を投影した楕円）と中心点 */
 function GpsHint({

@@ -142,3 +142,15 @@ export function buildSteps(graph: Graph, route: Route): RouteStep[] {
 
   return steps;
 }
+
+/**
+ * ステップが通るノード列（起点〜動作地点）。地図で「いまの区間」を
+ * 強調するのに使う。経路上に見つからなければ動作地点だけを返す。
+ */
+export function stepNodeIds(route: Route, step: RouteStep): NodeId[] {
+  const start = route.nodeIds.indexOf(step.fromNodeId);
+  if (start === -1) return [step.atNodeId];
+  const end = route.nodeIds.indexOf(step.atNodeId, start);
+  if (end === -1) return [step.atNodeId];
+  return route.nodeIds.slice(start, end + 1);
+}

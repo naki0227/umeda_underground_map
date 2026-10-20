@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fitGeoToMap, nearestNode } from '../geo';
+import { fitGeoTransform, nearestNode } from '../geo';
 import type { MapNode } from '../types';
 
 const node = (id: string, x: number, y: number, lat?: number, lng?: number): MapNode => ({
@@ -22,28 +22,35 @@ const anchors = [
   node('d', 91.5, 111.3, 34.701, 135.501),
 ];
 
-describe('fitGeoToMap', () => {
+describe('fitGeoTransform', () => {
   it('maps lat/lng onto plane coordinates fitted from anchor nodes', () => {
-    const toMap = fitGeoToMap(anchors);
-    expect(toMap).not.toBeNull();
-    const p = toMap?.({ lat: 34.7005, lng: 135.5005 });
+    const transform = fitGeoTransform(anchors);
+    expect(transform).not.toBeNull();
+    const p = transform?.toMap({ lat: 34.7005, lng: 135.5005 });
     expect(p?.x).toBeCloseTo(45.75, 0);
     expect(p?.y).toBeCloseTo(55.65, 0);
   });
 
   it('returns null with fewer than three anchors or collinear anchors', () => {
-    expect(fitGeoToMap(anchors.slice(0, 2))).toBeNull();
+    expect(fitGeoTransform(anchors.slice(0, 2))).toBeNull();
     const collinear = [
       node('a', 0, 0, 34.7, 135.5),
       node('b', 10, 0, 34.7, 135.5001),
       node('c', 20, 0, 34.7, 135.5002),
     ];
-    expect(fitGeoToMap(collinear)).toBeNull();
+    expect(fitGeoTransform(collinear)).toBeNull();
   });
 
   it('ignores nodes without coordinates', () => {
-    const toMap = fitGeoToMap([...anchors, node('j', 500, 500)]);
-    expect(toMap?.({ lat: 34.7, lng: 135.5 }).x).toBeCloseTo(0, 0);
+    const transform = fitGeoTransform([...anchors, node('j', 500, 500)]);
+    expect(transform?.toMap({ lat: 34.7, lng: 135.5 }).x).toBeCloseTo(0, 0);
+  });
+
+  it('converts plane coordinates back to lat/lng', () => {
+    const transform = fitGeoTransform(anchors);
+    const geo = transform?.toGeo({ x: 45.75, y: 55.65 });
+    expect(geo?.lat).toBeCloseTo(34.7005, 5);
+    expect(geo?.lng).toBeCloseTo(135.5005, 5);
   });
 });
 
