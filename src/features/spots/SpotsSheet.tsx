@@ -6,6 +6,7 @@ import { findRoute } from '../../domain/route';
 import type { NodeId, Poi } from '../../domain/types';
 import { localized } from '../../i18n';
 import type { Place } from '../map/InteractiveMap';
+import { BottomSheet } from '../../components/BottomSheet';
 
 interface Props {
   graph: Graph;
@@ -30,7 +31,7 @@ export function SpotsSheet({ graph, pois, currentNodeId, onPick, onClose }: Prop
   }, [pois, graph, currentNodeId]);
 
   return (
-    <div className="sheet" role="dialog" aria-label={t('spots.title')}>
+    <BottomSheet label={t('spots.title')}>
       <div className="sheet-header">
         <h2>{t('spots.title')}</h2>
         <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>
@@ -59,6 +60,6 @@ export function SpotsSheet({ graph, pois, currentNodeId, onPick, onClose }: Prop
           </li>
         ))}
       </ul>
-    </div>
+    </BottomSheet>
   );
 }

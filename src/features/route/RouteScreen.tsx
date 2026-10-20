@@ -1,11 +1,18 @@
-import { useMemo } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { WALK_SPEED_M_PER_MIN } from '../../app/config';
+import {
+  ABOVE_GROUND_MIN_STRAIGHT_M,
+  ABOVE_GROUND_SUGGEST_RATIO,
+  WALK_SPEED_M_PER_MIN,
+} from '../../app/config';
+import { googleMapsWalkingUrl, shouldSuggestAboveGround } from '../../domain/aboveGround';
 import { buildSteps, type RouteStep } from '../../domain/directions';
+import { fitGeoTransform, type LatLng } from '../../domain/geo';
 import type { Graph } from '../../domain/graph';
-import { findRoute } from '../../domain/route';
+import { findRoute, routeUsesStairs } from '../../domain/route';
 import { nodeFloor, type LocalizedText, type NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
+import { useSpeech } from './useSpeech';
 
 interface Props {
   graph: Graph;
@@ -19,6 +26,12 @@ interface Props {
   onToggleAvoidStairs: () => void;
   onLost: () => void;
   onFinish: () => void;
+  /** 経路シートを閉じて地図を見る（案内は継続） */
+  onClose: () => void;
+  /** いま表示しているステップ（0 始まり）。範囲外は端に丸める */
+  stepIndex?: number;
+  /** 「次へ」「前へ」・一覧のタップでステップを選んだとき */
+  onStepChange?: (index: number) => void;
 }
 
 /** ステップの種類をアイコン1文字で表す */
@@ -47,22 +60,62 @@ export function RouteScreen({
   onToggleAvoidStairs,
   onLost,
   onFinish,
+  onClose,
+  stepIndex = 0,
+  onStepChange,
 }: Props) {
   const { t, i18n } = useTranslation();
 
   const result = useMemo(() => {
     const route = findRoute(graph, fromNodeId, toNodeId, { avoidStairs });
     if (route === null) return null;
-    return { route, steps: buildSteps(graph, route) };
+    return { route, steps: buildSteps(graph, route), usesStairs: routeUsesStairs(graph, route) };
   }, [graph, fromNodeId, toNodeId, avoidStairs]);
+
+  /** 地上の方が近い可能性があるときの比較値と Google マップのリンク */
+  const aboveGroundSuggestion = useMemo(() => {
+    if (result === null) return null;
+    const from = graph.nodes.get(fromNodeId);
+    const to = graph.nodes.get(toNodeId);
+    if (!from || !to) return null;
+    const straightM = Math.hypot(to.x - from.x, to.y - from.y);
+    const undergroundM = result.route.totalDistanceM;
+    const suggest = shouldSuggestAboveGround({
+      undergroundM,
+      straightM,
+      ratio: ABOVE_GROUND_SUGGEST_RATIO,
+      minStraightM: ABOVE_GROUND_MIN_STRAIGHT_M,
+    });
+    if (!suggest) return null;
+    const transform = fitGeoTransform([...graph.nodes.values()]);
+    const geoOf = (node: typeof from): LatLng | null =>
+      node.lat !== undefined && node.lng !== undefined
+        ? { lat: node.lat, lng: node.lng }
+        : (transform?.toGeo(node) ?? null);
+    const origin = geoOf(from);
+    const destination = geoOf(to);
+    if (origin === null || destination === null) return null;
+    return {
+      straightM: Math.round(straightM),
+      undergroundM: Math.round(undergroundM),
+      url: googleMapsWalkingUrl(origin, destination),
+    };
+  }, [graph, fromNodeId, toNodeId, result]);
 
   const nodeName = (nodeId: NodeId) => {
     const node = graph.nodes.get(nodeId);
     return node ? localized(node.name, i18n.language) : nodeId;
   };
 
+  const destinationName =
+    destinationLabel !== null ? localized(destinationLabel, i18n.language) : nodeName(toNodeId);
+
   const actionText = (step: RouteStep) => {
-    const name = nodeName(step.atNodeId);
+    // 最終到着は目的地の表示名（店名など）で伝える。地上スポットは出口名のまま
+    const name =
+      step.action === 'arrive' && step.atNodeId === toNodeId && !aboveGround
+        ? destinationName
+        : nodeName(step.atNodeId);
     switch (step.action) {
       case 'left':
         return t('route.actionLeft', { name });
@@ -85,15 +138,38 @@ export function RouteScreen({
     }
   };
 
+  const lastIndex = result !== null ? result.steps.length - 1 : -1;
+  const currentIndex = Math.min(Math.max(stepIndex, 0), Math.max(lastIndex, 0));
+  const next = result !== null && result.steps.length > 0 ? result.steps[currentIndex] : null;
+  /** いまいるフロア = 表示中ステップの起点のフロア */
   const currentFloor = (() => {
-    const node = graph.nodes.get(fromNodeId);
+    const node = graph.nodes.get(next?.fromNodeId ?? fromNodeId);
     return node ? nodeFloor(node) : 'B1';
   })();
+  /** ここから到着までの残り距離 */
+  const remainingM =
+    result !== null
+      ? result.steps.slice(currentIndex).reduce((sum, step) => sum + step.distanceM, 0)
+      : 0;
+  const selectStep = (index: number) => onStepChange?.(index);
 
-  const destinationName =
-    destinationLabel !== null ? localized(destinationLabel, i18n.language) : nodeName(toNodeId);
-
-  const next = result !== null && result.steps.length > 0 ? result.steps[0] : null;
+  // 音声案内: オンの間、表示中の「次の動作」を読み上げる（ステップが変わるたび）
+  const speech = useSpeech();
+  const [voiceOn, setVoiceOn] = useState(false);
+  const spokenText =
+    next === null
+      ? null
+      : t('route.spokenStep', {
+          go: t('route.stepGo', { distance: next.distanceM }),
+          action: actionText(next),
+        });
+  useEffect(() => {
+    if (voiceOn && spokenText !== null) speech.speak(spokenText, i18n.language);
+  }, [voiceOn, spokenText, speech, i18n.language]);
+  const toggleVoice = () => {
+    if (voiceOn) speech.cancel();
+    setVoiceOn((on) => !on);
+  };
 
   return (
     <section>
@@ -102,9 +178,23 @@ export function RouteScreen({
         <button
           type="button"
           className={avoidStairs ? 'chip active' : 'chip'}
+          aria-pressed={avoidStairs}
           onClick={onToggleAvoidStairs}
         >
           {t('route.avoidStairs')}
+        </button>
+        {speech.supported && (
+          <button
+            type="button"
+            className={voiceOn ? 'chip active' : 'chip'}
+            aria-pressed={voiceOn}
+            onClick={toggleVoice}
+          >
+            {t('route.voice')}
+          </button>
+        )}
+        <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>
+          ×
         </button>
       </div>
       <p className="description">
@@ -126,8 +216,17 @@ export function RouteScreen({
         <p className="hint warn">{t('route.notFound')}</p>
       ) : (
         <>
+          {result.steps.length === 0 && <p className="hint ok">{t('route.alreadyHere')}</p>}
+          {avoidStairs && result.usesStairs && (
+            <p className="hint warn" data-testid="stairs-warning">
+              {t('route.usesStairs')}
+            </p>
+          )}
           {next !== null && (
-            <div className="next-step-card" data-testid="next-step">
+            <div className="next-step-card" data-testid="next-step" aria-live="polite">
+              <span className="step-counter">
+                {t('route.stepCounter', { current: currentIndex + 1, total: lastIndex + 1 })}
+              </span>
               <span className="next-icon" aria-hidden>
                 {stepIcon(next)}
               </span>
@@ -147,17 +246,56 @@ export function RouteScreen({
               </div>
             </div>
           )}
+          {next !== null && lastIndex > 0 && onStepChange !== undefined && (
+            <div className="step-nav">
+              <button
+                type="button"
+                className="secondary"
+                disabled={currentIndex === 0}
+                onClick={() => selectStep(currentIndex - 1)}
+              >
+                {t('route.prevStep')}
+              </button>
+              <button
+                type="button"
+                className="primary"
+                disabled={currentIndex === lastIndex}
+                onClick={() => selectStep(currentIndex + 1)}
+              >
+                {t('route.nextStep')}
+              </button>
+            </div>
+          )}
+
+          {aboveGroundSuggestion !== null && (
+            <div className="above-ground-suggest" data-testid="above-ground-suggest">
+              <p>
+                {t('route.aboveGroundSuggest', {
+                  underground: aboveGroundSuggestion.undergroundM,
+                  straight: aboveGroundSuggestion.straightM,
+                })}
+              </p>
+              <a href={aboveGroundSuggestion.url} target="_blank" rel="noopener noreferrer">
+                {t('route.openGoogleMaps')}
+              </a>
+              <p className="hint">{t('route.aboveGroundReason')}</p>
+            </div>
+          )}
 
           <p className="total eta">
             {t('route.eta', {
-              distance: Math.round(result.route.totalDistanceM),
-              minutes: Math.max(1, Math.round(result.route.totalDistanceM / WALK_SPEED_M_PER_MIN)),
+              distance: Math.round(remainingM),
+              minutes: Math.max(1, Math.round(remainingM / WALK_SPEED_M_PER_MIN)),
             })}
           </p>
 
           <ol className="steps">
             {result.steps.map((step, index) => (
-              <li key={`${step.atNodeId}-${index}`} className={index === 0 ? 'current' : ''}>
+              <li
+                key={`${step.atNodeId}-${index}`}
+                className={index === currentIndex ? 'current' : index < currentIndex ? 'done' : ''}
+                aria-current={index === currentIndex ? 'step' : undefined}
+              >
                 <span className="step-icon" aria-hidden>
                   {stepIcon(step)}
                 </span>

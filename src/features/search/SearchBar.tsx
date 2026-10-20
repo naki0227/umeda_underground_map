@@ -45,8 +45,10 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
         place: { nodeId: s.nodeId, name: s.name, aboveGround: false },
         kindLabel: t('search.kindShop'),
       }));
+    // 出口・駅・広場を先に、通路の分岐（「ekimo梅田 北」など）は後ろに並べる
     const nodeResults: Result[] = [...graph.nodes.values()]
-      .filter((n) => n.kind !== 'junction' && matches(n.name.ja, n.name.en))
+      .filter((n) => matches(n.name.ja, n.name.en) || (n.exitNo ?? '').toLowerCase() === q)
+      .sort((a, b) => Number(a.kind === 'junction') - Number(b.kind === 'junction'))
       .map((n) => ({
         key: n.id,
         place: { nodeId: n.id, name: n.name, aboveGround: false },
@@ -69,9 +71,12 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
         placeholder={t('search.placeholder')}
         aria-label={t('search.placeholder')}
         onChange={(e) => setQuery(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Escape') setQuery('');
+        }}
       />
       {results.length > 0 && (
-        <ul className="search-results">
+        <ul className="search-results" aria-label={t('search.results')}>
           {results.map((result) => (
             <li key={result.key}>
               <button type="button" onClick={() => pick(result)}>
