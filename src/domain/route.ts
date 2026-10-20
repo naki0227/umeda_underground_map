@@ -64,7 +64,7 @@ class MinHeap {
 }
 
 /**
- * Dijkstra法で最短経路を求める。
+ * Dijkstra法で最短経路を求める。出口（地上への出入口）は途中では通らない。
  * 経路が存在しない場合は null を返す（未知ノードも同様）。
  */
 export function findRoute(
@@ -91,6 +91,8 @@ export function findRoute(
     if (done.has(current.nodeId)) continue;
     done.add(current.nodeId);
     if (current.nodeId === to) break;
+    // 出口は経路の出発点・到着点にだけ使う。途中で通ると地上へ出て別の出口から下りることになる
+    if (current.nodeId !== from && graph.nodes.get(current.nodeId)?.kind === 'exit') continue;
 
     for (const edge of graph.adjacency.get(current.nodeId) ?? []) {
       const penalty =

@@ -2250,6 +2250,17 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
+      id: 'n12154532602',
+      lat: 34.703564,
+      lng: 135.495088,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: 'ケユカ付近',
+        en: 'Near Keyuca',
+      },
+    },
+    {
       id: 'n12154532604',
       lat: 34.703625,
       lng: 135.495075,
@@ -2271,6 +2282,17 @@ export const osmData: GeneratedMapData = {
         en: 'Near ファミリマート',
       },
       floor: '1F',
+    },
+    {
+      id: 'n12154532613',
+      lat: 34.70364,
+      lng: 135.495214,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: 'ケユカ付近',
+        en: 'Near Keyuca',
+      },
     },
     {
       id: 'n12154532648',
@@ -2468,6 +2490,17 @@ export const osmData: GeneratedMapData = {
       name: {
         ja: 'D-40出口付近',
         en: 'Near Exit D-40',
+      },
+    },
+    {
+      id: 'n12215302917',
+      lat: 34.699947,
+      lng: 135.49742,
+      area: 'diamor',
+      kind: 'junction',
+      name: {
+        ja: 'D-39出口付近',
+        en: 'Near Exit D-39',
       },
     },
     {
@@ -3286,6 +3319,28 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
+      id: 'n5848795559-exit',
+      lat: 34.699766,
+      lng: 135.498191,
+      area: 'diamor',
+      kind: 'junction',
+      name: {
+        ja: 'E-20出口付近',
+        en: 'Near Exit E-20',
+      },
+    },
+    {
+      id: 'n5848795565-exit',
+      lat: 34.699738,
+      lng: 135.498209,
+      area: 'diamor',
+      kind: 'junction',
+      name: {
+        ja: 'E-20出口付近',
+        en: 'Near Exit E-20',
+      },
+    },
+    {
       id: 'n5848795566-exit',
       lat: 34.699966,
       lng: 135.498062,
@@ -3407,6 +3462,28 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
+      id: 'n5852387975-exit',
+      lat: 34.699103,
+      lng: 135.497272,
+      area: 'diamor',
+      kind: 'junction',
+      name: {
+        ja: 'D-52出口付近',
+        en: 'Near Exit D-52',
+      },
+    },
+    {
+      id: 'n5852387976-exit',
+      lat: 34.69899,
+      lng: 135.49727,
+      area: 'diamor',
+      kind: 'junction',
+      name: {
+        ja: 'D-56出口付近',
+        en: 'Near Exit D-56',
+      },
+    },
+    {
       id: 'n5852387977-exit',
       lat: 34.698678,
       lng: 135.497264,
@@ -3473,6 +3550,28 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
+      id: 'n5865318036-exit',
+      lat: 34.70365,
+      lng: 135.499473,
+      area: 'whity',
+      kind: 'junction',
+      name: {
+        ja: '5-68出口付近',
+        en: 'Near Exit 5-68',
+      },
+    },
+    {
+      id: 'n5865318038-exit',
+      lat: 34.703594,
+      lng: 135.499485,
+      area: 'whity',
+      kind: 'junction',
+      name: {
+        ja: '5-68出口付近',
+        en: 'Near Exit 5-68',
+      },
+    },
+    {
       id: 'n5865318044',
       lat: 34.6981,
       lng: 135.498864,
@@ -3495,6 +3594,17 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
+      id: 'n5865516097-exit',
+      lat: 34.699463,
+      lng: 135.497867,
+      area: 'diamor',
+      kind: 'junction',
+      name: {
+        ja: '10-8出口付近',
+        en: 'Near Exit 10-8',
+      },
+    },
+    {
       id: 'n5866997085-exit',
       lat: 34.699159,
       lng: 135.499685,
@@ -3503,6 +3613,17 @@ export const osmData: GeneratedMapData = {
       name: {
         ja: 'F-70出口付近',
         en: 'Near Exit F-70',
+      },
+    },
+    {
+      id: 'n5884732499-exit',
+      lat: 34.699105,
+      lng: 135.497272,
+      area: 'diamor',
+      kind: 'junction',
+      name: {
+        ja: 'D-52出口付近',
+        en: 'Near Exit D-52',
       },
     },
     {
@@ -3528,6 +3649,17 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
+      id: 'n5884732568-exit',
+      lat: 34.699463,
+      lng: 135.49791,
+      area: 'diamor',
+      kind: 'junction',
+      name: {
+        ja: '10-8出口付近',
+        en: 'Near Exit 10-8',
+      },
+    },
+    {
       id: 'n5884732582',
       lat: 34.700088,
       lng: 135.497525,
@@ -3536,6 +3668,17 @@ export const osmData: GeneratedMapData = {
       name: {
         ja: 'D-34出口付近',
         en: 'Near Exit D-34',
+      },
+    },
+    {
+      id: 'n5884732788',
+      lat: 34.699604,
+      lng: 135.497414,
+      area: 'diamor',
+      kind: 'junction',
+      name: {
+        ja: 'D-40出口付近',
+        en: 'Near Exit D-40',
       },
     },
     {
@@ -3971,6 +4114,17 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
+      id: 'n9320740016',
+      lat: 34.699463,
+      lng: 135.498955,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '10-22出口付近',
+        en: 'Near Exit 10-22',
+      },
+    },
+    {
       id: 'n9320747517',
       lat: 34.699461,
       lng: 135.497279,
@@ -4258,17 +4412,6 @@ export const osmData: GeneratedMapData = {
     },
     {
       id: 'nsplit-16',
-      lat: 34.703458,
-      lng: 135.499467,
-      area: 'whity',
-      kind: 'junction',
-      name: {
-        ja: 'ゆかり前',
-        en: 'In front of ゆかり',
-      },
-    },
-    {
-      id: 'nsplit-17',
       lat: 34.696071,
       lng: 135.495554,
       area: 'dojima',
@@ -4279,7 +4422,7 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
-      id: 'nsplit-18',
+      id: 'nsplit-17',
       lat: 34.696298,
       lng: 135.495514,
       area: 'dojima',
@@ -4290,7 +4433,7 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
-      id: 'nsplit-19',
+      id: 'nsplit-18',
       lat: 34.696496,
       lng: 135.495479,
       area: 'dojima',
@@ -4298,6 +4441,17 @@ export const osmData: GeneratedMapData = {
       name: {
         ja: 'C-83出口付近',
         en: 'Near Exit C-83',
+      },
+    },
+    {
+      id: 'nsplit-19',
+      lat: 34.69894,
+      lng: 135.4956,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: 'PatSat前',
+        en: 'In front of PatSat',
       },
     },
     {
@@ -4313,13 +4467,13 @@ export const osmData: GeneratedMapData = {
     },
     {
       id: 'nsplit-20',
-      lat: 34.69894,
-      lng: 135.4956,
+      lat: 34.699054,
+      lng: 135.497429,
       area: 'station',
       kind: 'junction',
       name: {
-        ja: 'PatSat前',
-        en: 'In front of PatSat',
+        ja: 'D-52出口付近',
+        en: 'Near Exit D-52',
       },
     },
     {
@@ -4760,8 +4914,13 @@ export const osmData: GeneratedMapData = {
   edges: [
     {
       from: 'dj-3',
-      to: 'nsplit-19',
+      to: 'nsplit-18',
       distanceM: 16,
+    },
+    {
+      from: 'dm-b1',
+      to: 'dm-s',
+      distanceM: 77,
     },
     {
       from: 'dm-b1',
@@ -4774,14 +4933,29 @@ export const osmData: GeneratedMapData = {
       distanceM: 64,
     },
     {
+      from: 'dm-b2',
+      to: 'nsplit-20',
+      distanceM: 65,
+    },
+    {
       from: 'dm-b3',
       to: 'ndm-b3-link',
       distanceM: 41,
     },
     {
       from: 'dm-b4',
+      to: 'dm-e',
+      distanceM: 89,
+    },
+    {
+      from: 'dm-b4',
       to: 'ndm-b4-link',
       distanceM: 43,
+    },
+    {
+      from: 'dm-s',
+      to: 'nsplit-20',
+      distanceM: 19,
     },
     {
       from: 'dm-w',
@@ -4815,6 +4989,12 @@ export const osmData: GeneratedMapData = {
       attrs: ['stairs'],
     },
     {
+      from: 'ex-10-18',
+      to: 'n9320740016',
+      distanceM: 20,
+      attrs: ['stairs'],
+    },
+    {
       from: 'ex-10-21',
       to: 'n9320740015',
       distanceM: 24,
@@ -4822,20 +5002,20 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-10-22',
-      to: 'ex-10-18',
-      distanceM: 13,
-      attrs: ['stairs'],
-    },
-    {
-      from: 'ex-10-22',
-      to: 'n9320740015',
-      distanceM: 61,
+      to: 'n9320740016',
+      distanceM: 9,
       attrs: ['stairs'],
     },
     {
       from: 'ex-10-7',
       to: 'n5852387969-exit',
       distanceM: 27,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-10-8',
+      to: 'n5884732568-exit',
+      distanceM: 14,
       attrs: ['stairs'],
     },
     {
@@ -4902,6 +5082,12 @@ export const osmData: GeneratedMapData = {
       from: 'ex-5-22',
       to: 'n8928684247-exit',
       distanceM: 12,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-5-2',
+      to: 'n9320740009',
+      distanceM: 22,
       attrs: ['stairs'],
     },
     {
@@ -5037,12 +5223,6 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-C-1',
-      to: 'ex-5-2',
-      distanceM: 12,
-      attrs: ['stairs'],
-    },
-    {
-      from: 'ex-C-1',
       to: 'n9320740009',
       distanceM: 13,
       attrs: ['stairs'],
@@ -5150,12 +5330,6 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-D-14',
-      to: 'ex-D-13',
-      distanceM: 20,
-      attrs: ['stairs'],
-    },
-    {
-      from: 'ex-D-14',
       to: 'n2299310457-exit',
       distanceM: 14,
       attrs: ['stairs'],
@@ -5174,8 +5348,8 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-D-24',
-      to: 'ex-D-22',
-      distanceM: 10,
+      to: 'dm-n',
+      distanceM: 14,
       attrs: ['stairs'],
     },
     {
@@ -5191,21 +5365,9 @@ export const osmData: GeneratedMapData = {
       attrs: ['stairs'],
     },
     {
-      from: 'ex-D-41',
-      to: 'ex-D-39',
-      distanceM: 12,
-      attrs: ['stairs'],
-    },
-    {
       from: 'ex-D-44',
-      to: 'ex-D-40',
-      distanceM: 15,
-      attrs: ['stairs'],
-    },
-    {
-      from: 'ex-D-49',
-      to: 'ex-D-51',
-      distanceM: 16,
+      to: 'n5884732788',
+      distanceM: 18,
       attrs: ['stairs'],
     },
     {
@@ -5222,14 +5384,20 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-D-51',
-      to: 'ex-D-52',
-      distanceM: 11,
+      to: 'n5852387975-exit',
+      distanceM: 7,
       attrs: ['stairs'],
     },
     {
-      from: 'ex-D-51',
-      to: 'ex-D-55',
-      distanceM: 13,
+      from: 'ex-D-52',
+      to: 'n5884732499-exit',
+      distanceM: 6,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-D-55',
+      to: 'n5852387976-exit',
+      distanceM: 8,
       attrs: ['stairs'],
     },
     {
@@ -5252,8 +5420,8 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-E-13',
-      to: 'ex-E-15',
-      distanceM: 24,
+      to: 'n5848795559-exit',
+      distanceM: 14,
       attrs: ['stairs'],
     },
     {
@@ -5264,26 +5432,20 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-E-15',
-      to: 'ex-10-8',
-      distanceM: 27,
-      attrs: ['stairs'],
-    },
-    {
-      from: 'ex-E-17',
-      to: 'ex-E-13',
-      distanceM: 16,
-      attrs: ['stairs'],
-    },
-    {
-      from: 'ex-E-17',
-      to: 'ex-E-20',
-      distanceM: 16,
+      to: 'n5865516097-exit',
+      distanceM: 17,
       attrs: ['stairs'],
     },
     {
       from: 'ex-E-17',
       to: 'n9320740015',
       distanceM: 24,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-E-20',
+      to: 'n5848795565-exit',
+      distanceM: 8,
       attrs: ['stairs'],
     },
     {
@@ -5341,9 +5503,9 @@ export const osmData: GeneratedMapData = {
       attrs: ['stairs'],
     },
     {
-      from: 'ex-F-54',
-      to: 'ex-F-51',
-      distanceM: 10,
+      from: 'ex-F-51',
+      to: 'n9320739989',
+      distanceM: 15,
       attrs: ['stairs'],
     },
     {
@@ -5384,12 +5546,6 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-H-28',
-      to: 'ex-H-30',
-      distanceM: 29,
-      attrs: ['stairs'],
-    },
-    {
-      from: 'ex-H-28',
       to: 'n9320747528',
       distanceM: 26,
       attrs: ['stairs'],
@@ -5402,8 +5558,14 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-H-30',
-      to: 'ex-H-32',
-      distanceM: 6,
+      to: 'n5865318036-exit',
+      distanceM: 41,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-H-32',
+      to: 'n5865318038-exit',
+      distanceM: 41,
       attrs: ['stairs'],
     },
     {
@@ -5466,20 +5628,20 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ex-M-1',
-      to: 'ex-M-5',
-      distanceM: 11,
-      attrs: ['stairs'],
-    },
-    {
-      from: 'ex-M-1',
       to: 'n9320747533',
       distanceM: 16,
       attrs: ['stairs'],
     },
     {
-      from: 'ex-M-6',
-      to: 'ex-M-2',
-      distanceM: 8,
+      from: 'ex-M-2',
+      to: 'n9320747533',
+      distanceM: 18,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-M-5',
+      to: 'n9320747533',
+      distanceM: 18,
       attrs: ['stairs'],
     },
     {
@@ -5592,10 +5754,20 @@ export const osmData: GeneratedMapData = {
       distanceM: 29,
     },
     {
+      from: 'n12079442292',
+      to: 'n5226429631',
+      distanceM: 7,
+    },
+    {
       from: 'n12079442293',
       to: 'ex-F-82',
       distanceM: 19,
       attrs: ['stairs'],
+    },
+    {
+      from: 'n12079442293',
+      to: 'n5226429629',
+      distanceM: 15,
     },
     {
       from: 'n12079442293',
@@ -5648,6 +5820,21 @@ export const osmData: GeneratedMapData = {
       distanceM: 37,
     },
     {
+      from: 'n12154532602',
+      to: 'n12154532604',
+      distanceM: 7,
+    },
+    {
+      from: 'n12154532602',
+      to: 'n12154532613',
+      distanceM: 14,
+    },
+    {
+      from: 'n12154532602',
+      to: 'n9320739981',
+      distanceM: 18,
+    },
+    {
       from: 'n12154532604',
       to: 'n12154532649',
       distanceM: 54,
@@ -5656,11 +5843,6 @@ export const osmData: GeneratedMapData = {
       from: 'n12154532604',
       to: 'n9320739979',
       distanceM: 4,
-    },
-    {
-      from: 'n12154532604',
-      to: 'n9320739981',
-      distanceM: 25,
     },
     {
       from: 'n12154532607',
@@ -5698,6 +5880,11 @@ export const osmData: GeneratedMapData = {
       to: 'ex-H-43',
       distanceM: 1,
       attrs: ['stairs'],
+    },
+    {
+      from: 'n12167150335',
+      to: 'n12241180668',
+      distanceM: 17,
     },
     {
       from: 'n12183308978',
@@ -5809,20 +5996,31 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n12215302914',
-      to: 'ex-D-40',
-      distanceM: 11,
-      attrs: ['stairs'],
-    },
-    {
-      from: 'n12215302914',
       to: 'ex-D-41',
       distanceM: 29,
       attrs: ['stairs'],
     },
     {
       from: 'n12215302914',
+      to: 'n12215302917',
+      distanceM: 33,
+    },
+    {
+      from: 'n12215302914',
+      to: 'n5884732788',
+      distanceM: 7,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'n12215302917',
+      to: 'ex-D-39',
+      distanceM: 20,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'n12215302917',
       to: 'n12241180675',
-      distanceM: 59,
+      distanceM: 26,
       attrs: ['escalator'],
     },
     {
@@ -5924,6 +6122,11 @@ export const osmData: GeneratedMapData = {
       to: 'dm-n',
       distanceM: 8,
       attrs: ['stairs'],
+    },
+    {
+      from: 'n12215302967',
+      to: 'dm-b4',
+      distanceM: 59,
     },
     {
       from: 'n12215302967',
@@ -6112,8 +6315,8 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n12241180668',
-      to: 'nsplit-16',
-      distanceM: 62,
+      to: 'n5865318038-exit',
+      distanceM: 77,
     },
     {
       from: 'n12241180670',
@@ -6313,6 +6516,11 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n12300527193',
+      to: 'dm-b4',
+      distanceM: 66,
+    },
+    {
+      from: 'n12300527193',
       to: 'ex-9',
       distanceM: 20,
       attrs: ['stairs'],
@@ -6345,8 +6553,19 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n13382704679',
+      to: 'ex-D-13',
+      distanceM: 20,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'n13382704679',
       to: 'ex-D-14',
       distanceM: 5,
+    },
+    {
+      from: 'n13382704679',
+      to: 'n5887069694-exit',
+      distanceM: 15,
     },
     {
       from: 'n13519702375',
@@ -6370,7 +6589,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n2293280516-exit',
-      to: 'nsplit-20',
+      to: 'nsplit-19',
       distanceM: 32,
     },
     {
@@ -6397,6 +6616,11 @@ export const osmData: GeneratedMapData = {
       from: 'n3375274239',
       to: 'n8878597307',
       distanceM: 6,
+    },
+    {
+      from: 'n3375274239',
+      to: 'st-jr-sakurabashi',
+      distanceM: 1,
     },
     {
       from: 'n3394153476-exit',
@@ -6499,6 +6723,11 @@ export const osmData: GeneratedMapData = {
       distanceM: 47,
     },
     {
+      from: 'n5024365389-exit',
+      to: 'n5853250908',
+      distanceM: 19,
+    },
+    {
       from: 'n5024365394-exit',
       to: 'nst-nishiumeda-link',
       distanceM: 13,
@@ -6514,14 +6743,49 @@ export const osmData: GeneratedMapData = {
       distanceM: 35,
     },
     {
-      from: 'n5848795566-exit',
+      from: 'n5848795559-exit',
+      to: 'dm-b4',
+      distanceM: 90,
+    },
+    {
+      from: 'n5848795559-exit',
       to: 'dm-e',
-      distanceM: 26,
+      distanceM: 1,
+    },
+    {
+      from: 'n5848795559-exit',
+      to: 'n5848795566-exit',
+      distanceM: 25,
+    },
+    {
+      from: 'n5848795565-exit',
+      to: 'dm-b4',
+      distanceM: 88,
+    },
+    {
+      from: 'n5848795565-exit',
+      to: 'dm-e',
+      distanceM: 3,
+    },
+    {
+      from: 'n5848795565-exit',
+      to: 'n9320740015',
+      distanceM: 34,
+    },
+    {
+      from: 'n5848795566-exit',
+      to: 'dm-b4',
+      distanceM: 104,
     },
     {
       from: 'n5848795566-exit',
       to: 'n9320740014',
       distanceM: 22,
+    },
+    {
+      from: 'n5852387923-exit',
+      to: 'dm-b2',
+      distanceM: 76,
     },
     {
       from: 'n5852387923-exit',
@@ -6535,6 +6799,11 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n5852387961-exit',
+      to: 'dm-b2',
+      distanceM: 80,
+    },
+    {
+      from: 'n5852387961-exit',
       to: 'n5852387965-exit',
       distanceM: 1,
     },
@@ -6545,13 +6814,28 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n5852387962-exit',
+      to: 'dm-b2',
+      distanceM: 69,
+    },
+    {
+      from: 'n5852387962-exit',
       to: 'n5852387966-exit',
       distanceM: 1,
     },
     {
       from: 'n5852387965-exit',
+      to: 'dm-b2',
+      distanceM: 80,
+    },
+    {
+      from: 'n5852387965-exit',
       to: 'nsplit-11',
       distanceM: 20,
+    },
+    {
+      from: 'n5852387966-exit',
+      to: 'dm-b2',
+      distanceM: 69,
     },
     {
       from: 'n5852387969-exit',
@@ -6560,12 +6844,22 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n5852387969-exit',
-      to: 'n5884732540-exit',
-      distanceM: 16,
+      to: 'n5865516097-exit',
+      distanceM: 4,
     },
     {
       from: 'n5852387970-exit',
-      to: 'n5852387971-exit',
+      to: 'dm-b1',
+      distanceM: 78,
+    },
+    {
+      from: 'n5852387970-exit',
+      to: 'dm-b2',
+      distanceM: 74,
+    },
+    {
+      from: 'n5852387970-exit',
+      to: 'n5852387976-exit',
       distanceM: 35,
     },
     {
@@ -6575,13 +6869,63 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n5852387971-exit',
-      to: 'dm-s',
-      distanceM: 16,
+      to: 'dm-b1',
+      distanceM: 73,
+    },
+    {
+      from: 'n5852387971-exit',
+      to: 'dm-b2',
+      distanceM: 76,
+    },
+    {
+      from: 'n5852387971-exit',
+      to: 'n5852387975-exit',
+      distanceM: 13,
+    },
+    {
+      from: 'n5852387971-exit',
+      to: 'n5852387976-exit',
+      distanceM: 1,
     },
     {
       from: 'n5852387973-exit',
       to: 'n9320747517',
       distanceM: 33,
+    },
+    {
+      from: 'n5852387975-exit',
+      to: 'dm-b1',
+      distanceM: 76,
+    },
+    {
+      from: 'n5852387975-exit',
+      to: 'dm-b2',
+      distanceM: 82,
+    },
+    {
+      from: 'n5852387975-exit',
+      to: 'n5884732499-exit',
+      distanceM: 1,
+    },
+    {
+      from: 'n5852387976-exit',
+      to: 'dm-b1',
+      distanceM: 73,
+    },
+    {
+      from: 'n5852387976-exit',
+      to: 'dm-b2',
+      distanceM: 76,
+    },
+    {
+      from: 'n5852387977-exit',
+      to: 'dm-b1',
+      distanceM: 78,
+    },
+    {
+      from: 'n5852387977-exit',
+      to: 'dm-b2',
+      distanceM: 74,
     },
     {
       from: 'n5852387977-exit',
@@ -6621,6 +6965,21 @@ export const osmData: GeneratedMapData = {
       attrs: ['stairs'],
     },
     {
+      from: 'n5865318036-exit',
+      to: 'n5865318038-exit',
+      distanceM: 6,
+    },
+    {
+      from: 'n5865318036-exit',
+      to: 'n9320747528',
+      distanceM: 12,
+    },
+    {
+      from: 'n5865516097-exit',
+      to: 'n5884732568-exit',
+      distanceM: 4,
+    },
+    {
       from: 'n5866997085-exit',
       to: 'ndm-b3-link',
       distanceM: 1,
@@ -6631,14 +6990,45 @@ export const osmData: GeneratedMapData = {
       distanceM: 57,
     },
     {
+      from: 'n5884732499-exit',
+      to: 'dm-b1',
+      distanceM: 76,
+    },
+    {
+      from: 'n5884732499-exit',
+      to: 'dm-b2',
+      distanceM: 82,
+    },
+    {
+      from: 'n5884732499-exit',
+      to: 'dm-s',
+      distanceM: 3,
+    },
+    {
       from: 'n5884732540-exit',
       to: 'n5884732545-exit',
       distanceM: 14,
     },
     {
+      from: 'n5884732540-exit',
+      to: 'n5884732568-exit',
+      distanceM: 8,
+    },
+    {
       from: 'n5884732545-exit',
       to: 'n9320740015',
       distanceM: 21,
+    },
+    {
+      from: 'n5884732788',
+      to: 'ex-D-40',
+      distanceM: 4,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'n5884732788',
+      to: 'n9320747517',
+      distanceM: 23,
     },
     {
       from: 'n5884732792-exit',
@@ -6736,12 +7126,17 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n9320739989',
+      to: 'dm-b4',
+      distanceM: 62,
+    },
+    {
+      from: 'n9320739989',
       to: 'ndm-b4-link',
       distanceM: 39,
     },
     {
       from: 'n9320739990',
-      to: 'nsplit-17',
+      to: 'nsplit-16',
       distanceM: 35,
     },
     {
@@ -6831,8 +7226,13 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n9320740015',
-      to: 'dm-e',
-      distanceM: 37,
+      to: 'n9320740016',
+      distanceM: 52,
+    },
+    {
+      from: 'n9320740016',
+      to: 'dm-b4',
+      distanceM: 47,
     },
     {
       from: 'n9320747517',
@@ -6878,11 +7278,6 @@ export const osmData: GeneratedMapData = {
       from: 'n9320747526',
       to: 'wt-c1',
       distanceM: 39,
-    },
-    {
-      from: 'n9320747528',
-      to: 'nsplit-16',
-      distanceM: 33,
     },
     {
       from: 'n9320747533',
@@ -6936,24 +7331,24 @@ export const osmData: GeneratedMapData = {
       distanceM: 54,
     },
     {
-      from: 'nsplit-17',
-      to: 'nsplit-18',
+      from: 'nsplit-16',
+      to: 'nsplit-17',
       distanceM: 26,
     },
     {
-      from: 'nsplit-18',
-      to: 'nsplit-19',
+      from: 'nsplit-17',
+      to: 'nsplit-18',
       distanceM: 22,
+    },
+    {
+      from: 'nsplit-19',
+      to: 'nst-nishiumeda-link',
+      distanceM: 60,
     },
     {
       from: 'nsplit-1',
       to: 'wt-izumi',
       distanceM: 24,
-    },
-    {
-      from: 'nsplit-20',
-      to: 'nst-nishiumeda-link',
-      distanceM: 60,
     },
     {
       from: 'nsplit-5',
@@ -7325,7 +7720,7 @@ export const osmData: GeneratedMapData = {
         en: 'ゆかり',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-16',
+      nodeId: 'n5865318038-exit',
     },
     {
       id: 'osm-n12183308984',
@@ -7433,7 +7828,7 @@ export const osmData: GeneratedMapData = {
         en: 'すし金',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-16',
+      nodeId: 'n5865318038-exit',
     },
     {
       id: 'osm-n12993506596',
@@ -7586,7 +7981,7 @@ export const osmData: GeneratedMapData = {
         en: '三田製麺所',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-16',
     },
     {
       id: 'osm-n14016577234',
@@ -7604,7 +7999,7 @@ export const osmData: GeneratedMapData = {
         en: '中央軒',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-16',
     },
     {
       id: 'osm-n14022063012',
@@ -7685,7 +8080,7 @@ export const osmData: GeneratedMapData = {
         en: 'CAFÉ ONthe',
       },
       category: 'cafe',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-16',
     },
     {
       id: 'osm-n14022063021',
@@ -7739,7 +8134,7 @@ export const osmData: GeneratedMapData = {
         en: 'あいち',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-18',
+      nodeId: 'nsplit-17',
     },
     {
       id: 'osm-n14022063030',
@@ -7748,7 +8143,7 @@ export const osmData: GeneratedMapData = {
         en: 'おらが蕎麦',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-18',
+      nodeId: 'nsplit-17',
     },
     {
       id: 'osm-n14022063031',
@@ -7757,7 +8152,7 @@ export const osmData: GeneratedMapData = {
         en: 'お酒の美術館',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-18',
+      nodeId: 'nsplit-17',
     },
     {
       id: 'osm-n14022063032',
@@ -7766,7 +8161,7 @@ export const osmData: GeneratedMapData = {
         en: '浪花串カツ',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-18',
+      nodeId: 'nsplit-17',
     },
     {
       id: 'osm-n14022063033',
@@ -7775,7 +8170,7 @@ export const osmData: GeneratedMapData = {
         en: 'Barber the GM',
       },
       category: 'service',
-      nodeId: 'nsplit-18',
+      nodeId: 'nsplit-17',
     },
     {
       id: 'osm-n14022063034',
@@ -8009,7 +8404,7 @@ export const osmData: GeneratedMapData = {
         en: 'PatSat',
       },
       category: 'service',
-      nodeId: 'nsplit-20',
+      nodeId: 'nsplit-19',
     },
     {
       id: 'osm-n14061278510',
@@ -8153,7 +8548,7 @@ export const osmData: GeneratedMapData = {
         en: 'お好み焼三代目てんぐ',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-19',
+      nodeId: 'nsplit-18',
     },
     {
       id: 'osm-n14118804590',
@@ -8171,7 +8566,7 @@ export const osmData: GeneratedMapData = {
         en: '卑弥呼',
       },
       category: 'fashion',
-      nodeId: 'dm-s',
+      nodeId: 'nsplit-20',
     },
     {
       id: 'osm-n14118804592',
@@ -8252,7 +8647,7 @@ export const osmData: GeneratedMapData = {
         en: '信州そば処そじ坊',
       },
       category: 'restaurant',
-      nodeId: 'dm-b4',
+      nodeId: 'n9320740016',
     },
     {
       id: 'osm-n14118824003',
@@ -8306,7 +8701,7 @@ export const osmData: GeneratedMapData = {
         en: 'MISTER MINIT',
       },
       category: 'service',
-      nodeId: 'n9320747517',
+      nodeId: 'n5884732788',
     },
     {
       id: 'osm-n14118824010',
@@ -8387,7 +8782,7 @@ export const osmData: GeneratedMapData = {
         en: '碧',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-18',
+      nodeId: 'nsplit-17',
     },
     {
       id: 'osm-n14180459970',
@@ -8891,7 +9286,7 @@ export const osmData: GeneratedMapData = {
         en: '和ダイニングゆめ咲小町',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-16',
     },
     {
       id: 'osm-n1740972029',
@@ -9476,7 +9871,7 @@ export const osmData: GeneratedMapData = {
         en: 'Zetteria',
       },
       category: 'restaurant',
-      nodeId: 'n5852387923-exit',
+      nodeId: 'n9320740016',
     },
     {
       id: 'osm-n5737998049',
@@ -9566,7 +9961,7 @@ export const osmData: GeneratedMapData = {
         en: 'FamilyMart',
       },
       category: 'convenience',
-      nodeId: 'n9320740015',
+      nodeId: 'n9320740016',
     },
     {
       id: 'osm-n5971950160',

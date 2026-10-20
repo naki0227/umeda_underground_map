@@ -127,12 +127,15 @@ export function buildWalkGraph(osm, opts) {
   };
   const bridges = bridge(opts.bridgeM);
 
-  // 4. 出入口をつなぐ
+  // 4. 出入口をつなぐ。つなぎ先は通路の点だけ（先につないだ別の出入口につなぐと、
+  //    地上へ出て隣の出入口から下りる「通り抜け」ができてしまう）
+  const entranceIds = new Set(entrances.map((e) => e.id));
   let attached = 0;
   for (const e of entrances) {
     if (adj.has(e.id)) continue;
     let best = null;
     for (const id of adj.keys()) {
+      if (entranceIds.has(id)) continue;
       const d = distanceM(e, nodes.get(id));
       if (d <= opts.entranceAttachM && (!best || d < best.d)) best = { id, d };
     }
