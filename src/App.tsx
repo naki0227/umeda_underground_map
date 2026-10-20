@@ -1,9 +1,10 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BottomSheet } from './components/BottomSheet';
 import { TabBar } from './components/TabBar';
 import { umedaMap } from './data/map';
 import { fitGeoTransform, nearestNode } from './domain/geo';
+import { buildSteps, stepNodeIds } from './domain/directions';
 import { buildGraph } from './domain/graph';
 import { findRoute } from './domain/route';
 import { localized } from './i18n';
@@ -16,6 +17,12 @@ import { useInitialGeolocation } from './features/locate/useGeolocation';
 import { RouteScreen } from './features/route/RouteScreen';
 import { SearchBar } from './features/search/SearchBar';
 import { SpotsSheet } from './features/spots/SpotsSheet';
+import { FavoritesSheet } from './features/favorites/FavoritesSheet';
+import { useFavorites } from './features/favorites/useFavorites';
+
+/** 画面下のシートが地図を隠すおおよその割合（地図を寄せるときに避ける） */
+const SHEET_INSET: Record<string, number> = { none: 0.1, place: 0.38 };
+const DEFAULT_SHEET_INSET = 0.6;
 
 /** GPS 位置から最寄りノードまでこれ以上離れていたら「範囲外」とする（m） */
 const GPS_AREA_RANGE_M = 600;
@@ -25,8 +32,14 @@ export default function App() {
   const graph = useMemo(() => buildGraph(umedaMap), []);
   const nav = useMapNavigation();
   const [avoidStairs, setAvoidStairs] = useState(false);
+  const favorites = useFavorites();
   const gps = useInitialGeolocation();
   const [gpsNoteDismissed, setGpsNoteDismissed] = useState(false);
+  const { acquire: acquireGps } = gps;
+  const locateGps = useCallback(() => {
+    setGpsNoteDismissed(false);
+    acquireGps();
+  }, [acquireGps]);
   const geo = useMemo(() => fitGeoTransform(umedaMap.nodes), []);
 
   /** GPS の大まかな位置をマップ平面に置く。範囲外なら inArea=false */
@@ -43,6 +56,30 @@ export default function App() {
     return findRoute(graph, nav.currentNodeId, nav.destination.nodeId, { avoidStairs });
   }, [graph, nav.currentNodeId, nav.destination, avoidStairs]);
 
+  // 案内中に表示しているステップ。経路が変わったら先頭に戻す
+  const routeKey = route?.nodeIds.join('>') ?? '';
+  const [stepState, setStepState] = useState({ routeKey: '', index: 0 });
+  const stepIndex = stepState.routeKey === routeKey ? stepState.index : 0;
+  const setStepIndex = (index: number) => setStepState({ routeKey, index });
+  const focusNodeIds = useMemo(() => {
+    if (route === null || nav.sheet !== 'route') return undefined;
+    const steps = buildSteps(graph, route);
+    const step = steps[Math.min(stepIndex, steps.length - 1)];
+    return step ? stepNodeIds(route, step) : undefined;
+  }, [graph, route, stepIndex, nav.sheet]);
+
+  /** 選択中・目的地の地上スポット（地図で最寄り出口までの点線を出す） */
+  const linkedPoiIds = useMemo(() => {
+    const places = [nav.selectedPlace, nav.destination].filter(
+      (place): place is NonNullable<typeof place> => place !== null && place.aboveGround,
+    );
+    return umedaMap.pois
+      .filter((poi) =>
+        places.some((place) => place.nodeId === poi.nodeId && place.name.ja === poi.name.ja),
+      )
+      .map((poi) => poi.id);
+  }, [nav.selectedPlace, nav.destination]);
+
   const currentName = useMemo(() => {
     if (nav.currentNodeId === null) return null;
     const node = graph.nodes.get(nav.currentNodeId);
@@ -56,14 +93,15 @@ export default function App() {
         shops={umedaMap.shops}
         pois={umedaMap.pois}
         routeNodeIds={route?.nodeIds}
+        focusNodeIds={focusNodeIds}
         currentNodeId={nav.currentNodeId}
         destinationNodeId={nav.destination?.nodeId ?? null}
+        selectedNodeId={nav.sheet === 'place' ? (nav.selectedPlace?.nodeId ?? null) : null}
+        linkedPoiIds={linkedPoiIds}
+        bottomInset={SHEET_INSET[nav.sheet] ?? DEFAULT_SHEET_INSET}
         gpsHint={gpsHint?.inArea ? gpsHint : null}
         onSelectGpsHint={nav.openLocate}
-        onLocateGps={() => {
-          setGpsNoteDismissed(false);
-          gps.acquire();
-        }}
+        onLocateGps={locateGps}
         gpsBusy={gps.status === 'loading'}
         onSelectPlace={nav.selectPlace}
       />
@@ -113,6 +151,8 @@ export default function App() {
           onGo={nav.goToSelected}
           onSetHere={nav.setHereSelected}
           onClose={nav.closeSheet}
+          favorite={favorites.isFavorite(nav.selectedPlace)}
+          onToggleFavorite={() => nav.selectedPlace && favorites.toggle(nav.selectedPlace)}
         />
       )}
 
@@ -153,6 +193,8 @@ export default function App() {
             onLost={nav.markLost}
             onFinish={nav.clearDestination}
             onClose={nav.closeSheet}
+            stepIndex={stepIndex}
+            onStepChange={setStepIndex}
           />
         </BottomSheet>
       )}
@@ -167,6 +209,15 @@ export default function App() {
         />
       )}
 
+      {nav.sheet === 'favorites' && (
+        <FavoritesSheet
+          favorites={favorites.favorites}
+          onPick={nav.selectPlace}
+          onRemove={favorites.toggle}
+          onClose={nav.closeSheet}
+        />
+      )}
+
       {nav.sheet === 'menu' && (
         <MenuSheet dataVersion={umedaMap.dataVersion} onClose={nav.closeSheet} />
       )}
@@ -175,6 +226,7 @@ export default function App() {
         sheet={nav.sheet}
         onMap={nav.closeSheet}
         onSpots={nav.openSpots}
+        onFavorites={nav.openFavorites}
         onMenu={nav.openMenu}
       />
     </div>

@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildSteps, classifyTurn, turnAngleDeg } from '../directions';
+import { buildSteps, classifyTurn, stepNodeIds, turnAngleDeg } from '../directions';
 import { buildGraph } from '../graph';
 import { findRoute } from '../route';
 import { testEdges, testNodes } from './fixtures';
@@ -65,5 +65,27 @@ describe('buildSteps', () => {
   it('returns empty steps for a single-node route', () => {
     const route = findRoute(graph, 'j1', 'j1');
     expect(buildSteps(graph, route as NonNullable<typeof route>)).toEqual([]);
+  });
+});
+
+describe('stepNodeIds', () => {
+  it('returns the nodes from the step start to its action point', () => {
+    const route = findRoute(graph, 'exit1', 'j5', { avoidStairs: true });
+    expect(route).not.toBeNull();
+    if (route === null) return;
+    const steps = buildSteps(graph, route);
+    // exit1 -> j1 で左折（南へ）、j4 で左折（東へ）、j5 に到着
+    expect(steps.map((s) => stepNodeIds(route, s))).toEqual([
+      ['exit1', 'j1'],
+      ['j1', 'j4'],
+      ['j4', 'j5'],
+    ]);
+  });
+
+  it('falls back to the action node when the step is not on the route', () => {
+    const route = { nodeIds: ['j1', 'j2'], totalDistanceM: 100 };
+    expect(
+      stepNodeIds(route, { fromNodeId: 'x', atNodeId: 'j2', action: 'arrive', distanceM: 0 }),
+    ).toEqual(['j2']);
   });
 });

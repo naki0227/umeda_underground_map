@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { umedaMap } from '../../../data/map';
+import { projectToPlane } from '../../../domain/geo';
 import { buildGraph } from '../../../domain/graph';
 import { buildBuildings } from '../ground';
 import { project, type ScreenPoint } from '../iso';
@@ -41,14 +42,18 @@ describe('map labels with real data', () => {
     }
   });
 
-  it('shows every exit number and building name when zoomed in', () => {
-    const boxes = boxesAt(0.5);
+  it('shows every building name and almost every exit number when zoomed in', () => {
+    // 最大拡大（幅120mを約375pxで表示 ≒ k=0.32）。数m間隔で並ぶ出口（同じ番号の2か所など）は
+    // バッジが重なるため、9割以上を基準にする（隠れた出口も点で表示され、操作できる）
+    const boxes = boxesAt(0.32);
     const visible = placeLabels(boxes);
-    const hidden = boxes
-      .filter((b) => b.id.startsWith('exit:') || b.id.startsWith('building:'))
-      .filter((b) => !visible.has(b.id))
-      .map((b) => b.id);
-    expect(hidden).toEqual([]);
+    // 建物名どうしは重ならない（出口番号を優先して隠れることはある）
+    const buildings = boxes.filter((b) => b.id.startsWith('building:'));
+    const buildingsOnly = placeLabels(buildings);
+    expect(buildings.filter((b) => !buildingsOnly.has(b.id)).map((b) => b.id)).toEqual([]);
+    const exits = boxes.filter((b) => b.id.startsWith('exit:'));
+    const shown = exits.filter((b) => visible.has(b.id)).length;
+    expect(shown / exits.length).toBeGreaterThanOrEqual(0.9);
   });
 
   it('keeps exit numbers ahead of other labels when zoomed out', () => {
@@ -60,14 +65,15 @@ describe('map labels with real data', () => {
 });
 
 describe('buildBuildings', () => {
-  it('places building boxes without overlapping each other', () => {
-    for (let i = 0; i < buildings.length; i += 1) {
-      for (let j = i + 1; j < buildings.length; j += 1) {
-        const a = buildings[i].base;
-        const b = buildings[j].base;
-        const apart = Math.abs(a.px - b.px) >= 68 || Math.abs(a.py - b.py) >= 51;
-        expect(apart, `${buildings[i].poi.id} vs ${buildings[j].poi.id}`).toBe(true);
-      }
+  it('puts each building at the position of its spot, linked to its nearest exit', () => {
+    for (const building of buildings) {
+      const { poi } = building;
+      if (poi.lat === undefined || poi.lng === undefined) continue;
+      const p = projectToPlane({ lat: poi.lat, lng: poi.lng });
+      const expected = project(p.x, p.y);
+      expect(building.base.px, poi.id).toBeCloseTo(expected.px);
+      expect(building.base.py, poi.id).toBeCloseTo(expected.py);
+      expect(building.anchor, poi.id).toEqual(screenOf.get(poi.nodeId));
     }
   });
 });

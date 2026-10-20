@@ -2,14 +2,17 @@ import i18n from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import { en } from './locales/en';
 import { ja } from './locales/ja';
+import { ko } from './locales/ko';
+import { zh } from './locales/zh';
 import type { LocalizedText } from '../domain/types';
 
-export type AppLanguage = 'ja' | 'en';
+export const APP_LANGUAGES = ['ja', 'en', 'zh', 'ko'] as const;
+export type AppLanguage = (typeof APP_LANGUAGES)[number];
 
 const LANGUAGE_STORAGE_KEY = 'umeda-navi.language';
 
 function isAppLanguage(value: unknown): value is AppLanguage {
-  return value === 'ja' || value === 'en';
+  return typeof value === 'string' && (APP_LANGUAGES as readonly string[]).includes(value);
 }
 
 /** 前回選んだ言語。保存できない環境（プライベートモード等）では null */
@@ -36,10 +39,18 @@ function applyDocumentLanguage(language: string): void {
 }
 
 export function detectLanguage(navigatorLanguage: string): AppLanguage {
-  return navigatorLanguage.toLowerCase().startsWith('ja') ? 'ja' : 'en';
+  const lang = navigatorLanguage.toLowerCase();
+  if (lang.startsWith('ja')) return 'ja';
+  // 繁体字（zh-TW / zh-HK / zh-Hant）は簡体字 UI ではなく英語にする
+  if (lang.startsWith('zh') && !/^zh-(tw|hk|mo|hant)/.test(lang)) return 'zh';
+  if (lang.startsWith('ko')) return 'ko';
+  return 'en';
 }
 
-/** マップデータの多言語名を現在の言語で取り出す */
+/**
+ * マップデータの多言語名を現在の言語で取り出す。
+ * データは日本語・英語のみなので、中国語・韓国語では英語表記を使う。
+ */
 export function localized(text: LocalizedText, language: string): string {
   return language === 'ja' ? text.ja : text.en;
 }
@@ -54,6 +65,8 @@ export function initI18n(initialLanguage?: AppLanguage): typeof i18n {
       resources: {
         ja: { translation: ja },
         en: { translation: en },
+        zh: { translation: zh },
+        ko: { translation: ko },
       },
       lng:
         initialLanguage ??

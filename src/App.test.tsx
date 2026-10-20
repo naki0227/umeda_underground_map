@@ -9,7 +9,8 @@ beforeAll(() => {
   return i18n.changeLanguage('ja');
 });
 
-describe('App map-first user flow', () => {
+// 画面をまたぐ長いフロー（検索・位置確定・案内）を通すので、遅い CI でも足りる時間にする
+describe('App map-first user flow', { timeout: 15_000 }, () => {
   it('searches a place, sets location via shops, and shows directions', async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -29,10 +30,18 @@ describe('App map-first user flow', () => {
 
     // 4. 近くの店を2つ選んで推定 → 推定位置カードから案内開始
     const locateSheet = screen.getByRole('dialog', { name: '現在地を確認する' });
+    const shopSearch = within(locateSheet).getByPlaceholderText('店名で検索');
+    await user.type(shopSearch, 'スターバックス');
     await user.click(
       within(locateSheet).getByLabelText(/スターバックスコーヒー ホワイティうめだ店/),
     );
+    await user.clear(shopSearch);
+    await user.type(shopSearch, '古潭');
     await user.click(within(locateSheet).getByLabelText(/古潭 ホワイティうめだ店/));
+    // 選んだ店は検索を変えても残る
+    expect(
+      within(locateSheet).getByLabelText(/スターバックスコーヒー ホワイティうめだ店/),
+    ).toBeChecked();
     await user.click(screen.getByRole('button', { name: '現在地を推定する' }));
     expect(screen.getByText('推定位置')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'この位置で案内開始' }));
@@ -111,5 +120,64 @@ describe('App map-first user flow', () => {
     // 地図タブでシートが閉じる
     await user.click(screen.getByRole('button', { name: '地図' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+  });
+
+  it('steps through directions and the map follows the current step', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+
+    // 泉の広場を現在地に、ドーチカ南方面のお店を目的地に
+    await user.click(container.querySelector('[data-node-id="wt-izumi"]') as Element);
+    await user.click(screen.getByRole('button', { name: 'いまここにいる' }));
+    const search = screen.getByRole('searchbox', { name: '目的地を入力（お店・出口・スポット）' });
+    await user.type(search, 'C-93');
+    await user.click(
+      within(screen.getByRole('list', { name: '検索結果' })).getAllByRole('button')[0],
+    );
+    await user.click(screen.getByRole('button', { name: 'ここへ行く' }));
+
+    const card = screen.getByTestId('next-step');
+    expect(card).toHaveTextContent(/^1 \/ \d+/);
+    expect(screen.getByTestId('map-route-focus')).toBeInTheDocument();
+    // 泉の広場から西へ向かう区間沿いの店名が地図に出る
+    expect(screen.getAllByTestId('map-shop-label').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: '前へ' })).toBeDisabled();
+    const firstAction = card.textContent;
+
+    await user.click(screen.getByRole('button', { name: '次へ' }));
+    expect(screen.getByTestId('next-step')).toHaveTextContent(/^2 \/ \d+/);
+    expect(screen.getByTestId('next-step').textContent).not.toBe(firstAction);
+    expect(screen.getByRole('button', { name: '前へ' })).toBeEnabled();
+    // 1ステップ目は完了扱いで、2ステップ目が現在
+    const stepItems = container.querySelectorAll('ol.steps li');
+    expect(stepItems[0]).toHaveClass('done');
+    expect(stepItems[1]).toHaveAttribute('aria-current', 'step');
+  });
+
+  it('adds a place to favorites and starts directions from the favorites tab', async () => {
+    localStorage.clear();
+    const tabs = () => screen.getByRole('navigation', { name: 'メインメニュー' });
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+
+    await user.click(within(tabs()).getByRole('button', { name: 'お気に入り' }));
+    expect(screen.getByText(/まだありません/)).toBeInTheDocument();
+
+    await user.click(container.querySelector('[data-node-id="wt-izumi"]') as Element);
+    const favButton = within(screen.getByRole('dialog', { name: /泉の広場/ })).getByRole('button', {
+      name: /お気に入りに登録/,
+    });
+    await user.click(favButton);
+    expect(favButton).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(within(tabs()).getByRole('button', { name: 'お気に入り' }));
+    const sheet = screen.getByRole('dialog', { name: 'お気に入り' });
+    await user.click(within(sheet).getByRole('button', { name: '泉の広場（Water Tree）' }));
+    expect(screen.getByRole('dialog', { name: /泉の広場/ })).toBeInTheDocument();
+
+    // 外すと一覧から消える
+    await user.click(within(tabs()).getByRole('button', { name: 'お気に入り' }));
+    await user.click(screen.getByRole('button', { name: /をお気に入りから外す/ }));
+    expect(screen.getByText(/まだありません/)).toBeInTheDocument();
   });
 });

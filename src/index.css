@@ -333,6 +333,7 @@ body {
 
 .sheet-header {
   display: flex;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
   gap: 8px;
@@ -600,6 +601,7 @@ button.candidate:hover {
 }
 
 .next-step-card {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -713,9 +715,10 @@ button.candidate:hover {
 
 .stair-link {
   stroke: var(--accent-strong);
-  stroke-width: 3;
-  stroke-dasharray: 8 7;
-  opacity: 0.55;
+  stroke-width: 2.5px;
+  stroke-dasharray: 6 5;
+  vector-effect: non-scaling-stroke;
+  opacity: 0.8;
 }
 
 .building {
@@ -763,11 +766,10 @@ button.candidate:hover {
 
 .map-route {
   fill: none;
-  stroke: var(--accent);
-  stroke-width: 16;
+  stroke: #1d4ed8;
+  stroke-width: 6px;
   stroke-linecap: round;
   stroke-linejoin: round;
-  opacity: 0.9;
 }
 
 .map-node {
@@ -808,7 +810,7 @@ button.candidate:hover {
   cursor: pointer;
 }
 
-.map-exit-badge.compact circle {
+.map-exit-badge.compact circle:not(.hit-area) {
   fill: var(--accent-strong);
   stroke: #ffffff;
   stroke-width: 1.5;
@@ -999,4 +1001,188 @@ button.candidate:hover {
 .above-ground-suggest a {
   color: var(--accent-strong);
   font-weight: 700;
+}
+
+.step-nav {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.step-nav button {
+  flex: 1;
+}
+
+.step-counter {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.steps li.done {
+  opacity: 0.55;
+}
+
+.map-route-focus {
+  fill: none;
+  stroke: #f59e0b;
+  stroke-width: 7px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map-shop-label {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #9a3412;
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 3px;
+}
+
+.favorite-toggle {
+  margin-left: auto;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--text-strong);
+  font-size: 0.85rem;
+}
+
+.favorite-toggle.active {
+  border-color: #f59e0b;
+  color: #b45309;
+  background: #fff7e6;
+}
+
+.favorite-list {
+  list-style: none;
+  margin: 8px 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.favorite-list li {
+  display: flex;
+  gap: 6px;
+}
+
+.favorite-item {
+  flex: 1;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  text-align: left;
+  color: var(--text-strong);
+}
+
+.favorite-remove {
+  padding: 0 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--bg);
+  color: #f59e0b;
+  font-size: 1.1rem;
+}
+
+/* 経路: 白い縁取り + 濃い青の線 + 進行方向の矢印（太さは画面 px で一定） */
+.map-route-casing {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 11px;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map-route-arrow path {
+  fill: none;
+  stroke: #ffffff;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  pointer-events: none;
+}
+
+/* 経路の表示中は、経路以外を薄くして経路を目立たせる */
+.has-route .map-network,
+.has-route .map-zone {
+  opacity: 0.45;
+}
+
+.has-route .map-shop-pin {
+  opacity: 0.3;
+}
+
+.has-route .map-exit-badge:not(.on-route),
+.has-route .building:not(.selected) {
+  opacity: 0.45;
+}
+
+.map-exit-badge.on-route rect,
+.map-exit-badge.on-route circle:not(.hit-area) {
+  fill: #1d4ed8;
+}
+
+/* 見た目より広い透明な当たり判定（小さな点や建物を指で押しやすくする） */
+.map-exit-badge .hit-area,
+.building .hit-area {
+  fill: transparent;
+  stroke: none;
+}
+
+.building-shadow {
+  fill: rgba(22, 35, 44, 0.12);
+}
+
+.building .building-top,
+.building .building-left,
+.building .building-right {
+  stroke-width: 1;
+}
+
+.building.selected .building-top {
+  fill: #fde68a;
+}
+
+/* 選んでいる場所の目印 */
+.selection-ring ellipse {
+  fill: rgba(245, 158, 11, 0.15);
+  stroke: #f59e0b;
+  stroke-width: 3;
+  animation: selection-pulse 1.6s ease-in-out infinite;
+}
+
+@keyframes selection-pulse {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.45;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .selection-ring ellipse {
+    animation: none;
+  }
+}
+
+.map-legend .swatch.route {
+  background: #1d4ed8;
+  border: 1px solid #1d4ed8;
+}
+
+/* 全体表示ではエリア名を大きく */
+[data-detail='overview'] .map-zone-label {
+  font-size: 16px;
 }

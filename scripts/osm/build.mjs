@@ -1,0 +1,574 @@
+#!/usr/bin/env node
+// OSM の抽出データ（XML）から src/data/generated/osmData.ts を作る。
+//
+//   node scripts/osm/build.mjs <umeda.osm> [出力先]
+//
+// 抽出データの取得手順は scripts/osm/README.md を参照。
+// 出力は © OpenStreetMap contributors の ODbL データベースの派生物。
+import { writeFileSync } from 'node:fs';
+import { parseOsm } from './parseOsm.mjs';
+import { buildWalkGraph, components, distanceM, simplify } from './network.mjs';
+import { AREA_POLYGONS, BUILDING_ANCHORS, ORIGIN, PLACES, POIS, REGION } from './overlay.mjs';
+
+const [input, output = 'src/data/generated/osmData.ts'] = process.argv.slice(2);
+if (!input) {
+  console.error('usage: node scripts/osm/build.mjs <umeda.osm> [output.ts]');
+  process.exit(1);
+}
+
+const M_PER_DEG_LAT = 111_320;
+const COS0 = Math.cos((ORIGIN.lat * Math.PI) / 180);
+const toPlane = (p) => ({
+  x: (p.lon - ORIGIN.lng) * M_PER_DEG_LAT * COS0,
+  y: (p.lat - ORIGIN.lat) * M_PER_DEG_LAT,
+});
+const fromPlane = (x, y) => ({
+  lat: ORIGIN.lat + y / M_PER_DEG_LAT,
+  lon: ORIGIN.lng + x / (M_PER_DEG_LAT * COS0),
+});
+const round6 = (v) => Math.round(v * 1e6) / 1e6;
+
+const osm = parseOsm(input);
+const wayById = new Map(osm.ways.map((w) => [w.id, w]));
+const centroid = (way) => {
+  const pts = way.nds.map((id) => osm.nodes.get(id)).filter(Boolean);
+  const unique = way.nds[0] === way.nds.at(-1) ? pts.slice(0, -1) : pts;
+  return {
+    lat: unique.reduce((s, n) => s + n.lat, 0) / unique.length,
+    lon: unique.reduce((s, n) => s + n.lon, 0) / unique.length,
+  };
+};
+const osmRef = (ref) => {
+  const kind = ref[0];
+  const id = ref.slice(1);
+  if (kind === 'N') return osm.nodes.get(id);
+  const way = wayById.get(id);
+  return way ? { ...centroid(way), tags: way.tags } : undefined;
+};
+
+// ---- 1. 地下の歩行グラフ
+const walk = buildWalkGraph(osm, { bridgeM: 15, entranceAttachM: 30, minComponentSize: 1 });
+const adj = walk.adj;
+const inRegion = (n) => {
+  const { x, y } = toPlane(n);
+  return x >= REGION.minX && x <= REGION.maxX && y >= REGION.minY && y <= REGION.maxY;
+};
+for (const id of [...adj.keys()]) if (!inRegion(osm.nodes.get(id))) adj.delete(id);
+for (const m of adj.values()) for (const id of [...m.keys()]) if (!adj.has(id)) m.delete(id);
+
+// 各点のフロア（接する OSM の通路の level から）
+const vertexLevels = new Map();
+for (const way of osm.ways) {
+  const lv = (way.tags.level ?? '')
+    .split(/[;,]/)
+    .map(Number)
+    .filter((n) => Number.isFinite(n) && way.tags.level);
+  for (const id of way.nds) {
+    if (!adj.has(id)) continue;
+    if (!vertexLevels.has(id)) vertexLevels.set(id, new Set());
+    for (const l of lv) vertexLevels.get(id).add(l);
+  }
+}
+const isEntranceId = new Set(walk.entrances.map((e) => e.id));
+const placeFloor = new Map(PLACES.map((p) => [p.id, p.floor ?? 'B1']));
+const floorOf = (id) => placeFloor.get(id) ?? floorOfVertex(id);
+const floorOfVertex = (id) => {
+  if (placeFloor.has(id)) return placeFloor.get(id);
+  if (isEntranceId.has(id)) return '1F';
+  const lv = [...(vertexLevels.get(id) ?? [])];
+  if (lv.length > 0 && lv.every((l) => l <= -2)) return 'B2';
+  if (lv.length > 0 && lv.every((l) => l >= 0)) return '1F';
+  return 'B1';
+};
+
+// ---- 2. 名前のある場所を重ねる
+const positions = new Map(); // id -> {lat, lon}
+for (const id of adj.keys()) positions.set(id, osm.nodes.get(id));
+const placeInfo = new Map(); // 最終ノード ID -> place
+const rename = new Map(); // OSM 点 ID -> place ID
+
+const placePosition = (p) => {
+  if (p.osmNode) return osm.nodes.get(p.osmNode);
+  if (p.osmWay) return centroid(wayById.get(p.osmWay));
+  return fromPlane(p.x, p.y);
+};
+const nearestVertex = (pos, maxM, filter = () => true) => {
+  let best = null;
+  for (const id of adj.keys()) {
+    if (rename.has(id) || isEntranceId.has(id) || !filter(id)) continue;
+    const d = distanceM(pos, positions.get(id));
+    if (d <= maxM && (!best || d < best.d)) best = { id, d };
+  }
+  return best;
+};
+
+for (const place of PLACES) {
+  const pos = placePosition(place);
+  if (!pos) throw new Error(`place ${place.id}: OSM element not found`);
+  const snap = place.noSnap ? null : nearestVertex(pos, 30);
+  if (snap) {
+    rename.set(snap.id, place.id);
+    placeInfo.set(place.id, {
+      ...place,
+      lat: positions.get(snap.id).lat,
+      lon: positions.get(snap.id).lon,
+    });
+  } else {
+    placeInfo.set(place.id, { ...place, lat: pos.lat, lon: pos.lon });
+  }
+}
+// rename を反映した隣接リストへ
+const g = new Map();
+const nid = (id) => rename.get(id) ?? id;
+for (const [a, m] of adj) {
+  const A = nid(a);
+  if (!g.has(A)) g.set(A, new Map());
+  for (const [b, e] of m) g.get(A).set(nid(b), e);
+}
+for (const [id, place] of placeInfo) {
+  positions.set(id, { lat: place.lat, lon: place.lon });
+  if (!g.has(id)) g.set(id, new Map());
+}
+const link = (a, b, attrs) => {
+  const d = Math.max(1, distanceM(positions.get(a), positions.get(b)) * 1.15);
+  g.get(a).set(b, { lengthM: d, attrs });
+  g.get(b).set(a, { lengthM: d, attrs });
+};
+// 場所は最大の連結成分（主な通路網）につなぐ（小さな切れ端につなぐと孤立する）
+const rawComp = components(g);
+const compSize = new Map();
+for (const c of rawComp.values()) compSize.set(c, (compSize.get(c) ?? 0) + 1);
+const mainRawComp = [...compSize].sort((x, y) => y[1] - x[1])[0][0];
+const snapped = new Set(rename.values());
+
+/** 主な通路網の中で pos に最も近い線分と、その上の最寄り点 */
+const nearestSegment = (pos) => {
+  const p = toPlane(pos);
+  let best = null;
+  for (const [a, m] of g) {
+    if (rawComp.get(a) !== mainRawComp || floorOfVertex(a) === '1F') continue;
+    for (const [b, e] of m) {
+      if (a >= b || rawComp.get(b) !== mainRawComp || floorOfVertex(b) === '1F') continue;
+      if (e.attrs.length > 0) continue;
+      const A = toPlane(positions.get(a));
+      const B = toPlane(positions.get(b));
+      const dx = B.x - A.x;
+      const dy = B.y - A.y;
+      const len2 = dx * dx + dy * dy || 1;
+      const t = Math.min(1, Math.max(0, ((p.x - A.x) * dx + (p.y - A.y) * dy) / len2));
+      const d = Math.hypot(A.x + t * dx - p.x, A.y + t * dy - p.y);
+      if (!best || d < best.d) best = { a, b, t, d, e };
+    }
+  }
+  return best;
+};
+
+/** 線分 a-b の途中（割合 t）に点 id を入れる */
+const insertOnSegment = ({ a, b, t, e }, id) => {
+  const A = positions.get(a);
+  const B = positions.get(b);
+  positions.set(id, { lat: A.lat + (B.lat - A.lat) * t, lon: A.lon + (B.lon - A.lon) * t });
+  vertexLevels.set(id, new Set([-1]));
+  if (!g.has(id)) g.set(id, new Map());
+  g.get(a).delete(b);
+  g.get(b).delete(a);
+  const first = { lengthM: Math.max(1, e.lengthM * t), attrs: [] };
+  const second = { lengthM: Math.max(1, e.lengthM * (1 - t)), attrs: [] };
+  g.get(a).set(id, first);
+  g.get(id).set(a, first);
+  g.get(id).set(b, second);
+  g.get(b).set(id, second);
+  rawComp.set(id, mainRawComp);
+};
+
+// 1周目: 通路の上（25m 以内）にある場所は通路の途中に入れ、離れた場所（改札など）は
+// 通路上の最寄り点から枝を出してつなぐ
+const ON_CORRIDOR_M = 25;
+for (const [id, place] of placeInfo) {
+  if (place.link || snapped.has(id)) continue;
+  const seg = nearestSegment(positions.get(id));
+  if (!seg || seg.d > 150) throw new Error(`place ${id}: no corridor within 150m`);
+  if (seg.d <= ON_CORRIDOR_M && !place.noSnap) {
+    insertOnSegment(seg, id);
+    placeInfo.set(id, { ...place, lat: positions.get(id).lat, lon: positions.get(id).lon });
+  } else {
+    const junction = `${id}~link`;
+    insertOnSegment(seg, junction);
+    const differentFloor = (place.floor ?? 'B1') !== 'B1';
+    link(id, junction, place.linkAttrs ?? (differentFloor ? ['stairs'] : []));
+  }
+}
+// 番号付きの出入口で、主な通路網につながっていないもの（30m より離れている・切れ端にある）は
+// 80m 以内の通路の最寄り点から階段でつなぐ
+const EXIT_LINK_M = 80;
+for (const e of walk.entrances) {
+  if (!e.tags.ref || !inRegion(e)) continue;
+  if (g.has(e.id) && rawComp.get(e.id) === mainRawComp) continue;
+  const seg = nearestSegment(e);
+  if (!seg || seg.d > EXIT_LINK_M) continue;
+  const junction = `${e.id}~exit`;
+  insertOnSegment(seg, junction);
+  positions.set(e.id, e);
+  if (!g.has(e.id)) g.set(e.id, new Map());
+  link(e.id, junction, ['stairs']);
+  rawComp.set(e.id, mainRawComp);
+}
+// 2周目: 場所どうしのつながり（ノースモールなど OSM に通路がない所）
+for (const [id, place] of placeInfo) {
+  if (place.link) for (const other of place.link) link(id, other, place.linkAttrs ?? []);
+}
+
+// ---- 3. 縮約
+const keep = new Set([...placeInfo.keys()]);
+for (const e of walk.entrances) if (g.has(e.id) && e.tags.ref) keep.add(e.id);
+let net = simplify(g, keep);
+
+// 連結成分: JR大阪駅 御堂筋口を含む成分だけ残す
+const comp = components(net);
+const main = comp.get('st-jr-midosuji');
+for (const id of [...net.keys()]) if (comp.get(id) !== main) net.delete(id);
+for (const m of net.values()) for (const id of [...m.keys()]) if (!net.has(id)) m.delete(id);
+
+// 番号のない出入口は、行き止まりなら落とす（出口番号が必須のため）
+for (const id of [...net.keys()]) {
+  if (!isEntranceId.has(id) || osm.nodes.get(id).tags.ref) continue;
+  if (net.get(id).size <= 1) {
+    for (const other of net.get(id).keys()) net.get(other).delete(id);
+    net.delete(id);
+  }
+}
+net = simplify(net, keep);
+
+// ---- 4. エリア判定（OSM の地下街ポリゴン）
+const polygons = Object.entries(AREA_POLYGONS).map(([area, name]) => {
+  const way = osm.ways.find((w) => w.tags.name === name && w.nds[0] === w.nds.at(-1));
+  if (!way) throw new Error(`area polygon not found: ${name}`);
+  return { area, pts: way.nds.map((id) => toPlane(osm.nodes.get(id))) };
+});
+const inside = (p, pts) => {
+  let c = false;
+  for (let i = 0, j = pts.length - 1; i < pts.length; j = i++) {
+    if (
+      pts[i].y > p.y !== pts[j].y > p.y &&
+      p.x < ((pts[j].x - pts[i].x) * (p.y - pts[i].y)) / (pts[j].y - pts[i].y) + pts[i].x
+    )
+      c = !c;
+  }
+  return c;
+};
+const areaOf = (id) => {
+  if (placeInfo.has(id)) return placeInfo.get(id).area;
+  const p = toPlane(positions.get(id));
+  return polygons.find((poly) => inside(p, poly.pts))?.area ?? 'station';
+};
+
+// ---- 5. 店舗（OSM の地下の店）
+const levelsOf = (t) =>
+  (t.level ?? '')
+    .split(/[;,]/)
+    .map(Number)
+    .filter((n) => Number.isFinite(n) && t.level);
+const SERVICE_AMENITY = new Set(['bank', 'atm', 'clinic', 'dentist', 'post_office', 'pharmacy']);
+const FOOD_AMENITY = new Set(['restaurant', 'fast_food', 'pub', 'bar', 'food_court', 'biergarten']);
+const category = (t) => {
+  if (FOOD_AMENITY.has(t.amenity)) return 'restaurant';
+  if (t.amenity === 'cafe' || t.amenity === 'ice_cream') return 'cafe';
+  if (t.amenity === 'pharmacy' || ['chemist', 'cosmetics', 'medical_supply'].includes(t.shop))
+    return 'drugstore';
+  if (SERVICE_AMENITY.has(t.amenity)) return 'service';
+  if (['bakery', 'confectionery', 'pastry'].includes(t.shop)) return 'bakery';
+  if (['convenience', 'supermarket'].includes(t.shop)) return 'convenience';
+  if (['books'].includes(t.shop)) return 'bookstore';
+  if (
+    [
+      'clothes',
+      'shoes',
+      'bag',
+      'fashion',
+      'fashion_accessories',
+      'jewelry',
+      'boutique',
+      'watches',
+    ].includes(t.shop)
+  )
+    return 'fashion';
+  if (
+    [
+      'hairdresser',
+      'beauty',
+      'massage',
+      'repair',
+      'laundry',
+      'dry_cleaning',
+      'travel_agency',
+      'ticket',
+      'mobile_phone',
+      'copyshop',
+      'tailor',
+      'shoe_repair',
+      'optician',
+    ].includes(t.shop)
+  )
+    return 'service';
+  return 'goods';
+};
+const shopCandidates = [];
+for (const n of osm.nodes.values())
+  shopCandidates.push({ ref: `N${n.id}`, lat: n.lat, lon: n.lon, tags: n.tags });
+for (const w of osm.ways)
+  if (w.tags.name && (w.tags.shop || w.tags.amenity))
+    shopCandidates.push({ ref: `W${w.id}`, ...centroid(w), tags: w.tags });
+// 店舗の取り付け: 近くの点（25m 以内）か、通路の途中（45m 以内）に点を足して付ける。
+// 縮約で長い通路（ドーチカなど）は途中に点がないため、途中に点を足す。
+const NODE_ATTACH_M = 25;
+const EDGE_ATTACH_M = 45;
+const MERGE_SPLIT_M = 20;
+const candidates = [];
+const seenShop = new Set();
+for (const s of shopCandidates) {
+  const t = s.tags;
+  if (
+    !t.name ||
+    !(
+      t.shop ||
+      FOOD_AMENITY.has(t.amenity) ||
+      ['cafe', 'ice_cream', 'pharmacy', ...SERVICE_AMENITY].includes(t.amenity)
+    )
+  )
+    continue;
+  if (['mall', 'department_store'].includes(t.shop)) continue;
+  const lv = levelsOf(t);
+  if (!lv.some((l) => l < 0) || !inRegion(s)) continue;
+  // level=-2 でも、近く（60m）に B2 の点がない地下街（ディアモールなど）は地下の主フロアとして扱う
+  const b2Nearby = [...net.keys()].some(
+    (id) => floorOf(id) === 'B2' && distanceM(s, positions.get(id)) <= 60,
+  );
+  candidates.push({ s, wantB2: lv.every((l) => l <= -2) && b2Nearby });
+}
+const floorOk = (id, wantB2) => {
+  const f = floorOf(id);
+  return f !== '1F' && (f === 'B2') === wantB2;
+};
+const splits = new Map(); // "a|b" -> [{t, shops: []}]
+let splitCount = 0;
+const attachToNode = new Map(); // shop index -> node id
+const anchors = BUILDING_ANCHORS.map((a) => ({
+  ...a,
+  pts: a.osmWay ? wayById.get(a.osmWay).nds.map((id) => toPlane(osm.nodes.get(id))) : null,
+}));
+candidates.forEach(({ s, wantB2 }, index) => {
+  const p = toPlane(s);
+  const anchor = anchors.find((a) =>
+    a.pts ? inside(p, a.pts) : distanceM(s, positions.get(a.node)) <= a.radiusM,
+  );
+  if (anchor && net.has(anchor.node)) {
+    attachToNode.set(index, anchor.node);
+    return;
+  }
+  let bestNode = null;
+  for (const id of net.keys()) {
+    if (!floorOk(id, wantB2)) continue;
+    const d = distanceM(s, positions.get(id));
+    if (!bestNode || d < bestNode.d) bestNode = { id, d };
+  }
+  if (bestNode && bestNode.d <= NODE_ATTACH_M) {
+    attachToNode.set(index, bestNode.id);
+    return;
+  }
+  let bestEdge = null;
+  for (const [a, m] of net) {
+    if (!floorOk(a, wantB2)) continue;
+    for (const [b, e] of m) {
+      if (a >= b || !floorOk(b, wantB2) || e.attrs.length > 0) continue;
+      const A = toPlane(positions.get(a));
+      const B = toPlane(positions.get(b));
+      const dx = B.x - A.x;
+      const dy = B.y - A.y;
+      const len2 = dx * dx + dy * dy;
+      if (len2 === 0) continue;
+      const t = Math.min(1, Math.max(0, ((p.x - A.x) * dx + (p.y - A.y) * dy) / len2));
+      const d = Math.hypot(A.x + t * dx - p.x, A.y + t * dy - p.y);
+      if (!bestEdge || d < bestEdge.d) bestEdge = { a, b, t, d };
+    }
+  }
+  const edgeIsBetter =
+    bestEdge && bestEdge.d <= EDGE_ATTACH_M && (!bestNode || bestEdge.d < bestNode.d - 5);
+  if (edgeIsBetter) {
+    const key = `${bestEdge.a}|${bestEdge.b}`;
+    if (!splits.has(key)) splits.set(key, []);
+    splits.get(key).push({ t: bestEdge.t, index });
+  } else if (bestNode && bestNode.d <= EDGE_ATTACH_M) {
+    attachToNode.set(index, bestNode.id);
+  }
+});
+// 通路を分割して点を足す
+for (const [key, list] of splits) {
+  const [a, b] = key.split('|');
+  const e = net.get(a).get(b);
+  const A = positions.get(a);
+  const B = positions.get(b);
+  const total = distanceM(A, B);
+  list.sort((x, y) => x.t - y.t);
+  const groups = [];
+  for (const item of list) {
+    const last = groups.at(-1);
+    if (last && (item.t - last.t) * total < MERGE_SPLIT_M) last.items.push(item);
+    else groups.push({ t: item.t, items: [item] });
+  }
+  net.get(a).delete(b);
+  net.get(b).delete(a);
+  let prev = a;
+  let prevT = 0;
+  groups.forEach((group) => {
+    const t = group.items.reduce((sum, i) => sum + i.t, 0) / group.items.length;
+    if (t * total < 5 || (1 - t) * total < 5) {
+      const end = t < 0.5 ? a : b;
+      for (const item of group.items) attachToNode.set(item.index, end);
+      return;
+    }
+    splitCount += 1;
+    const id = `split~${splitCount}`;
+    positions.set(id, { lat: A.lat + (B.lat - A.lat) * t, lon: A.lon + (B.lon - A.lon) * t });
+    vertexLevels.set(id, new Set([-1]));
+    net.set(id, new Map());
+    const seg = { lengthM: Math.max(1, e.lengthM * (t - prevT)), attrs: [] };
+    net.get(prev).set(id, seg);
+    net.get(id).set(prev, seg);
+    for (const item of group.items) attachToNode.set(item.index, id);
+    prev = id;
+    prevT = t;
+  });
+  const last = { lengthM: Math.max(1, e.lengthM * (1 - prevT)), attrs: [] };
+  net.get(prev).set(b, last);
+  net.get(b).set(prev, last);
+}
+const netIds = [...net.keys()];
+const shops = [];
+for (const [index, nodeId] of attachToNode) {
+  const { s } = candidates[index];
+  const t = s.tags;
+  const ja = t['name:ja'] ?? t.name;
+  const key = `${ja}@${nodeId}`;
+  if (seenShop.has(key)) continue;
+  seenShop.add(key);
+  const en = t['name:en'] ?? t['brand:en'] ?? (/^[\x20-\x7e]+$/.test(t.name) ? t.name : ja);
+  shops.push({ id: `osm-${s.ref.toLowerCase()}`, name: { ja, en }, category: category(t), nodeId });
+}
+
+// ---- 6. 名前のない分岐の名前（近くの出口 → 近くの店 → エリアの通路）
+const AREA_NAME = {
+  whity: { ja: 'ホワイティうめだ', en: 'Whity Umeda' },
+  diamor: { ja: 'ディアモール大阪', en: 'Diamor Osaka' },
+  dojima: { ja: 'ドーチカ', en: 'Dotica' },
+  ekimo: { ja: 'ekimo梅田', en: 'ekimo Umeda' },
+  sanbangai: { ja: '阪急三番街', en: 'Hankyu Sanbangai' },
+  station: { ja: '駅', en: 'station' },
+};
+const exitIdOf = new Map();
+const usedExitIds = new Map();
+for (const id of netIds) {
+  const tags = osm.nodes.get(id)?.tags;
+  if (!isEntranceId.has(id) || !tags?.ref) continue;
+  const base = `ex-${tags.ref.replace(/[^\w-]/g, '_')}`;
+  const n = (usedExitIds.get(base) ?? 0) + 1;
+  usedExitIds.set(base, n);
+  exitIdOf.set(id, n === 1 ? base : `${base}-${n}`);
+}
+const finalId = (id) => exitIdOf.get(id) ?? (placeInfo.has(id) ? id : `n${id.replace(/~/g, '-')}`);
+
+const nameJunction = (id) => {
+  const pos = positions.get(id);
+  let ex = null;
+  for (const e of exitIdOf.keys()) {
+    const d = distanceM(pos, osm.nodes.get(e));
+    if (d <= 35 && (!ex || d < ex.d)) ex = { ref: osm.nodes.get(e).tags.ref, d };
+  }
+  if (ex) return { ja: `${ex.ref}出口付近`, en: `Near Exit ${ex.ref}` };
+  const nearShop = shops.find((s) => s.nodeId === id);
+  if (nearShop) return { ja: `${nearShop.name.ja}前`, en: `In front of ${nearShop.name.en}` };
+  // 店が付いていない分岐は、30m 以内で店のある点の店名を目印にする
+  let landmark = null;
+  for (const shop of shops) {
+    const d = distanceM(pos, positions.get(shop.nodeId));
+    if (d <= 30 && (!landmark || d < landmark.d)) landmark = { shop, d };
+  }
+  if (landmark) {
+    const { ja, en } = landmark.shop.name;
+    return { ja: `${ja}付近`, en: `Near ${en}` };
+  }
+  const a = AREA_NAME[areaOf(id)];
+  return { ja: `${a.ja}の通路`, en: `${a.en[0].toUpperCase()}${a.en.slice(1)} passage` };
+};
+
+// ---- 7. 出力
+const nodes = netIds.map((id) => {
+  const pos = positions.get(id);
+  const base = { id: finalId(id), lat: round6(pos.lat), lng: round6(pos.lon), area: areaOf(id) };
+  if (placeInfo.has(id)) {
+    const p = placeInfo.get(id);
+    return { ...base, kind: p.kind, name: p.name, ...(p.floor ? { floor: p.floor } : {}) };
+  }
+  if (exitIdOf.has(id)) {
+    const ref = osm.nodes.get(id).tags.ref;
+    return {
+      ...base,
+      kind: 'exit',
+      exitNo: ref,
+      name: { ja: `${ref} 出口`, en: `Exit ${ref}` },
+      osmId: `node/${id}`,
+    };
+  }
+  const floor = floorOfVertex(id);
+  return {
+    ...base,
+    kind: 'junction',
+    name: nameJunction(id),
+    ...(floor !== 'B1' ? { floor } : {}),
+  };
+});
+const edges = [];
+for (const [a, m] of net) {
+  for (const [b, e] of m) {
+    if (a >= b) continue;
+    const edge = {
+      from: finalId(a),
+      to: finalId(b),
+      distanceM: Math.max(1, Math.round(e.lengthM)),
+    };
+    if (e.attrs.length > 0) edge.attrs = e.attrs;
+    edges.push(edge);
+  }
+}
+edges.sort((x, y) => (x.from + x.to).localeCompare(y.from + y.to));
+nodes.sort((x, y) => x.id.localeCompare(y.id));
+for (const s of shops) s.nodeId = finalId(s.nodeId);
+shops.sort((x, y) => x.id.localeCompare(y.id));
+
+const pois = POIS.map((p) => {
+  const el = osmRef(p.osm);
+  if (!el) throw new Error(`poi ${p.id}: OSM element ${p.osm} not found`);
+  return { id: p.id, name: p.name, lat: round6(el.lat), lng: round6(el.lon) };
+});
+
+// 抽出データの取得日（scripts/osm/README.md の手順で記録）。未指定なら生成日
+const extractDate = process.env.OSM_EXTRACT_DATE ?? new Date().toISOString().slice(0, 10);
+const json = (v) => JSON.stringify(v, null, 2);
+writeFileSync(
+  output,
+  `// このファイルは scripts/osm/build.mjs が生成する。手で編集しないこと。
+// データ: © OpenStreetMap contributors（ODbL 1.0, https://www.openstreetmap.org/copyright）
+// 生成日: ${extractDate}
+import type { GeneratedMapData } from '../types';
+
+export const osmData: GeneratedMapData = {
+  generatedAt: '${extractDate}',
+  nodes: ${json(nodes)},
+  edges: ${json(edges)},
+  shops: ${json(shops)},
+  pois: ${json(pois)},
+};
+`,
+);
+console.log(
+  `nodes ${nodes.length} (exits ${nodes.filter((n) => n.kind === 'exit').length}), edges ${edges.length}, shops ${shops.length}, pois ${pois.length}`,
+);

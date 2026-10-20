@@ -24,6 +24,8 @@ interface Props {
 type EntranceKey = '' | `poi:${string}` | `node:${string}`;
 
 const QUICK_PICK_COUNT = 8;
+/** 店の候補は数百件あるため、入力した文字に合うものだけをこの件数まで出す */
+const MAX_SHOP_RESULTS = 30;
 
 export function LocateScreen({
   graph,
@@ -69,13 +71,19 @@ export function LocateScreen({
     return [...landmarks, ...gates].slice(0, QUICK_PICK_COUNT);
   }, [graph]);
 
+  /** 選んだ店（常に表示）＋ 入力に合う店（最大 MAX_SHOP_RESULTS 件） */
   const filteredShops = useMemo(() => {
     const query = shopQuery.trim().toLowerCase();
-    if (query === '') return shops;
-    return shops.filter(
-      (s) => s.name.ja.toLowerCase().includes(query) || s.name.en.toLowerCase().includes(query),
-    );
-  }, [shops, shopQuery]);
+    const selected = shops.filter((s) => selectedShopIds.includes(s.id));
+    if (query === '') return selected;
+    const matches = shops
+      .filter((s) => !selectedShopIds.includes(s.id))
+      .filter(
+        (s) => s.name.ja.toLowerCase().includes(query) || s.name.en.toLowerCase().includes(query),
+      )
+      .slice(0, MAX_SHOP_RESULTS);
+    return [...selected, ...matches];
+  }, [shops, shopQuery, selectedShopIds]);
 
   const toggleShop = (shopId: string) => {
     setSelectedShopIds((prev) =>
@@ -172,6 +180,9 @@ export function LocateScreen({
           placeholder={t('locate.shopsPlaceholder')}
           onChange={(e) => setShopQuery(e.target.value)}
         />
+        {shopQuery.trim() === '' && selectedShopIds.length === 0 && (
+          <p className="hint">{t('locate.shopsHint')}</p>
+        )}
         <ul className="choice-list">
           {filteredShops.map((shop) => (
             <li key={shop.id}>
