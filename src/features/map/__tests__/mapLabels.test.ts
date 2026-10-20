@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { umedaMap } from '../../../data/map';
+import { projectToPlane } from '../../../domain/geo';
 import { buildGraph } from '../../../domain/graph';
 import { buildBuildings } from '../ground';
 import { project, type ScreenPoint } from '../iso';
@@ -64,14 +65,15 @@ describe('map labels with real data', () => {
 });
 
 describe('buildBuildings', () => {
-  it('places building boxes without overlapping each other', () => {
-    for (let i = 0; i < buildings.length; i += 1) {
-      for (let j = i + 1; j < buildings.length; j += 1) {
-        const a = buildings[i].base;
-        const b = buildings[j].base;
-        const apart = Math.abs(a.px - b.px) >= 68 || Math.abs(a.py - b.py) >= 51;
-        expect(apart, `${buildings[i].poi.id} vs ${buildings[j].poi.id}`).toBe(true);
-      }
+  it('puts each building at the position of its spot, linked to its nearest exit', () => {
+    for (const building of buildings) {
+      const { poi } = building;
+      if (poi.lat === undefined || poi.lng === undefined) continue;
+      const p = projectToPlane({ lat: poi.lat, lng: poi.lng });
+      const expected = project(p.x, p.y);
+      expect(building.base.px, poi.id).toBeCloseTo(expected.px);
+      expect(building.base.py, poi.id).toBeCloseTo(expected.py);
+      expect(building.anchor, poi.id).toEqual(screenOf.get(poi.nodeId));
     }
   });
 });

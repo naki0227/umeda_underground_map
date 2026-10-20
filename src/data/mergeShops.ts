@@ -24,8 +24,9 @@ function sameShop(official: Shop, osm: Shop): boolean {
 }
 
 /**
- * 公式サイト由来の店と OSM 由来の店をまとめる。同じ店が両方にあれば、
- * 店名は公式サイトのものを使い、位置（nodeId）は OSM 側（実測の位置）を使う。
+ * 公式サイト由来の店と OSM 由来の店をまとめる。同じ店が両方にあれば OSM 側
+ * （店名・種別・位置）を使い、公式サイト由来の方は捨てる（出典を OSM に一本化する）。
+ * OSM にない店だけ公式サイト由来のものを残す。
  * 同じ地下街の店どうしだけを照合するため、areaOf でエリアを渡す。
  */
 export function mergeShops(
@@ -34,15 +35,15 @@ export function mergeShops(
   areaOf: (nodeId: string) => string | undefined,
 ): Shop[] {
   const used = new Set<string>();
-  const merged = official.map((shop) => {
+  const officialOnly = official.filter((shop) => {
     const area = areaOf(shop.nodeId);
     const match = osm.find(
       (candidate) =>
         !used.has(candidate.id) && areaOf(candidate.nodeId) === area && sameShop(shop, candidate),
     );
-    if (match === undefined) return shop;
+    if (match === undefined) return true;
     used.add(match.id);
-    return { ...shop, nodeId: match.nodeId };
+    return false;
   });
-  return [...merged, ...osm.filter((shop) => !used.has(shop.id))];
+  return [...officialOnly, ...osm];
 }

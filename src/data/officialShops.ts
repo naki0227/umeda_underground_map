@@ -3,8 +3,8 @@ import type { Shop } from '../domain/types';
 /**
  * 各地下街の公式サイトに掲載されている店舗（店名は事実情報のみ参照、2026-07-09 時点）。
  * 店の前の点（nodeId）は推定。阪急三番街の B2 の店は公式フロアガイド（2026-10-20 確認）の
- * 南館 B2F・北館 B2F に合わせた。同名の店が OpenStreetMap にある場合は、読み込み時に
- * OSM 側の位置へ寄せる（src/data/map.ts）。
+ * 南館 B2F・北館 B2F に合わせた。同じ店が OpenStreetMap にある場合は、読み込み時に
+ * OSM 側を使い、ここの記載は使わない（src/data/map.ts、出典を OSM に一本化）。
  *
  * 出典: whity.osaka-chikagai.jp / www.diamor.jp / www.h-sanbangai.com /
  * www.ekimo.jp/umeda / dotica.osaka-chikagai.jp
