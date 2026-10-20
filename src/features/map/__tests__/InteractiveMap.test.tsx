@@ -30,7 +30,7 @@ describe('InteractiveMap', () => {
   });
 
   it('highlights a route and shows markers', () => {
-    const route = findRoute(graph, 'wt-c4', 'wt-exit-h28');
+    const route = findRoute(graph, 'wt-c4', 'ex-M-14');
     render(
       <InteractiveMap
         graph={graph}
@@ -38,7 +38,7 @@ describe('InteractiveMap', () => {
         pois={umedaMap.pois}
         routeNodeIds={route?.nodeIds}
         currentNodeId="wt-c4"
-        destinationNodeId="wt-exit-h28"
+        destinationNodeId="ex-M-14"
         onSelectPlace={() => {}}
       />,
     );
@@ -79,7 +79,7 @@ describe('InteractiveMap', () => {
     );
     expect(container.querySelector('[data-area="whity"]')).not.toBeNull();
     // 出口はバッジ（出口番号入りチップ）で表示される
-    const badge = container.querySelector('.map-exit-badge[data-node-id="wt-exit-h8"]');
+    const badge = container.querySelector('.map-exit-badge[data-node-id="ex-H-8"]');
     expect(badge).not.toBeNull();
     expect(badge).toHaveTextContent('H-8');
     expect(screen.getByTestId('map-legend')).toHaveTextContent('地下街');
@@ -101,7 +101,10 @@ describe('InteractiveMap', () => {
     expect(building).not.toBeNull();
     await user.click(building as Element);
     expect(onSelectPlace).toHaveBeenCalledWith(
-      expect.objectContaining({ nodeId: 'wt-exit-h8', aboveGround: true }),
+      expect.objectContaining({
+        nodeId: umedaMap.pois.find((p) => p.id === 'poi-hepfive')?.nodeId,
+        aboveGround: true,
+      }),
     );
   });
 });
