@@ -16,10 +16,12 @@ export const en: Resource = {
     entrancePoiGroup: 'From a building / spot above ground',
     entranceExitGroup: 'If you know the exit number / gate',
     gpsButton: 'Use approximate location',
+    gpsLoading: 'Getting your location…',
     gpsAcquired: 'Location acquired',
     gpsFailed: 'Could not get location (GPS is unreliable underground)',
     shopsLabel: 'Shops you can see nearby (multiple allowed)',
     shopsPlaceholder: 'Search shop name',
+    shopsHint: 'Type part of a shop name to see matches',
     locateButton: 'Estimate my location',
     quickLabel: 'Pick a common landmark (tap)',
     estimatedTitle: 'Estimated position',
@@ -30,10 +32,10 @@ export const en: Resource = {
     candidatesTitle: 'Other candidates',
     candidateConfidence: 'Confidence {{percent}}%',
     noCandidates: 'Could not estimate. Try selecting one or two more shops.',
-    confirm: "I'm here",
   },
   search: {
     placeholder: 'Enter destination (shops, exits, spots)',
+    results: 'Search results',
     kindPoi: 'Above ground',
     kindShop: 'Shop',
     kindNode: 'Exit / Station',
@@ -44,16 +46,25 @@ export const en: Resource = {
     aboveGroundNote: 'This place is above ground. We guide you to the nearest exit.',
   },
   mapUi: {
-    setLocation: 'Set my location',
     currentField: 'Current location',
     notSet: 'Not set (tap to set)',
+    resumeRoute: 'Show directions',
     setupPrompt: 'Set your location to get directions',
   },
   tabs: {
     label: 'Main menu',
     map: 'Map',
     spots: 'Spots',
+    favorites: 'Favorites',
     menu: 'Menu',
+  },
+  favorites: {
+    title: 'Favorites',
+    empty:
+      'Nothing yet. Pick a place and tap "Save to favorites" to get directions from here quickly.',
+    add: 'Save to favorites',
+    removeNamed: 'Remove {{name}} from favorites',
+    storageNote: 'Favorites are stored only on this device.',
   },
   spots: {
     title: 'Recommended spots',
@@ -62,11 +73,11 @@ export const en: Resource = {
     walk: '{{minutes}} min walk / approx. {{distance}}m',
   },
   sheet: {
+    resize: 'Resize sheet',
     close: 'Close',
   },
   route: {
     title: 'Directions',
-    total: 'Total approx. {{distance}}m ({{minutes}} min walk)',
     from: 'From: {{name}}',
     to: 'To: {{name}}',
     stepGo: 'Walk about {{distance}}m',
@@ -79,12 +90,22 @@ export const en: Resource = {
     aboveGroundHint:
       '{{name}} is above ground. We guide you to {{exit}} — go up to street level from there.',
     notFound: 'No route found',
-    newSearch: 'Choose another destination',
     eta: 'Arrive in approx. {{minutes}} min / {{distance}}m',
     avoidStairs: 'Avoid stairs',
     finish: 'End',
     floorNow: 'Now: {{floor}}',
     floorNext: 'Next: {{floor}}',
+    aboveGroundSuggest:
+      'Walking above ground may be shorter (underground approx. {{underground}}m / straight line approx. {{straight}}m).',
+    openGoogleMaps: 'See the street-level walking route in Google Maps',
+    aboveGroundReason: 'To stay out of the sun or rain, keep following the underground route.',
+    prevStep: 'Back',
+    nextStep: 'Next',
+    stepCounter: '{{current}} of {{total}}',
+    voice: 'Voice',
+    spokenStep: '{{go}}. {{action}}',
+    usesStairs: 'This route includes stairs (no step-free route was found).',
+    alreadyHere: 'You are already at the destination.',
     estimateNote:
       'Your position is the estimate from when guidance started. Tap "I\'m lost" if it drifts.',
   },
@@ -118,6 +139,11 @@ export const en: Resource = {
     station: 'Station corridors',
   },
   map: {
+    legendRoute: 'Route',
+    fitRoute: 'Show the whole route',
+    gpsHint: 'Approx. location (GPS)',
+    locateGps: 'Show my approximate location',
+    gpsOutOfArea: 'You seem to be outside the Umeda underground map.',
     title: 'Umeda underground map',
     you: 'You are here',
     destination: 'Destination',
@@ -127,6 +153,12 @@ export const en: Resource = {
     resetView: 'Fit view',
     legendUnderground: 'Underground',
     legendGround: 'Above ground',
+  },
+  attribution: {
+    title: 'Data sources',
+    osm: 'Passages, exits, underground shops and above-ground spots:',
+    official:
+      'Some shop names are taken from the official websites of each underground mall (Whity Umeda, Diamor Osaka, Hankyu Sanbangai, ekimo Umeda, Dojima Underground Center).',
   },
   language: {
     label: 'Language',

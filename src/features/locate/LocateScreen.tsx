@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
 import { locate, type LocationCandidate } from '../../domain/locate';
@@ -10,18 +10,53 @@ interface Props {
   graph: Graph;
   shops: Shop[];
   pois: Poi[];
+  /** 「迷った」から開いたとき true。再測位の説明を出す */
+  lost?: boolean;
+  /** 起動時に取れた GPS 位置。あれば位置推定のヒントに使う */
+  initialGps?: { lat: number; lng: number } | null;
   onConfirm: (nodeId: NodeId) => void;
 }
 
-const QUICK_PICK_COUNT = 8;
+/**
+ * 入口セレクトの値。地上スポット同士・出口と同じノードを指すことがあるため、
+ * ノードIDではなく「種類:ID」で一意にする。
+ */
+type EntranceKey = '' | `poi:${string}` | `node:${string}`;
 
-export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
+const QUICK_PICK_COUNT = 8;
+/** 店の候補は数百件あるため、入力した文字に合うものだけをこの件数まで出す */
+const MAX_SHOP_RESULTS = 30;
+
+export function LocateScreen({
+  graph,
+  shops,
+  pois,
+  lost = false,
+  initialGps = null,
+  onConfirm,
+}: Props) {
   const { t, i18n } = useTranslation();
   const gps = useGeolocation();
-  const [entranceNodeId, setEntranceNodeId] = useState<string>('');
+  const [entranceKey, setEntranceKey] = useState<EntranceKey>('');
   const [selectedShopIds, setSelectedShopIds] = useState<string[]>([]);
   const [shopQuery, setShopQuery] = useState('');
   const [candidates, setCandidates] = useState<LocationCandidate[] | null>(null);
+  const estimateRef = useRef<HTMLDivElement>(null);
+
+  const entranceNodeId = useMemo(() => {
+    if (entranceKey.startsWith('poi:')) {
+      const poiId = entranceKey.slice('poi:'.length);
+      return pois.find((p) => p.id === poiId)?.nodeId ?? '';
+    }
+    return entranceKey.startsWith('node:') ? entranceKey.slice('node:'.length) : '';
+  }, [entranceKey, pois]);
+
+  // 推定結果カードは画面外に出やすいので、表示されたら見える位置へ寄せる
+  useEffect(() => {
+    if (candidates !== null && candidates.length > 0) {
+      estimateRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' });
+    }
+  }, [candidates]);
 
   const entrances = useMemo(
     () => [...graph.nodes.values()].filter((n) => n.kind === 'exit' || n.kind === 'gate'),
@@ -36,13 +71,19 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
     return [...landmarks, ...gates].slice(0, QUICK_PICK_COUNT);
   }, [graph]);
 
+  /** 選んだ店（常に表示）＋ 入力に合う店（最大 MAX_SHOP_RESULTS 件） */
   const filteredShops = useMemo(() => {
     const query = shopQuery.trim().toLowerCase();
-    if (query === '') return shops;
-    return shops.filter(
-      (s) => s.name.ja.toLowerCase().includes(query) || s.name.en.toLowerCase().includes(query),
-    );
-  }, [shops, shopQuery]);
+    const selected = shops.filter((s) => selectedShopIds.includes(s.id));
+    if (query === '') return selected;
+    const matches = shops
+      .filter((s) => !selectedShopIds.includes(s.id))
+      .filter(
+        (s) => s.name.ja.toLowerCase().includes(query) || s.name.en.toLowerCase().includes(query),
+      )
+      .slice(0, MAX_SHOP_RESULTS);
+    return [...selected, ...matches];
+  }, [shops, shopQuery, selectedShopIds]);
 
   const toggleShop = (shopId: string) => {
     setSelectedShopIds((prev) =>
@@ -53,7 +94,7 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
   const runLocate = () => {
     const result = locate(graph, shops, {
       entranceNodeId: entranceNodeId === '' ? undefined : entranceNodeId,
-      gps: gps.position ?? undefined,
+      gps: gps.position ?? initialGps ?? undefined,
       nearbyShopIds: selectedShopIds,
     });
     setCandidates(result);
@@ -73,6 +114,7 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
 
   return (
     <section>
+      {lost && <p className="hint warn">{t('lost.description')}</p>}
       <p className="description">{t('locate.description')}</p>
 
       <div className="field">
@@ -82,8 +124,11 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
             <button
               key={node.id}
               type="button"
-              className={entranceNodeId === node.id ? 'chip active' : 'chip'}
-              onClick={() => setEntranceNodeId((prev) => (prev === node.id ? '' : node.id))}
+              className={entranceKey === `node:${node.id}` ? 'chip active' : 'chip'}
+              aria-pressed={entranceKey === `node:${node.id}`}
+              onClick={() =>
+                setEntranceKey((prev) => (prev === `node:${node.id}` ? '' : `node:${node.id}`))
+              }
             >
               {localized(node.name, i18n.language)}
             </button>
@@ -93,18 +138,18 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
 
       <label className="field">
         <span>{t('locate.entranceLabel')}</span>
-        <select value={entranceNodeId} onChange={(e) => setEntranceNodeId(e.target.value)}>
+        <select value={entranceKey} onChange={(e) => setEntranceKey(e.target.value as EntranceKey)}>
           <option value="">{t('locate.entranceNone')}</option>
           <optgroup label={t('locate.entrancePoiGroup')}>
             {pois.map((poi) => (
-              <option key={poi.id} value={poi.nodeId}>
+              <option key={poi.id} value={`poi:${poi.id}`}>
                 {localized(poi.name, i18n.language)}
               </option>
             ))}
           </optgroup>
           <optgroup label={t('locate.entranceExitGroup')}>
             {entrances.map((node) => (
-              <option key={node.id} value={node.id}>
+              <option key={node.id} value={`node:${node.id}`}>
                 {node.exitNo !== undefined ? `${node.exitNo} ` : ''}
                 {localized(node.name, i18n.language)}
               </option>
@@ -114,8 +159,14 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
       </label>
 
       <div className="field">
-        <button type="button" className="secondary" onClick={gps.acquire}>
-          {t('locate.gpsButton')}
+        <button
+          type="button"
+          className="secondary"
+          onClick={gps.acquire}
+          disabled={gps.status === 'loading'}
+          aria-busy={gps.status === 'loading'}
+        >
+          {gps.status === 'loading' ? t('locate.gpsLoading') : t('locate.gpsButton')}
         </button>
         {gps.status === 'success' && <p className="hint ok">{t('locate.gpsAcquired')}</p>}
         {gps.status === 'error' && <p className="hint warn">{t('locate.gpsFailed')}</p>}
@@ -129,6 +180,9 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
           placeholder={t('locate.shopsPlaceholder')}
           onChange={(e) => setShopQuery(e.target.value)}
         />
+        {shopQuery.trim() === '' && selectedShopIds.length === 0 && (
+          <p className="hint">{t('locate.shopsHint')}</p>
+        )}
         <ul className="choice-list">
           {filteredShops.map((shop) => (
             <li key={shop.id}>
@@ -153,7 +207,7 @@ export function LocateScreen({ graph, shops, pois, onConfirm }: Props) {
         <p className="hint warn">{t('locate.noCandidates')}</p>
       )}
       {top !== null && (
-        <div className="estimate-card">
+        <div className="estimate-card" ref={estimateRef}>
           <p className="estimate-title">{t('locate.estimatedTitle')}</p>
           <p className="estimate-place">
             {t('locate.estimatedNear', { name: nodeName(top.nodeId) })}

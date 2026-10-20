@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { LanguageSwitcher } from '../../components/LanguageSwitcher';
 import { ReportLink } from '../../components/ReportLink';
+import { BottomSheet } from '../../components/BottomSheet';
 
 interface Props {
   dataVersion: string;
@@ -11,9 +12,9 @@ interface Props {
 export function MenuSheet({ dataVersion, onClose }: Props) {
   const { t } = useTranslation();
   return (
-    <div className="sheet" role="dialog" aria-label={t('tabs.menu')}>
+    <BottomSheet label={t('tabs.menu')}>
       <div className="sheet-header">
-        <h1>{t('app.title')}</h1>
+        <h2>{t('app.title')}</h2>
         <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>
           ×
         </button>
@@ -26,6 +27,17 @@ export function MenuSheet({ dataVersion, onClose }: Props) {
       </div>
       <ReportLink />
       <p className="hint">{t('app.dataVersionNote', { version: dataVersion })}</p>
-    </div>
+      <div className="attribution" data-testid="attribution">
+        <h3>{t('attribution.title')}</h3>
+        <p className="hint">
+          {t('attribution.osm')}{' '}
+          <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">
+            © OpenStreetMap contributors
+          </a>{' '}
+          (ODbL)
+        </p>
+        <p className="hint">{t('attribution.official')}</p>
+      </div>
+    </BottomSheet>
   );
 }
