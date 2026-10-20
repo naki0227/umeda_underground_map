@@ -11,9 +11,8 @@
 ## 手順
 
 ```bash
-# 1. 梅田周辺の抽出データを取得（OSM API の map 呼び出し。範囲は約 1.2km 四方）
-mkdir -p .osm
-curl -o .osm/umeda.osm 'https://api.openstreetmap.org/api/0.6/map?bbox=135.4925,34.6955,135.5055,34.7075'
+# 1. 梅田周辺の抽出データを取得（OSM API の map 呼び出しを約 500m 四方ずつ 36 回。範囲は約 2.7km × 3.1km）
+node scripts/osm/fetch.mjs .osm/umeda.osm
 
 # 2. 生成（取得日を記録する）
 OSM_EXTRACT_DATE=$(date +%F) node scripts/osm/build.mjs .osm/umeda.osm
@@ -29,6 +28,7 @@ npm test
 
 | ファイル       | 役割                                                                                                                     |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `fetch.mjs`    | OSM API からマスに分けて取得し、1 つの OSM XML にまとめる                                                                |
 | `parseOsm.mjs` | OSM XML の読み込み（node / way / tag）                                                                                   |
 | `network.mjs`  | 地下の歩行グラフ作成（地下の通路＋上り下りの階段、15m 以内の切れ目をつなぐ、出入口を 30m 以内でつなぐ、次数2の点を縮約） |
 | `overlay.mjs`  | 手作業で重ねるデータ（改札・広場・区画名・阪急三番街 B1/B2・地上スポットの一覧）。値の根拠をコメントに書く               |
@@ -36,7 +36,7 @@ npm test
 
 ## 生成の規則
 
-- 範囲: `overlay.mjs` の `REGION`（原点からの東西・南北メートル）
+- 範囲: JR大阪駅 御堂筋口と地下でつながる通路網すべて（取得範囲 `fetch.mjs` の `FETCH_BOUNDS` の中）。OSM に通路が描き足されれば、作り直すだけで地図が広がる
 - 出口: `railway=subway_entrance`（または番号付きの `entrance`）のうち、主な通路網につながり番号（`ref`）があるもの
 - フロア: 通路の `level`。-2 だけなら B2、出入口は 1F、それ以外は B1
 - エリア: OSM の地下街ポリゴン（Whityうめだ / ディアモール大阪 / ドージマ地下センター / ekimo梅田）の内側。阪急三番街は `overlay.mjs` の場所。その他は駅（station）

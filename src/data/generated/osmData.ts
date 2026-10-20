@@ -551,6 +551,136 @@ export const osmData: GeneratedMapData = {
       osmId: 'node/5024365400',
     },
     {
+      id: 'ex-6-1',
+      lat: 34.697556,
+      lng: 135.490284,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-1',
+      name: {
+        ja: '6-1 出口',
+        en: 'Exit 6-1',
+      },
+      osmId: 'node/8872207304',
+    },
+    {
+      id: 'ex-6-10',
+      lat: 34.697945,
+      lng: 135.490666,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-10',
+      name: {
+        ja: '6-10 出口',
+        en: 'Exit 6-10',
+      },
+      osmId: 'node/8872207247',
+    },
+    {
+      id: 'ex-6-13',
+      lat: 34.697905,
+      lng: 135.491332,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-13',
+      name: {
+        ja: '6-13 出口',
+        en: 'Exit 6-13',
+      },
+      osmId: 'node/5887069663',
+    },
+    {
+      id: 'ex-6-19',
+      lat: 34.698174,
+      lng: 135.491672,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-19',
+      name: {
+        ja: '6-19 出口',
+        en: 'Exit 6-19',
+      },
+      osmId: 'node/5887069652',
+    },
+    {
+      id: 'ex-6-2',
+      lat: 34.697844,
+      lng: 135.490372,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-2',
+      name: {
+        ja: '6-2 出口',
+        en: 'Exit 6-2',
+      },
+      osmId: 'node/8872207309',
+    },
+    {
+      id: 'ex-6-20',
+      lat: 34.69831,
+      lng: 135.491544,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-20',
+      name: {
+        ja: '6-20 出口',
+        en: 'Exit 6-20',
+      },
+      osmId: 'node/5887069653',
+    },
+    {
+      id: 'ex-6-25',
+      lat: 34.698218,
+      lng: 135.491896,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-25',
+      name: {
+        ja: '6-25 出口',
+        en: 'Exit 6-25',
+      },
+      osmId: 'node/5887069624',
+    },
+    {
+      id: 'ex-6-30',
+      lat: 34.698907,
+      lng: 135.492247,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-30',
+      name: {
+        ja: '6-30 出口',
+        en: 'Exit 6-30',
+      },
+      osmId: 'node/6048835150',
+    },
+    {
+      id: 'ex-6-31',
+      lat: 34.698678,
+      lng: 135.492532,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-31',
+      name: {
+        ja: '6-31 出口',
+        en: 'Exit 6-31',
+      },
+      osmId: 'node/5887069626',
+    },
+    {
+      id: 'ex-6-36',
+      lat: 34.699014,
+      lng: 135.49257,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-36',
+      name: {
+        ja: '6-36 出口',
+        en: 'Exit 6-36',
+      },
+      osmId: 'node/5887069628',
+    },
+    {
       id: 'ex-6-40',
       lat: 34.699175,
       lng: 135.492798,
@@ -562,6 +692,19 @@ export const osmData: GeneratedMapData = {
         en: 'Exit 6-40',
       },
       osmId: 'node/5887069632',
+    },
+    {
+      id: 'ex-6-40-2',
+      lat: 34.699258,
+      lng: 135.492731,
+      area: 'station',
+      kind: 'exit',
+      exitNo: '6-40',
+      name: {
+        ja: '6-40 出口',
+        en: 'Exit 6-40',
+      },
+      osmId: 'node/6024811118',
     },
     {
       id: 'ex-6-46',
@@ -835,6 +978,32 @@ export const osmData: GeneratedMapData = {
         en: 'Exit 9',
       },
       osmId: 'node/5024365378',
+    },
+    {
+      id: 'ex-A-11',
+      lat: 34.698745,
+      lng: 135.492124,
+      area: 'station',
+      kind: 'exit',
+      exitNo: 'A-11',
+      name: {
+        ja: 'A-11 出口',
+        en: 'Exit A-11',
+      },
+      osmId: 'node/5887069623',
+    },
+    {
+      id: 'ex-A-3',
+      lat: 34.699113,
+      lng: 135.491602,
+      area: 'station',
+      kind: 'exit',
+      exitNo: 'A-3',
+      name: {
+        ja: 'A-3 出口',
+        en: 'Exit A-3',
+      },
+      osmId: 'node/5887069622',
     },
     {
       id: 'ex-C-1',
@@ -3693,25 +3862,102 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
-      id: 'n5887069632-exit',
-      lat: 34.699487,
-      lng: 135.493561,
+      id: 'n5887069622-exit',
+      lat: 34.698561,
+      lng: 135.492132,
       area: 'station',
       kind: 'junction',
       name: {
-        ja: '6-57出口付近',
-        en: 'Near Exit 6-57',
+        ja: 'A-11出口付近',
+        en: 'Near Exit A-11',
+      },
+    },
+    {
+      id: 'n5887069623-exit',
+      lat: 34.698628,
+      lng: 135.492236,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: 'A-11出口付近',
+        en: 'Near Exit A-11',
+      },
+    },
+    {
+      id: 'n5887069624-exit',
+      lat: 34.698335,
+      lng: 135.491784,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-25出口付近',
+        en: 'Near Exit 6-25',
+      },
+    },
+    {
+      id: 'n5887069626-exit',
+      lat: 34.698765,
+      lng: 135.492448,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-31出口付近',
+        en: 'Near Exit 6-31',
+      },
+    },
+    {
+      id: 'n5887069628-exit',
+      lat: 34.698909,
+      lng: 135.49267,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-36出口付近',
+        en: 'Near Exit 6-36',
+      },
+    },
+    {
+      id: 'n5887069632-exit',
+      lat: 34.699062,
+      lng: 135.492906,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-40出口付近',
+        en: 'Near Exit 6-40',
       },
     },
     {
       id: 'n5887069635-exit',
-      lat: 34.699487,
-      lng: 135.493561,
+      lat: 34.699328,
+      lng: 135.493316,
       area: 'station',
       kind: 'junction',
       name: {
-        ja: '6-57出口付近',
-        en: 'Near Exit 6-57',
+        ja: '6-46出口付近',
+        en: 'Near Exit 6-46',
+      },
+    },
+    {
+      id: 'n5887069652-exit',
+      lat: 34.698229,
+      lng: 135.491619,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-19出口付近',
+        en: 'Near Exit 6-19',
+      },
+    },
+    {
+      id: 'n5887069653-exit',
+      lat: 34.69823,
+      lng: 135.491621,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-19出口付近',
+        en: 'Near Exit 6-19',
       },
     },
     {
@@ -3737,6 +3983,28 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
+      id: 'n6024811118-exit',
+      lat: 34.699067,
+      lng: 135.492914,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-40出口付近',
+        en: 'Near Exit 6-40',
+      },
+    },
+    {
+      id: 'n6048835150-exit',
+      lat: 34.698739,
+      lng: 135.492408,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-31出口付近',
+        en: 'Near Exit 6-31',
+      },
+    },
+    {
       id: 'n6048835702',
       lat: 34.701377,
       lng: 135.494924,
@@ -3747,6 +4015,17 @@ export const osmData: GeneratedMapData = {
         en: 'Near Exit C-1',
       },
       floor: '1F',
+    },
+    {
+      id: 'n8872207247-exit',
+      lat: 34.697836,
+      lng: 135.490715,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-10出口付近',
+        en: 'Near Exit 6-10',
+      },
     },
     {
       id: 'n8878597296-exit',
@@ -3883,6 +4162,17 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
+      id: 'n9320739984',
+      lat: 34.697685,
+      lng: 135.490214,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-1出口付近',
+        en: 'Near Exit 6-1',
+      },
+    },
+    {
       id: 'n9320739985',
       lat: 34.699487,
       lng: 135.493561,
@@ -3891,6 +4181,17 @@ export const osmData: GeneratedMapData = {
       name: {
         ja: '6-57出口付近',
         en: 'Near Exit 6-57',
+      },
+    },
+    {
+      id: 'n9320739986',
+      lat: 34.698004,
+      lng: 135.491273,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-13出口付近',
+        en: 'Near Exit 6-13',
       },
     },
     {
@@ -4335,83 +4636,6 @@ export const osmData: GeneratedMapData = {
     },
     {
       id: 'nsplit-1',
-      lat: 34.70229,
-      lng: 135.501881,
-      area: 'whity',
-      kind: 'junction',
-      name: {
-        ja: 'M-10出口付近',
-        en: 'Near Exit M-10',
-      },
-    },
-    {
-      id: 'nsplit-10',
-      lat: 34.69867,
-      lng: 135.499877,
-      area: 'station',
-      kind: 'junction',
-      name: {
-        ja: 'F-82出口付近',
-        en: 'Near Exit F-82',
-      },
-    },
-    {
-      id: 'nsplit-11',
-      lat: 34.698473,
-      lng: 135.498763,
-      area: 'station',
-      kind: 'junction',
-      name: {
-        ja: 'E-35出口付近',
-        en: 'Near Exit E-35',
-      },
-    },
-    {
-      id: 'nsplit-12',
-      lat: 34.702933,
-      lng: 135.494167,
-      area: 'station',
-      kind: 'junction',
-      name: {
-        ja: 'ジーユー前',
-        en: 'In front of GU',
-      },
-    },
-    {
-      id: 'nsplit-13',
-      lat: 34.703132,
-      lng: 135.494563,
-      area: 'station',
-      kind: 'junction',
-      name: {
-        ja: '芋屋金次郎前',
-        en: 'In front of 芋屋金次郎',
-      },
-    },
-    {
-      id: 'nsplit-14',
-      lat: 34.704314,
-      lng: 135.498117,
-      area: 'station',
-      kind: 'junction',
-      name: {
-        ja: '三井住友銀行前',
-        en: 'In front of Sumitomo Mitsui Banking Corporation',
-      },
-    },
-    {
-      id: 'nsplit-15',
-      lat: 34.702564,
-      lng: 135.499713,
-      area: 'whity',
-      kind: 'junction',
-      name: {
-        ja: 'J-4出口付近',
-        en: 'Near Exit J-4',
-      },
-    },
-    {
-      id: 'nsplit-16',
       lat: 34.696071,
       lng: 135.495554,
       area: 'dojima',
@@ -4422,73 +4646,18 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
-      id: 'nsplit-17',
-      lat: 34.696298,
-      lng: 135.495514,
-      area: 'dojima',
-      kind: 'junction',
-      name: {
-        ja: 'あいち前',
-        en: 'In front of あいち',
-      },
-    },
-    {
-      id: 'nsplit-18',
-      lat: 34.696496,
-      lng: 135.495479,
-      area: 'dojima',
-      kind: 'junction',
-      name: {
-        ja: 'C-83出口付近',
-        en: 'Near Exit C-83',
-      },
-    },
-    {
-      id: 'nsplit-19',
-      lat: 34.69894,
-      lng: 135.4956,
+      id: 'nsplit-10',
+      lat: 34.703132,
+      lng: 135.494563,
       area: 'station',
       kind: 'junction',
       name: {
-        ja: 'PatSat前',
-        en: 'In front of PatSat',
+        ja: '芋屋金次郎前',
+        en: 'In front of 芋屋金次郎',
       },
     },
     {
-      id: 'nsplit-2',
-      lat: 34.705406,
-      lng: 135.498363,
-      area: 'station',
-      kind: 'junction',
-      name: {
-        ja: '上島珈琲店前',
-        en: 'In front of Ueshima Coffee House',
-      },
-    },
-    {
-      id: 'nsplit-20',
-      lat: 34.699054,
-      lng: 135.497429,
-      area: 'station',
-      kind: 'junction',
-      name: {
-        ja: 'D-52出口付近',
-        en: 'Near Exit D-52',
-      },
-    },
-    {
-      id: 'nsplit-3',
-      lat: 34.704661,
-      lng: 135.498513,
-      area: 'station',
-      kind: 'junction',
-      name: {
-        ja: 'ハーブス前',
-        en: 'In front of HARBS',
-      },
-    },
-    {
-      id: 'nsplit-4',
+      id: 'nsplit-11',
       lat: 34.698237,
       lng: 135.499494,
       area: 'station',
@@ -4499,40 +4668,62 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
-      id: 'nsplit-5',
-      lat: 34.703516,
-      lng: 135.496357,
+      id: 'nsplit-12',
+      lat: 34.69867,
+      lng: 135.499877,
       area: 'station',
       kind: 'junction',
       name: {
-        ja: '博多新風 ラーメン食堂前',
-        en: 'In front of 博多新風 ラーメン食堂',
+        ja: 'F-82出口付近',
+        en: 'Near Exit F-82',
       },
     },
     {
-      id: 'nsplit-6',
-      lat: 34.703468,
-      lng: 135.495824,
+      id: 'nsplit-13',
+      lat: 34.698473,
+      lng: 135.498763,
       area: 'station',
       kind: 'junction',
       name: {
-        ja: 'Craft Beer Market前',
-        en: 'In front of Craft Beer Market',
+        ja: 'E-35出口付近',
+        en: 'Near Exit E-35',
       },
     },
     {
-      id: 'nsplit-7',
-      lat: 34.70176,
-      lng: 135.496361,
+      id: 'nsplit-14',
+      lat: 34.699054,
+      lng: 135.497429,
       area: 'station',
       kind: 'junction',
       name: {
-        ja: 'D-13出口付近',
-        en: 'Near Exit D-13',
+        ja: 'D-52出口付近',
+        en: 'Near Exit D-52',
       },
     },
     {
-      id: 'nsplit-8',
+      id: 'nsplit-15',
+      lat: 34.705406,
+      lng: 135.498363,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '上島珈琲店前',
+        en: 'In front of Ueshima Coffee House',
+      },
+    },
+    {
+      id: 'nsplit-16',
+      lat: 34.704661,
+      lng: 135.498513,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: 'ハーブス前',
+        en: 'In front of HARBS',
+      },
+    },
+    {
+      id: 'nsplit-17',
       lat: 34.703454,
       lng: 135.498592,
       area: 'station',
@@ -4543,7 +4734,7 @@ export const osmData: GeneratedMapData = {
       },
     },
     {
-      id: 'nsplit-9',
+      id: 'nsplit-18',
       lat: 34.703222,
       lng: 135.498146,
       area: 'station',
@@ -4551,6 +4742,127 @@ export const osmData: GeneratedMapData = {
       name: {
         ja: 'ルピシア前',
         en: 'In front of ルピシア',
+      },
+    },
+    {
+      id: 'nsplit-19',
+      lat: 34.704314,
+      lng: 135.498117,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '三井住友銀行前',
+        en: 'In front of Sumitomo Mitsui Banking Corporation',
+      },
+    },
+    {
+      id: 'nsplit-2',
+      lat: 34.696298,
+      lng: 135.495514,
+      area: 'dojima',
+      kind: 'junction',
+      name: {
+        ja: 'あいち前',
+        en: 'In front of あいち',
+      },
+    },
+    {
+      id: 'nsplit-20',
+      lat: 34.702564,
+      lng: 135.499713,
+      area: 'whity',
+      kind: 'junction',
+      name: {
+        ja: 'J-4出口付近',
+        en: 'Near Exit J-4',
+      },
+    },
+    {
+      id: 'nsplit-21',
+      lat: 34.70229,
+      lng: 135.501881,
+      area: 'whity',
+      kind: 'junction',
+      name: {
+        ja: 'M-10出口付近',
+        en: 'Near Exit M-10',
+      },
+    },
+    {
+      id: 'nsplit-3',
+      lat: 34.696496,
+      lng: 135.495479,
+      area: 'dojima',
+      kind: 'junction',
+      name: {
+        ja: 'C-83出口付近',
+        en: 'Near Exit C-83',
+      },
+    },
+    {
+      id: 'nsplit-4',
+      lat: 34.699191,
+      lng: 135.493105,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '6-40出口付近',
+        en: 'Near Exit 6-40',
+      },
+    },
+    {
+      id: 'nsplit-5',
+      lat: 34.69894,
+      lng: 135.4956,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: 'PatSat前',
+        en: 'In front of PatSat',
+      },
+    },
+    {
+      id: 'nsplit-6',
+      lat: 34.703516,
+      lng: 135.496357,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: '博多新風 ラーメン食堂前',
+        en: 'In front of 博多新風 ラーメン食堂',
+      },
+    },
+    {
+      id: 'nsplit-7',
+      lat: 34.703468,
+      lng: 135.495824,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: 'Craft Beer Market前',
+        en: 'In front of Craft Beer Market',
+      },
+    },
+    {
+      id: 'nsplit-8',
+      lat: 34.70176,
+      lng: 135.496361,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: 'D-13出口付近',
+        en: 'Near Exit D-13',
+      },
+    },
+    {
+      id: 'nsplit-9',
+      lat: 34.702933,
+      lng: 135.494167,
+      area: 'station',
+      kind: 'junction',
+      name: {
+        ja: 'ジーユー前',
+        en: 'In front of GU',
       },
     },
     {
@@ -4914,7 +5226,7 @@ export const osmData: GeneratedMapData = {
   edges: [
     {
       from: 'dj-3',
-      to: 'nsplit-18',
+      to: 'nsplit-3',
       distanceM: 16,
     },
     {
@@ -4934,7 +5246,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'dm-b2',
-      to: 'nsplit-20',
+      to: 'nsplit-14',
       distanceM: 65,
     },
     {
@@ -4954,7 +5266,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'dm-s',
-      to: 'nsplit-20',
+      to: 'nsplit-14',
       distanceM: 19,
     },
     {
@@ -4969,7 +5281,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'ek-2',
-      to: 'nsplit-9',
+      to: 'nsplit-18',
       distanceM: 28,
     },
     {
@@ -5114,9 +5426,75 @@ export const osmData: GeneratedMapData = {
       attrs: ['stairs'],
     },
     {
+      from: 'ex-6-10',
+      to: 'n8872207247-exit',
+      distanceM: 15,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-13',
+      to: 'n9320739986',
+      distanceM: 17,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-19',
+      to: 'n5887069652-exit',
+      distanceM: 9,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-1',
+      to: 'n9320739984',
+      distanceM: 16,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-20',
+      to: 'n5887069653-exit',
+      distanceM: 13,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-25',
+      to: 'n5887069624-exit',
+      distanceM: 19,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-2',
+      to: 'n9320739984',
+      distanceM: 23,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-30',
+      to: 'n6048835150-exit',
+      distanceM: 27,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-31',
+      to: 'n5887069626-exit',
+      distanceM: 14,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-36',
+      to: 'n5887069628-exit',
+      distanceM: 17,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-6-40-2',
+      to: 'n6024811118-exit',
+      distanceM: 31,
+      attrs: ['stairs'],
+    },
+    {
       from: 'ex-6-40',
       to: 'n5887069632-exit',
-      distanceM: 90,
+      distanceM: 18,
       attrs: ['stairs'],
     },
     {
@@ -5134,7 +5512,7 @@ export const osmData: GeneratedMapData = {
     {
       from: 'ex-6-48',
       to: 'n5887069635-exit',
-      distanceM: 45,
+      distanceM: 31,
       attrs: ['stairs'],
     },
     {
@@ -5213,6 +5591,18 @@ export const osmData: GeneratedMapData = {
       from: 'ex-8-5',
       to: 'n5852387981-exit',
       distanceM: 6,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-A-11',
+      to: 'n5887069623-exit',
+      distanceM: 19,
+      attrs: ['stairs'],
+    },
+    {
+      from: 'ex-A-3',
+      to: 'n5887069622-exit',
+      distanceM: 90,
       attrs: ['stairs'],
     },
     {
@@ -5699,7 +6089,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n10748809559',
-      to: 'nsplit-12',
+      to: 'nsplit-9',
       distanceM: 60,
     },
     {
@@ -5735,7 +6125,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n11738095778',
-      to: 'nsplit-5',
+      to: 'nsplit-6',
       distanceM: 60,
     },
     {
@@ -5771,7 +6161,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n12079442293',
-      to: 'nsplit-10',
+      to: 'nsplit-12',
       distanceM: 21,
     },
     {
@@ -5781,7 +6171,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n12079442294',
-      to: 'nsplit-4',
+      to: 'nsplit-11',
       distanceM: 78,
     },
     {
@@ -5872,7 +6262,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n12154532651',
-      to: 'nsplit-13',
+      to: 'nsplit-10',
       distanceM: 35,
     },
     {
@@ -5941,7 +6331,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n12183308983',
-      to: 'nsplit-8',
+      to: 'nsplit-17',
       distanceM: 26,
     },
     {
@@ -6227,7 +6617,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n12241180641',
-      to: 'nsplit-4',
+      to: 'nsplit-11',
       distanceM: 27,
     },
     {
@@ -6569,7 +6959,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n13519702375',
-      to: 'n5887069635-exit',
+      to: 'n9320739985',
       distanceM: 50,
     },
     {
@@ -6589,7 +6979,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n2293280516-exit',
-      to: 'nsplit-19',
+      to: 'nsplit-5',
       distanceM: 32,
     },
     {
@@ -6829,7 +7219,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n5852387965-exit',
-      to: 'nsplit-11',
+      to: 'nsplit-13',
       distanceM: 20,
     },
     {
@@ -6986,7 +7376,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n5866997085-exit',
-      to: 'nsplit-10',
+      to: 'nsplit-12',
       distanceM: 57,
     },
     {
@@ -7036,24 +7426,89 @@ export const osmData: GeneratedMapData = {
       distanceM: 22,
     },
     {
-      from: 'n5887069632-exit',
-      to: 'n5887069635-exit',
-      distanceM: 1,
+      from: 'n5887069622-exit',
+      to: 'n5887069623-exit',
+      distanceM: 12,
+    },
+    {
+      from: 'n5887069622-exit',
+      to: 'n5887069624-exit',
+      distanceM: 40,
+    },
+    {
+      from: 'n5887069623-exit',
+      to: 'n6048835150-exit',
+      distanceM: 20,
+    },
+    {
+      from: 'n5887069624-exit',
+      to: 'n5887069653-exit',
+      distanceM: 19,
+    },
+    {
+      from: 'n5887069626-exit',
+      to: 'n5887069628-exit',
+      distanceM: 26,
+    },
+    {
+      from: 'n5887069626-exit',
+      to: 'n6048835150-exit',
+      distanceM: 5,
+    },
+    {
+      from: 'n5887069628-exit',
+      to: 'n5887069632-exit',
+      distanceM: 27,
     },
     {
       from: 'n5887069632-exit',
-      to: 'n9320739985',
+      to: 'n6024811118-exit',
       distanceM: 1,
+    },
+    {
+      from: 'n5887069635-exit',
+      to: 'n9320739985',
+      distanceM: 29,
+    },
+    {
+      from: 'n5887069635-exit',
+      to: 'nsplit-4',
+      distanceM: 25,
+    },
+    {
+      from: 'n5887069652-exit',
+      to: 'n5887069653-exit',
+      distanceM: 1,
+    },
+    {
+      from: 'n5887069652-exit',
+      to: 'n9320739986',
+      distanceM: 40,
     },
     {
       from: 'n5887069694-exit',
-      to: 'nsplit-7',
+      to: 'nsplit-8',
       distanceM: 34,
+    },
+    {
+      from: 'n6024811118-exit',
+      to: 'nsplit-4',
+      distanceM: 22,
     },
     {
       from: 'n6048835702',
       to: 'n8878597307',
       distanceM: 7,
+    },
+    {
+      from: 'n8872207247-exit',
+      to: 'n9320739984',
+      distanceM: 49,
+    },
+    {
+      from: 'n8872207247-exit',
+      to: 'n9320739986',
+      distanceM: 54,
     },
     {
       from: 'n8878597296-exit',
@@ -7062,7 +7517,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n8878597296-exit',
-      to: 'nsplit-15',
+      to: 'nsplit-20',
       distanceM: 30,
     },
     {
@@ -7121,7 +7576,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n9320739981',
-      to: 'nsplit-6',
+      to: 'nsplit-7',
       distanceM: 84,
     },
     {
@@ -7136,7 +7591,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n9320739990',
-      to: 'nsplit-16',
+      to: 'nsplit-1',
       distanceM: 35,
     },
     {
@@ -7186,7 +7641,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n9320740008',
-      to: 'nsplit-7',
+      to: 'nsplit-8',
       distanceM: 41,
     },
     {
@@ -7201,7 +7656,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n9320740011',
-      to: 'nsplit-11',
+      to: 'nsplit-13',
       distanceM: 26,
     },
     {
@@ -7271,7 +7726,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n9320747526',
-      to: 'nsplit-15',
+      to: 'nsplit-20',
       distanceM: 37,
     },
     {
@@ -7281,7 +7736,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'n9320747533',
-      to: 'nsplit-1',
+      to: 'nsplit-21',
       distanceM: 42,
     },
     {
@@ -7307,7 +7762,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'nsb-s-link',
-      to: 'nsplit-3',
+      to: 'nsplit-16',
       distanceM: 30,
     },
     {
@@ -7316,49 +7771,49 @@ export const osmData: GeneratedMapData = {
       distanceM: 14,
     },
     {
-      from: 'nsplit-12',
-      to: 'nsplit-13',
+      from: 'nsplit-10',
+      to: 'nsplit-9',
       distanceM: 42,
-    },
-    {
-      from: 'nsplit-14',
-      to: 'nst-hankyu-link',
-      distanceM: 35,
-    },
-    {
-      from: 'nsplit-14',
-      to: 'nst-metro-n-link',
-      distanceM: 54,
-    },
-    {
-      from: 'nsplit-16',
-      to: 'nsplit-17',
-      distanceM: 26,
     },
     {
       from: 'nsplit-17',
       to: 'nsplit-18',
-      distanceM: 22,
+      distanceM: 48,
     },
     {
       from: 'nsplit-19',
-      to: 'nst-nishiumeda-link',
-      distanceM: 60,
+      to: 'nst-hankyu-link',
+      distanceM: 35,
+    },
+    {
+      from: 'nsplit-19',
+      to: 'nst-metro-n-link',
+      distanceM: 54,
     },
     {
       from: 'nsplit-1',
+      to: 'nsplit-2',
+      distanceM: 26,
+    },
+    {
+      from: 'nsplit-21',
       to: 'wt-izumi',
       distanceM: 24,
     },
     {
-      from: 'nsplit-5',
-      to: 'nsplit-6',
-      distanceM: 64,
+      from: 'nsplit-2',
+      to: 'nsplit-3',
+      distanceM: 22,
     },
     {
-      from: 'nsplit-8',
-      to: 'nsplit-9',
-      distanceM: 48,
+      from: 'nsplit-5',
+      to: 'nst-nishiumeda-link',
+      distanceM: 60,
+    },
+    {
+      from: 'nsplit-6',
+      to: 'nsplit-7',
+      distanceM: 64,
     },
     {
       from: 'sb-n-b2',
@@ -7368,7 +7823,7 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'sb-n',
-      to: 'nsplit-2',
+      to: 'nsplit-15',
       distanceM: 68,
     },
     {
@@ -7384,12 +7839,12 @@ export const osmData: GeneratedMapData = {
     },
     {
       from: 'sb-s',
-      to: 'nsplit-2',
+      to: 'nsplit-15',
       distanceM: 69,
     },
     {
       from: 'sb-s',
-      to: 'nsplit-3',
+      to: 'nsplit-16',
       distanceM: 28,
     },
     {
@@ -7585,7 +8040,7 @@ export const osmData: GeneratedMapData = {
         en: '遙華',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-4',
+      nodeId: 'nsplit-11',
     },
     {
       id: 'osm-n11716551803',
@@ -7603,7 +8058,7 @@ export const osmData: GeneratedMapData = {
         en: '丼丼亭',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-15',
+      nodeId: 'nsplit-20',
     },
     {
       id: 'osm-n11716551805',
@@ -7666,7 +8121,7 @@ export const osmData: GeneratedMapData = {
         en: 'GU',
       },
       category: 'fashion',
-      nodeId: 'nsplit-12',
+      nodeId: 'nsplit-9',
     },
     {
       id: 'osm-n12000565562',
@@ -7885,6 +8340,24 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n13266859698',
+      name: {
+        ja: 'そじ坊',
+        en: 'そじ坊',
+      },
+      category: 'restaurant',
+      nodeId: 'n5887069635-exit',
+    },
+    {
+      id: 'osm-n13266859699',
+      name: {
+        ja: '牛たん焼き仙台辺見',
+        en: '牛たん焼き仙台辺見',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-4',
+    },
+    {
       id: 'osm-n13316084907',
       name: {
         ja: 'ボクのスタンド',
@@ -7981,7 +8454,7 @@ export const osmData: GeneratedMapData = {
         en: '三田製麺所',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-16',
+      nodeId: 'nsplit-1',
     },
     {
       id: 'osm-n14016577234',
@@ -7999,7 +8472,7 @@ export const osmData: GeneratedMapData = {
         en: '中央軒',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-16',
+      nodeId: 'nsplit-1',
     },
     {
       id: 'osm-n14022063012',
@@ -8080,7 +8553,7 @@ export const osmData: GeneratedMapData = {
         en: 'CAFÉ ONthe',
       },
       category: 'cafe',
-      nodeId: 'nsplit-16',
+      nodeId: 'nsplit-1',
     },
     {
       id: 'osm-n14022063021',
@@ -8134,7 +8607,7 @@ export const osmData: GeneratedMapData = {
         en: 'あいち',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-2',
     },
     {
       id: 'osm-n14022063030',
@@ -8143,7 +8616,7 @@ export const osmData: GeneratedMapData = {
         en: 'おらが蕎麦',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-2',
     },
     {
       id: 'osm-n14022063031',
@@ -8152,7 +8625,7 @@ export const osmData: GeneratedMapData = {
         en: 'お酒の美術館',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-2',
     },
     {
       id: 'osm-n14022063032',
@@ -8161,7 +8634,7 @@ export const osmData: GeneratedMapData = {
         en: '浪花串カツ',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-2',
     },
     {
       id: 'osm-n14022063033',
@@ -8170,7 +8643,7 @@ export const osmData: GeneratedMapData = {
         en: 'Barber the GM',
       },
       category: 'service',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-2',
     },
     {
       id: 'osm-n14022063034',
@@ -8332,7 +8805,7 @@ export const osmData: GeneratedMapData = {
         en: 'Mending Service',
       },
       category: 'service',
-      nodeId: 'nsplit-14',
+      nodeId: 'nsplit-19',
     },
     {
       id: 'osm-n14026329291',
@@ -8368,7 +8841,7 @@ export const osmData: GeneratedMapData = {
         en: '2417 Cafè apartment',
       },
       category: 'cafe',
-      nodeId: 'nsplit-13',
+      nodeId: 'nsplit-10',
     },
     {
       id: 'osm-n14051464389',
@@ -8377,7 +8850,7 @@ export const osmData: GeneratedMapData = {
         en: '芋屋金次郎',
       },
       category: 'bakery',
-      nodeId: 'nsplit-13',
+      nodeId: 'nsplit-10',
     },
     {
       id: 'osm-n14051464396',
@@ -8386,7 +8859,7 @@ export const osmData: GeneratedMapData = {
         en: 'Natural House',
       },
       category: 'convenience',
-      nodeId: 'nsplit-13',
+      nodeId: 'nsplit-10',
     },
     {
       id: 'osm-n14061249986',
@@ -8404,7 +8877,7 @@ export const osmData: GeneratedMapData = {
         en: 'PatSat',
       },
       category: 'service',
-      nodeId: 'nsplit-19',
+      nodeId: 'nsplit-5',
     },
     {
       id: 'osm-n14061278510',
@@ -8548,7 +9021,7 @@ export const osmData: GeneratedMapData = {
         en: 'お好み焼三代目てんぐ',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-18',
+      nodeId: 'nsplit-3',
     },
     {
       id: 'osm-n14118804590',
@@ -8566,7 +9039,7 @@ export const osmData: GeneratedMapData = {
         en: '卑弥呼',
       },
       category: 'fashion',
-      nodeId: 'nsplit-20',
+      nodeId: 'nsplit-14',
     },
     {
       id: 'osm-n14118804592',
@@ -8782,7 +9255,7 @@ export const osmData: GeneratedMapData = {
         en: '碧',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-17',
+      nodeId: 'nsplit-2',
     },
     {
       id: 'osm-n14180459970',
@@ -9286,7 +9759,7 @@ export const osmData: GeneratedMapData = {
         en: '和ダイニングゆめ咲小町',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-16',
+      nodeId: 'nsplit-1',
     },
     {
       id: 'osm-n1740972029',
@@ -9322,7 +9795,7 @@ export const osmData: GeneratedMapData = {
         en: 'だまれトリ',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-1',
+      nodeId: 'nsplit-21',
     },
     {
       id: 'osm-n3469254238',
@@ -9403,7 +9876,7 @@ export const osmData: GeneratedMapData = {
         en: 'Ueshima Coffee House',
       },
       category: 'cafe',
-      nodeId: 'nsplit-2',
+      nodeId: 'nsplit-15',
     },
     {
       id: 'osm-n4496336591',
@@ -9412,7 +9885,7 @@ export const osmData: GeneratedMapData = {
         en: 'HARBS',
       },
       category: 'cafe',
-      nodeId: 'nsplit-3',
+      nodeId: 'nsplit-16',
     },
     {
       id: 'osm-n4502182393',
@@ -9466,7 +9939,7 @@ export const osmData: GeneratedMapData = {
         en: '玉五郎',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-4',
+      nodeId: 'nsplit-11',
     },
     {
       id: 'osm-n4646460489',
@@ -9511,7 +9984,7 @@ export const osmData: GeneratedMapData = {
         en: '博多新風 ラーメン食堂',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-5',
+      nodeId: 'nsplit-6',
     },
     {
       id: 'osm-n4927025822',
@@ -9613,6 +10086,24 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n5085052121',
+      name: {
+        ja: 'サイゼリヤ',
+        en: 'Saizeriya',
+      },
+      category: 'restaurant',
+      nodeId: 'n5887069622-exit',
+    },
+    {
+      id: 'osm-n5085067422',
+      name: {
+        ja: '丸福珈琲店',
+        en: '丸福珈琲店',
+      },
+      category: 'cafe',
+      nodeId: 'n6024811118-exit',
+    },
+    {
       id: 'osm-n5085855924',
       name: {
         ja: 'Enchante',
@@ -9673,7 +10164,7 @@ export const osmData: GeneratedMapData = {
         en: 'つるとんたん',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-7',
+      nodeId: 'nsplit-8',
     },
     {
       id: 'osm-n5208153029',
@@ -9682,7 +10173,7 @@ export const osmData: GeneratedMapData = {
         en: 'Taneyajaya',
       },
       category: 'cafe',
-      nodeId: 'nsplit-8',
+      nodeId: 'nsplit-17',
     },
     {
       id: 'osm-n5291849555',
@@ -9838,6 +10329,15 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n5689104480',
+      name: {
+        ja: 'ホリーズカフェ',
+        en: 'ホリーズカフェ',
+      },
+      category: 'cafe',
+      nodeId: 'n6048835150-exit',
+    },
+    {
       id: 'osm-n5733936532',
       name: {
         ja: '新・酒場なじみ野',
@@ -9952,7 +10452,7 @@ export const osmData: GeneratedMapData = {
         en: 'Craft Beer Market',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-6',
+      nodeId: 'nsplit-7',
     },
     {
       id: 'osm-n5890883055',
@@ -9997,7 +10497,7 @@ export const osmData: GeneratedMapData = {
         en: '新世界串カツ からさき',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-4',
+      nodeId: 'nsplit-11',
     },
     {
       id: 'osm-n6158655091',
@@ -10015,7 +10515,7 @@ export const osmData: GeneratedMapData = {
         en: 'Yoshinoya',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-10',
+      nodeId: 'nsplit-12',
     },
     {
       id: 'osm-n6182794085',
@@ -10033,7 +10533,7 @@ export const osmData: GeneratedMapData = {
         en: '金明飯店',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-10',
+      nodeId: 'nsplit-12',
     },
     {
       id: 'osm-n6253707957',
@@ -10114,7 +10614,7 @@ export const osmData: GeneratedMapData = {
         en: 'グリル異人館',
       },
       category: 'restaurant',
-      nodeId: 'nsplit-11',
+      nodeId: 'nsplit-13',
     },
     {
       id: 'osm-n6726515644',
@@ -10132,7 +10632,7 @@ export const osmData: GeneratedMapData = {
         en: 'The City Bakery',
       },
       category: 'bakery',
-      nodeId: 'nsplit-13',
+      nodeId: 'nsplit-10',
     },
     {
       id: 'osm-n7037609685',
@@ -10177,7 +10677,7 @@ export const osmData: GeneratedMapData = {
         en: 'Sumitomo Mitsui Banking Corporation',
       },
       category: 'service',
-      nodeId: 'nsplit-14',
+      nodeId: 'nsplit-19',
     },
     {
       id: 'osm-n7516366439',
@@ -10186,7 +10686,7 @@ export const osmData: GeneratedMapData = {
         en: 'ルピシア',
       },
       category: 'goods',
-      nodeId: 'nsplit-9',
+      nodeId: 'nsplit-18',
     },
     {
       id: 'osm-n7918822285',
@@ -10222,7 +10722,7 @@ export const osmData: GeneratedMapData = {
         en: "Rudy's Israel Bar",
       },
       category: 'restaurant',
-      nodeId: 'nsplit-10',
+      nodeId: 'nsplit-12',
     },
     {
       id: 'osm-n8067224971',
@@ -10276,7 +10776,7 @@ export const osmData: GeneratedMapData = {
         en: 'Biople by CosmeKitchen',
       },
       category: 'goods',
-      nodeId: 'nsplit-5',
+      nodeId: 'nsplit-6',
     },
   ],
   pois: [

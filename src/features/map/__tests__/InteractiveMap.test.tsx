@@ -14,7 +14,8 @@ beforeAll(() => {
   return i18n.changeLanguage('ja');
 });
 
-describe('InteractiveMap', () => {
+// 地図全体を何度も描き直す（拡大を繰り返す）テストがあるので、遅い環境でも足りる時間にする
+describe('InteractiveMap', { timeout: 15_000 }, () => {
   it('renders the network and zoom controls', () => {
     render(
       <InteractiveMap
