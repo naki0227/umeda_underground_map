@@ -88,6 +88,8 @@ export const ja = {
     prevStep: '前へ',
     nextStep: '次へ',
     stepCounter: '{{current}} / {{total}}',
+    voice: '音声案内',
+    spokenStep: '{{go}}。{{action}}',
     usesStairs: 'この経路には階段があります（階段を通らない経路が見つかりませんでした）',
     alreadyHere: '目的地は現在地です',
     estimateNote: '現在地は開始時の推定位置です。ずれてきたら「迷った」で再測位してください。',

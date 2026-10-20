@@ -92,6 +92,8 @@ export const en: Resource = {
     prevStep: 'Back',
     nextStep: 'Next',
     stepCounter: '{{current}} of {{total}}',
+    voice: 'Voice',
+    spokenStep: '{{go}}. {{action}}',
     usesStairs: 'This route includes stairs (no step-free route was found).',
     alreadyHere: 'You are already at the destination.',
     estimateNote:
