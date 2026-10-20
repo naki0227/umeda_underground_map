@@ -4,6 +4,7 @@ import { BottomSheet } from './components/BottomSheet';
 import { TabBar } from './components/TabBar';
 import { umedaMap } from './data/map';
 import { fitGeoTransform, nearestNode } from './domain/geo';
+import { buildSteps, stepNodeIds } from './domain/directions';
 import { buildGraph } from './domain/graph';
 import { findRoute } from './domain/route';
 import { localized } from './i18n';
@@ -43,6 +44,18 @@ export default function App() {
     return findRoute(graph, nav.currentNodeId, nav.destination.nodeId, { avoidStairs });
   }, [graph, nav.currentNodeId, nav.destination, avoidStairs]);
 
+  // 案内中に表示しているステップ。経路が変わったら先頭に戻す
+  const routeKey = route?.nodeIds.join('>') ?? '';
+  const [stepState, setStepState] = useState({ routeKey: '', index: 0 });
+  const stepIndex = stepState.routeKey === routeKey ? stepState.index : 0;
+  const setStepIndex = (index: number) => setStepState({ routeKey, index });
+  const focusNodeIds = useMemo(() => {
+    if (route === null || nav.sheet !== 'route') return undefined;
+    const steps = buildSteps(graph, route);
+    const step = steps[Math.min(stepIndex, steps.length - 1)];
+    return step ? stepNodeIds(route, step) : undefined;
+  }, [graph, route, stepIndex, nav.sheet]);
+
   const currentName = useMemo(() => {
     if (nav.currentNodeId === null) return null;
     const node = graph.nodes.get(nav.currentNodeId);
@@ -56,6 +69,7 @@ export default function App() {
         shops={umedaMap.shops}
         pois={umedaMap.pois}
         routeNodeIds={route?.nodeIds}
+        focusNodeIds={focusNodeIds}
         currentNodeId={nav.currentNodeId}
         destinationNodeId={nav.destination?.nodeId ?? null}
         gpsHint={gpsHint?.inArea ? gpsHint : null}
@@ -153,6 +167,8 @@ export default function App() {
             onLost={nav.markLost}
             onFinish={nav.clearDestination}
             onClose={nav.closeSheet}
+            stepIndex={stepIndex}
+            onStepChange={setStepIndex}
           />
         </BottomSheet>
       )}

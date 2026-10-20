@@ -600,6 +600,7 @@ button.candidate:hover {
 }
 
 .next-step-card {
+  position: relative;
   display: flex;
   align-items: center;
   gap: 12px;
@@ -999,4 +1000,43 @@ button.candidate:hover {
 .above-ground-suggest a {
   color: var(--accent-strong);
   font-weight: 700;
+}
+
+.step-nav {
+  display: flex;
+  gap: 8px;
+  margin: 8px 0;
+}
+
+.step-nav button {
+  flex: 1;
+}
+
+.step-counter {
+  position: absolute;
+  top: 6px;
+  right: 10px;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+.steps li.done {
+  opacity: 0.55;
+}
+
+.map-route-focus {
+  fill: none;
+  stroke: var(--accent-strong);
+  stroke-width: 22;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map-shop-label {
+  font-size: 13px;
+  font-weight: 700;
+  fill: #9a3412;
+  paint-order: stroke;
+  stroke: #ffffff;
+  stroke-width: 3px;
 }

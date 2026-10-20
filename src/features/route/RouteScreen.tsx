@@ -27,6 +27,10 @@ interface Props {
   onFinish: () => void;
   /** 経路シートを閉じて地図を見る（案内は継続） */
   onClose: () => void;
+  /** いま表示しているステップ（0 始まり）。範囲外は端に丸める */
+  stepIndex?: number;
+  /** 「次へ」「前へ」・一覧のタップでステップを選んだとき */
+  onStepChange?: (index: number) => void;
 }
 
 /** ステップの種類をアイコン1文字で表す */
@@ -56,6 +60,8 @@ export function RouteScreen({
   onLost,
   onFinish,
   onClose,
+  stepIndex = 0,
+  onStepChange,
 }: Props) {
   const { t, i18n } = useTranslation();
 
@@ -131,12 +137,20 @@ export function RouteScreen({
     }
   };
 
+  const lastIndex = result !== null ? result.steps.length - 1 : -1;
+  const currentIndex = Math.min(Math.max(stepIndex, 0), Math.max(lastIndex, 0));
+  const next = result !== null && result.steps.length > 0 ? result.steps[currentIndex] : null;
+  /** いまいるフロア = 表示中ステップの起点のフロア */
   const currentFloor = (() => {
-    const node = graph.nodes.get(fromNodeId);
+    const node = graph.nodes.get(next?.fromNodeId ?? fromNodeId);
     return node ? nodeFloor(node) : 'B1';
   })();
-
-  const next = result !== null && result.steps.length > 0 ? result.steps[0] : null;
+  /** ここから到着までの残り距離 */
+  const remainingM =
+    result !== null
+      ? result.steps.slice(currentIndex).reduce((sum, step) => sum + step.distanceM, 0)
+      : 0;
+  const selectStep = (index: number) => onStepChange?.(index);
 
   return (
     <section>
@@ -180,7 +194,10 @@ export function RouteScreen({
             </p>
           )}
           {next !== null && (
-            <div className="next-step-card" data-testid="next-step">
+            <div className="next-step-card" data-testid="next-step" aria-live="polite">
+              <span className="step-counter">
+                {t('route.stepCounter', { current: currentIndex + 1, total: lastIndex + 1 })}
+              </span>
               <span className="next-icon" aria-hidden>
                 {stepIcon(next)}
               </span>
@@ -198,6 +215,26 @@ export function RouteScreen({
                   </span>
                 )}
               </div>
+            </div>
+          )}
+          {next !== null && lastIndex > 0 && onStepChange !== undefined && (
+            <div className="step-nav">
+              <button
+                type="button"
+                className="secondary"
+                disabled={currentIndex === 0}
+                onClick={() => selectStep(currentIndex - 1)}
+              >
+                {t('route.prevStep')}
+              </button>
+              <button
+                type="button"
+                className="primary"
+                disabled={currentIndex === lastIndex}
+                onClick={() => selectStep(currentIndex + 1)}
+              >
+                {t('route.nextStep')}
+              </button>
             </div>
           )}
 
@@ -218,14 +255,18 @@ export function RouteScreen({
 
           <p className="total eta">
             {t('route.eta', {
-              distance: Math.round(result.route.totalDistanceM),
-              minutes: Math.max(1, Math.round(result.route.totalDistanceM / WALK_SPEED_M_PER_MIN)),
+              distance: Math.round(remainingM),
+              minutes: Math.max(1, Math.round(remainingM / WALK_SPEED_M_PER_MIN)),
             })}
           </p>
 
           <ol className="steps">
             {result.steps.map((step, index) => (
-              <li key={`${step.atNodeId}-${index}`} className={index === 0 ? 'current' : ''}>
+              <li
+                key={`${step.atNodeId}-${index}`}
+                className={index === currentIndex ? 'current' : index < currentIndex ? 'done' : ''}
+                aria-current={index === currentIndex ? 'step' : undefined}
+              >
                 <span className="step-icon" aria-hidden>
                   {stepIcon(step)}
                 </span>

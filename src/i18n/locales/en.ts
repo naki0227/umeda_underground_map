@@ -89,6 +89,9 @@ export const en: Resource = {
       'Walking above ground may be shorter (underground approx. {{underground}}m / straight line approx. {{straight}}m).',
     openGoogleMaps: 'See the street-level walking route in Google Maps',
     aboveGroundReason: 'To stay out of the sun or rain, keep following the underground route.',
+    prevStep: 'Back',
+    nextStep: 'Next',
+    stepCounter: '{{current}} of {{total}}',
     usesStairs: 'This route includes stairs (no step-free route was found).',
     alreadyHere: 'You are already at the destination.',
     estimateNote:

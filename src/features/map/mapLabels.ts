@@ -12,6 +12,10 @@ export const EXIT_BADGE_HEIGHT_PX = 20;
 export const LABEL_FONT_PX = 12;
 export const ZONE_FONT_PX = 14;
 export const FACILITY_FONT_PX = 11;
+/** 案内中に出す沿道の店名（目印なので少し大きめ） */
+export const SHOP_LABEL_FONT_PX = 13;
+/** 店名ラベルの位置（ノードからの画面 px。左下が基準） */
+export const SHOP_LABEL_OFFSET_PX = { x: 12, y: 20 };
 const CHIP_PADDING_PX = 6;
 /** 建物ラベルを屋根からどれだけ上に出すか */
 export const BUILDING_LABEL_GAP_PX = 6;
@@ -38,14 +42,17 @@ export interface MapLabelInput {
   facilities: { key: string; label: string; mid: ScreenPoint }[];
   zones: { area: AreaId; center: ScreenPoint }[];
   areaName: (area: AreaId) => string;
+  /** 案内中のステップ沿いの店（目印として名前を出す） */
+  focusShops?: { id: string; name: LocalizedText; at: ScreenPoint }[];
 }
 
 /**
- * 重なり判定用のラベル矩形を作る。優先度: 出口番号 > 建物名 > 広場名 > 改札名 >
- * 設備チップ > エリア名。id は `exit:` `building:` `pin:` `facility:` `zone:` + 元の id。
+ * 重なり判定用のラベル矩形を作る。優先度: 出口番号 > 案内中の沿道の店名 > 建物名 > 広場名 > 改札名 >
+ * 設備チップ > エリア名。id は `exit:` `shop:` `building:` `pin:` `facility:` `zone:` + 元の id。
  */
 export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
   const { k, language, exits, pins, screenOf, buildings, facilities, zones, areaName } = input;
+  const focusShops = input.focusShops ?? [];
   const nameOf = (text: LocalizedText) => localized(text, language);
   const toPx = (p: ScreenPoint) => ({ x: p.px / k, y: p.py / k });
   const at = (id: NodeId) => screenOf.get(id) as ScreenPoint;
@@ -74,6 +81,22 @@ export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
       width,
       height: LABEL_FONT_PX + 2,
       priority: 2,
+    });
+  }
+  // 同じノードの店名は縦に並べる
+  const shopRowByNode = new Map<string, number>();
+  for (const shop of focusShops) {
+    const key = `${shop.at.px},${shop.at.py}`;
+    const row = shopRowByNode.get(key) ?? 0;
+    shopRowByNode.set(key, row + 1);
+    const { x, y } = toPx(shop.at);
+    boxes.push({
+      id: `shop:${shop.id}`,
+      x: x + SHOP_LABEL_OFFSET_PX.x,
+      y: y + SHOP_LABEL_OFFSET_PX.y - SHOP_LABEL_FONT_PX + row * (SHOP_LABEL_FONT_PX + 4),
+      width: textWidthPx(nameOf(shop.name), SHOP_LABEL_FONT_PX),
+      height: SHOP_LABEL_FONT_PX + 2,
+      priority: 2.5,
     });
   }
   for (const node of pins) {

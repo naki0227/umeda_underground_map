@@ -112,4 +112,36 @@ describe('App map-first user flow', () => {
     await user.click(screen.getByRole('button', { name: '地図' }));
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
+
+  it('steps through directions and the map follows the current step', async () => {
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+
+    // 泉の広場を現在地に、ドーチカ南方面のお店を目的地に
+    await user.click(container.querySelector('[data-node-id="wt-izumi"]') as Element);
+    await user.click(screen.getByRole('button', { name: 'いまここにいる' }));
+    const search = screen.getByRole('searchbox', { name: '目的地を入力（お店・出口・スポット）' });
+    await user.type(search, 'C-90');
+    await user.click(
+      within(screen.getByRole('list', { name: '検索結果' })).getAllByRole('button')[0],
+    );
+    await user.click(screen.getByRole('button', { name: 'ここへ行く' }));
+
+    const card = screen.getByTestId('next-step');
+    expect(card).toHaveTextContent(/^1 \/ \d+/);
+    expect(screen.getByTestId('map-route-focus')).toBeInTheDocument();
+    // 泉の広場から西へ向かう区間沿いの店名が地図に出る
+    expect(screen.getAllByTestId('map-shop-label').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: '前へ' })).toBeDisabled();
+    const firstAction = card.textContent;
+
+    await user.click(screen.getByRole('button', { name: '次へ' }));
+    expect(screen.getByTestId('next-step')).toHaveTextContent(/^2 \/ \d+/);
+    expect(screen.getByTestId('next-step').textContent).not.toBe(firstAction);
+    expect(screen.getByRole('button', { name: '前へ' })).toBeEnabled();
+    // 1ステップ目は完了扱いで、2ステップ目が現在
+    const stepItems = container.querySelectorAll('ol.steps li');
+    expect(stepItems[0]).toHaveClass('done');
+    expect(stepItems[1]).toHaveAttribute('aria-current', 'step');
+  });
 });

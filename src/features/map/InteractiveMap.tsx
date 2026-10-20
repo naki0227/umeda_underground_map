@@ -13,6 +13,8 @@ import {
   EXIT_BADGE_HEIGHT_PX,
   EXIT_FONT_PX,
   FACILITY_FONT_PX,
+  SHOP_LABEL_FONT_PX,
+  SHOP_LABEL_OFFSET_PX,
 } from './mapLabels';
 import { MapMarkers } from './MapMarkers';
 import { pressable } from './pressable';
@@ -32,6 +34,8 @@ interface Props {
   shops: Shop[];
   pois: Poi[];
   routeNodeIds?: NodeId[];
+  /** 案内中のいまのステップが通るノード。強調表示し、地図をそこへ寄せ、沿道の店名を出す */
+  focusNodeIds?: NodeId[];
   currentNodeId?: NodeId | null;
   destinationNodeId?: NodeId | null;
   /** GPS による大まかな現在地（マップ平面座標と誤差半径）。表示しないなら null */
@@ -44,6 +48,8 @@ interface Props {
   onSelectPlace: (place: Place) => void;
 }
 
+/** 案内中の区間を表示領域の上から何割の高さに置くか */
+const FOCUS_ANCHOR_Y = 0.3;
 /** GPS 誤差円の表示上の最小・最大半径（m） */
 const GPS_RADIUS_MIN_M = 20;
 const GPS_RADIUS_MAX_M = 300;
@@ -75,6 +81,7 @@ export function InteractiveMap({
   shops,
   pois,
   routeNodeIds,
+  focusNodeIds,
   currentNodeId,
   destinationNodeId,
   gpsHint = null,
@@ -125,6 +132,21 @@ export function InteractiveMap({
 
   const viewport = useMapViewport(bounds);
   const { centerOn } = viewport;
+
+  // 案内のステップが変わったら、その区間の中央へ寄せる（三人称の追従表示）
+  const focusKey = focusNodeIds?.join('>') ?? '';
+  useEffect(() => {
+    if (focusKey === '') return;
+    const points = focusKey
+      .split('>')
+      .map((id) => screenOf.get(id))
+      .filter((p): p is ScreenPoint => p !== undefined);
+    if (points.length === 0) return;
+    const px = points.reduce((sum, p) => sum + p.px, 0) / points.length;
+    const py = points.reduce((sum, p) => sum + p.py, 0) / points.length;
+    // 経路シートが画面の下半分を覆うので、上寄り（上から3割）に置く
+    centerOn({ px, py }, FOCUS_ANCHOR_Y);
+  }, [focusKey, screenOf, centerOn]);
 
   // GPS の大まかな位置が取れたら、そこが見えるように寄せる
   const gpsX = gpsHint?.x;
@@ -181,6 +203,22 @@ export function InteractiveMap({
       .join(' ');
   }, [routeNodeIds, screenOf]);
 
+  const focusPoints = useMemo(() => {
+    if (!focusNodeIds || focusNodeIds.length < 2) return null;
+    return focusNodeIds
+      .map((id) => screenOf.get(id))
+      .filter((p): p is ScreenPoint => p !== undefined)
+      .map((p) => `${p.px},${p.py}`)
+      .join(' ');
+  }, [focusNodeIds, screenOf]);
+
+  /** いまのステップ沿いの店。案内中に目印として店名を出す */
+  const focusShops = useMemo(() => {
+    if (!focusNodeIds) return [];
+    const onSegment = new Set(focusNodeIds);
+    return shops.filter((shop) => onSegment.has(shop.nodeId));
+  }, [focusNodeIds, shops]);
+
   const shopsByNode = useMemo(() => {
     const groups = new Map<NodeId, Shop[]>();
     for (const shop of shops) {
@@ -221,9 +259,14 @@ export function InteractiveMap({
       facilities,
       zones,
       areaName: (area) => t(`area.${area}`),
+      focusShops: focusShops.map((shop) => ({
+        id: shop.id,
+        name: shop.name,
+        at: screenOf.get(shop.nodeId) as ScreenPoint,
+      })),
     });
     return placeLabels(boxes);
-  }, [k, exits, pins, screenOf, buildings, facilities, zones, language, t]);
+  }, [k, exits, pins, screenOf, buildings, facilities, zones, focusShops, language, t]);
 
   return (
     <div className="interactive-map">
@@ -268,6 +311,13 @@ export function InteractiveMap({
         {routePoints !== null && (
           <polyline className="map-route" points={routePoints} data-testid="map-route" />
         )}
+        {focusPoints !== null && (
+          <polyline
+            className="map-route-focus"
+            points={focusPoints}
+            data-testid="map-route-focus"
+          />
+        )}
         {nodes
           .filter((n) => n.kind === 'junction')
           .map((node) => (
@@ -311,6 +361,26 @@ export function InteractiveMap({
               </Fixed>
             );
           });
+        })}
+        {focusShops.map((shop) => {
+          // 同じノードの店名は縦に並べる（mapLabels の判定と同じ並び）
+          const row = focusShops
+            .slice(0, focusShops.indexOf(shop))
+            .filter((other) => other.nodeId === shop.nodeId).length;
+          if (!visibleLabels.has(`shop:${shop.id}`)) return null;
+          return (
+            <Fixed key={`label-${shop.id}`} at={screenOf.get(shop.nodeId) as ScreenPoint} k={k}>
+              <text
+                className="map-shop-label"
+                data-testid="map-shop-label"
+                x={SHOP_LABEL_OFFSET_PX.x}
+                y={SHOP_LABEL_OFFSET_PX.y + row * (SHOP_LABEL_FONT_PX + 4)}
+                pointerEvents="none"
+              >
+                {nameOf(shop.name)}
+              </text>
+            </Fixed>
+          );
         })}
         {pins.map((node) => (
           <Fixed key={node.id} at={at(node.id)} k={k}>
