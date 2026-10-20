@@ -1,6 +1,7 @@
 import { useTranslation } from 'react-i18next';
 import { localized } from '../../i18n';
 import type { Place } from './InteractiveMap';
+import { BottomSheet } from '../../components/BottomSheet';
 
 interface Props {
   place: Place;
@@ -13,7 +14,7 @@ interface Props {
 export function PlaceSheet({ place, onGo, onSetHere, onClose }: Props) {
   const { t, i18n } = useTranslation();
   return (
-    <div className="sheet" role="dialog" aria-label={localized(place.name, i18n.language)}>
+    <BottomSheet label={localized(place.name, i18n.language)} initialSnap="peek">
       <div className="sheet-header">
         <h2>{localized(place.name, i18n.language)}</h2>
         <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>
@@ -29,6 +30,6 @@ export function PlaceSheet({ place, onGo, onSetHere, onClose }: Props) {
           {t('place.setHere')}
         </button>
       </div>
-    </div>
+    </BottomSheet>
   );
 }

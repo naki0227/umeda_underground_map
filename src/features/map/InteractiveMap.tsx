@@ -1,11 +1,19 @@
-import { useMemo } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
-import type { LocalizedText, NodeId, Poi, Shop } from '../../domain/types';
+import type { LocalizedText, MapNode, NodeId, Poi, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
 import { project, SLAB_DEPTH, type ScreenPoint } from './iso';
 import { BUILDING_HALF_WIDTH, BUILDING_HEIGHT, buildBuildings } from './ground';
 import { MapGroundLayer } from './MapGroundLayer';
+import { placeLabels } from './labelLayout';
+import {
+  buildMapLabelBoxes,
+  chipWidthPx,
+  EXIT_BADGE_HEIGHT_PX,
+  EXIT_FONT_PX,
+  FACILITY_FONT_PX,
+} from './mapLabels';
 import { MapMarkers } from './MapMarkers';
 import { pressable } from './pressable';
 import { buildAreaZones } from './zones';
@@ -31,18 +39,21 @@ interface Props {
 
 const PADDING = 90;
 
-/** 同一ノードに複数の店ピンが重ならないよう円周上にずらす */
+/*
+ * ラベル・バッジ・ピンは画面上で一定サイズ（px）で描く。
+ * 以下の寸法はすべて画面 px。<Fixed> の中で unitsPerPixel 倍してマップ座標に置く。
+ */
+
+/** 同一ノードに複数の店ピンが重ならないよう円周上にずらす（px） */
 function shopOffset(index: number, count: number): { dx: number; dy: number } {
-  if (count === 1) return { dx: 0, dy: 18 };
+  if (count === 1) return { dx: 0, dy: 10 };
   const angle = (index / count) * Math.PI * 2;
-  return { dx: Math.cos(angle) * 24, dy: Math.sin(angle) * 14 + 6 };
+  return { dx: Math.cos(angle) * 14, dy: Math.sin(angle) * 8 + 4 };
 }
 
-/** バッジ・チップの幅をテキストから概算する（全角=21px / 半角=12px 相当） */
-function chipWidth(text: string): number {
-  let width = 0;
-  for (const ch of text) width += ch.charCodeAt(0) > 0xff ? 21 : 12;
-  return width + 18;
+/** 子要素を画面 px 単位で描くグループ（ズームしても見た目の大きさが変わらない） */
+function Fixed({ at, k, children }: { at: ScreenPoint; k: number; children: ReactNode }) {
+  return <g transform={`translate(${at.px} ${at.py}) scale(${k})`}>{children}</g>;
 }
 
 export function InteractiveMap({
@@ -158,8 +169,34 @@ export function InteractiveMap({
     onSelectPlace(place);
   };
 
-  const exits = nodes.filter((n) => n.kind === 'exit');
-  const pins = nodes.filter((n) => n.kind === 'gate' || n.kind === 'landmark');
+  const exits = useMemo(() => nodes.filter((n) => n.kind === 'exit'), [nodes]);
+  const pins = useMemo(
+    () => nodes.filter((n) => n.kind === 'gate' || n.kind === 'landmark'),
+    [nodes],
+  );
+  const k = viewport.unitsPerPixel;
+  const language = i18n.language;
+  const nameOf = (text: LocalizedText) => localized(text, language);
+  const exitLabel = (node: MapNode) => node.exitNo ?? localized(node.name, language);
+
+  /**
+   * 重なるラベルを間引く。優先度: 出口番号 > 建物名 > 改札・広場名 > エリア名。
+   * 画面 px での判定なので、ズーム倍率（k）が変わったときだけ計算し直す。
+   */
+  const visibleLabels = useMemo(() => {
+    const boxes = buildMapLabelBoxes({
+      k,
+      language,
+      exits,
+      pins,
+      screenOf,
+      buildings,
+      facilities,
+      zones,
+      areaName: (area) => t(`area.${area}`),
+    });
+    return placeLabels(boxes);
+  }, [k, exits, pins, screenOf, buildings, facilities, zones, language, t]);
 
   return (
     <div className="interactive-map">
@@ -181,17 +218,13 @@ export function InteractiveMap({
           />
         ))}
         {zones
-          .filter((zone) => zone.area !== 'station')
+          .filter((zone) => zone.area !== 'station' && visibleLabels.has(`zone:${zone.area}`))
           .map((zone) => (
-            <text
-              key={`label-${zone.area}`}
-              className="map-zone-label"
-              x={zone.center.px}
-              y={zone.center.py}
-              textAnchor="middle"
-            >
-              {t(`area.${zone.area}`)}
-            </text>
+            <Fixed key={`label-${zone.area}`} at={zone.center} k={k}>
+              <text className="map-zone-label" textAnchor="middle">
+                {t(`area.${zone.area}`)}
+              </text>
+            </Fixed>
           ))}
 
         {/* 地下フロア: 通路スラブ（側面→上面） */}
@@ -210,91 +243,112 @@ export function InteractiveMap({
         )}
         {nodes
           .filter((n) => n.kind === 'junction')
-          .map((node) => {
-            const p = at(node.id);
+          .map((node) => (
+            <Fixed key={node.id} at={at(node.id)} k={k}>
+              <ellipse className="map-node" rx={4} ry={2.5} />
+            </Fixed>
+          ))}
+        {facilities
+          .filter(({ key }) => visibleLabels.has(`facility:${key}`))
+          .map(({ key, label, mid }) => {
+            const width = chipWidthPx(label, FACILITY_FONT_PX);
             return (
-              <ellipse key={node.id} className="map-node" cx={p.px} cy={p.py} rx={6} ry={3.5} />
+              <Fixed key={key} at={mid} k={k}>
+                <g className="map-facility">
+                  <rect x={-width / 2} y={-8} width={width} height={16} rx={8} />
+                  <text y={4}>{label}</text>
+                </g>
+              </Fixed>
             );
           })}
-        {facilities.map(({ key, label, mid }) => {
-          const width = chipWidth(label);
-          return (
-            <g key={key} className="map-facility">
-              <rect x={mid.px - width / 2} y={mid.py - 14} width={width} height={28} rx={14} />
-              <text x={mid.px} y={mid.py + 7}>
-                {label}
-              </text>
-            </g>
-          );
-        })}
         {[...shopsByNode.entries()].flatMap(([nodeId, group]) => {
           const p = screenOf.get(nodeId);
           if (!p) return [];
           return group.map((shop, index) => {
             const { dx, dy } = shopOffset(index, group.length);
             return (
-              <ellipse
-                key={shop.id}
-                className="map-shop-pin"
-                data-shop-id={shop.id}
-                cx={p.px + dx}
-                cy={p.py + dy}
-                rx={9}
-                ry={5.5}
-                {...pressable(localized(shop.name, i18n.language), () =>
-                  pick({ nodeId, name: shop.name, aboveGround: false }),
-                )}
-              >
-                <title>{localized(shop.name, i18n.language)}</title>
-              </ellipse>
+              <Fixed key={shop.id} at={p} k={k}>
+                <ellipse
+                  className="map-shop-pin"
+                  data-shop-id={shop.id}
+                  cx={dx}
+                  cy={dy}
+                  rx={6}
+                  ry={3.5}
+                  {...pressable(nameOf(shop.name), () =>
+                    pick({ nodeId, name: shop.name, aboveGround: false }),
+                  )}
+                >
+                  <title>{nameOf(shop.name)}</title>
+                </ellipse>
+              </Fixed>
             );
           });
         })}
-        {pins.map((node) => {
-          const p = at(node.id);
-          return (
+        {pins.map((node) => (
+          <Fixed key={node.id} at={at(node.id)} k={k}>
             <g
-              key={node.id}
               className="map-pin"
               data-node-id={node.id}
-              {...pressable(localized(node.name, i18n.language), () =>
+              {...pressable(nameOf(node.name), () =>
                 pick({ nodeId: node.id, name: node.name, aboveGround: false }),
               )}
             >
-              <ellipse cx={p.px} cy={p.py} rx={12} ry={7} />
-              <text className="map-label" x={p.px + 16} y={p.py - 8} pointerEvents="none">
-                {localized(node.name, i18n.language)}
-              </text>
-            </g>
-          );
-        })}
-        {exits.map((node) => {
-          const p = at(node.id);
-          const label = node.exitNo ?? localized(node.name, i18n.language);
-          const width = chipWidth(label);
-          return (
-            <g
-              key={node.id}
-              className="map-exit-badge"
-              data-node-id={node.id}
-              {...pressable(
-                node.exitNo !== undefined
-                  ? `${node.exitNo} ${localized(node.name, i18n.language)}`
-                  : localized(node.name, i18n.language),
-                () => pick({ nodeId: node.id, name: node.name, aboveGround: false }),
+              <ellipse rx={7} ry={4} />
+              {visibleLabels.has(`pin:${node.id}`) && (
+                <text className="map-label" x={10} y={-6} pointerEvents="none">
+                  {nameOf(node.name)}
+                </text>
               )}
-            >
-              <rect x={p.px - width / 2} y={p.py - 16} width={width} height={32} rx={9} />
-              <text x={p.px} y={p.py + 7} textAnchor="middle">
-                {label}
-              </text>
-              <title>{localized(node.name, i18n.language)}</title>
             </g>
+          </Fixed>
+        ))}
+        {exits.map((node) => {
+          const label = exitLabel(node);
+          const width = chipWidthPx(label, EXIT_FONT_PX);
+          const showBadge = visibleLabels.has(`exit:${node.id}`);
+          return (
+            <Fixed key={node.id} at={at(node.id)} k={k}>
+              <g
+                className={showBadge ? 'map-exit-badge' : 'map-exit-badge compact'}
+                data-node-id={node.id}
+                {...pressable(
+                  node.exitNo !== undefined
+                    ? `${node.exitNo} ${nameOf(node.name)}`
+                    : nameOf(node.name),
+                  () => pick({ nodeId: node.id, name: node.name, aboveGround: false }),
+                )}
+              >
+                {showBadge ? (
+                  <>
+                    <rect
+                      x={-width / 2}
+                      y={-EXIT_BADGE_HEIGHT_PX / 2}
+                      width={width}
+                      height={EXIT_BADGE_HEIGHT_PX}
+                      rx={6}
+                    />
+                    <text y={4} textAnchor="middle">
+                      {label}
+                    </text>
+                  </>
+                ) : (
+                  <circle r={5} />
+                )}
+                <title>{nameOf(node.name)}</title>
+              </g>
+            </Fixed>
           );
         })}
 
-        <MapGroundLayer buildings={buildings} onPick={pick} />
+        <MapGroundLayer
+          buildings={buildings}
+          unitsPerPixel={k}
+          visibleLabelIds={visibleLabels}
+          onPick={pick}
+        />
         <MapMarkers
+          unitsPerPixel={k}
           current={currentNodeId ? at(currentNodeId) : undefined}
           destination={destinationNodeId ? at(destinationNodeId) : undefined}
         />
