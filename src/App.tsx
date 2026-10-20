@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BottomSheet } from './components/BottomSheet';
 import { TabBar } from './components/TabBar';
@@ -31,6 +31,11 @@ export default function App() {
   const favorites = useFavorites();
   const gps = useInitialGeolocation();
   const [gpsNoteDismissed, setGpsNoteDismissed] = useState(false);
+  const { acquire: acquireGps } = gps;
+  const locateGps = useCallback(() => {
+    setGpsNoteDismissed(false);
+    acquireGps();
+  }, [acquireGps]);
   const geo = useMemo(() => fitGeoTransform(umedaMap.nodes), []);
 
   /** GPS の大まかな位置をマップ平面に置く。範囲外なら inArea=false */
@@ -77,10 +82,7 @@ export default function App() {
         destinationNodeId={nav.destination?.nodeId ?? null}
         gpsHint={gpsHint?.inArea ? gpsHint : null}
         onSelectGpsHint={nav.openLocate}
-        onLocateGps={() => {
-          setGpsNoteDismissed(false);
-          gps.acquire();
-        }}
+        onLocateGps={locateGps}
         gpsBusy={gps.status === 'loading'}
         onSelectPlace={nav.selectPlace}
       />

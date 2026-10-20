@@ -1,4 +1,4 @@
-import { useEffect, useMemo, type ReactNode } from 'react';
+import { memo, useEffect, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
 import type { LocalizedText, MapNode, NodeId, Poi, Shop } from '../../domain/types';
@@ -76,7 +76,7 @@ function Fixed({ at, k, children }: { at: ScreenPoint; k: number; children: Reac
   return <g transform={`translate(${at.px} ${at.py}) scale(${k})`}>{children}</g>;
 }
 
-export function InteractiveMap({
+function InteractiveMapView({
   graph,
   shops,
   pois,
@@ -488,6 +488,12 @@ export function InteractiveMap({
     </div>
   );
 }
+
+/**
+ * 全画面マップ。要素が多い（数百のピン・ラベル）ため、props が変わらない限り
+ * 描き直さない（シートの開閉などで App が再描画されても地図はそのまま）。
+ */
+export const InteractiveMap = memo(InteractiveMapView);
 
 /** GPS による大まかな現在地: 誤差円（地面の円を投影した楕円）と中心点 */
 function GpsHint({

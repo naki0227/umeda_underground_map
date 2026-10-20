@@ -9,7 +9,8 @@ beforeAll(() => {
   return i18n.changeLanguage('ja');
 });
 
-describe('App map-first user flow', () => {
+// 画面をまたぐ長いフロー（検索・位置確定・案内）を通すので、遅い CI でも足りる時間にする
+describe('App map-first user flow', { timeout: 15_000 }, () => {
   it('searches a place, sets location via shops, and shows directions', async () => {
     const user = userEvent.setup();
     render(<App />);
