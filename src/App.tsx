@@ -17,6 +17,8 @@ import { useInitialGeolocation } from './features/locate/useGeolocation';
 import { RouteScreen } from './features/route/RouteScreen';
 import { SearchBar } from './features/search/SearchBar';
 import { SpotsSheet } from './features/spots/SpotsSheet';
+import { FavoritesSheet } from './features/favorites/FavoritesSheet';
+import { useFavorites } from './features/favorites/useFavorites';
 
 /** GPS 位置から最寄りノードまでこれ以上離れていたら「範囲外」とする（m） */
 const GPS_AREA_RANGE_M = 600;
@@ -26,6 +28,7 @@ export default function App() {
   const graph = useMemo(() => buildGraph(umedaMap), []);
   const nav = useMapNavigation();
   const [avoidStairs, setAvoidStairs] = useState(false);
+  const favorites = useFavorites();
   const gps = useInitialGeolocation();
   const [gpsNoteDismissed, setGpsNoteDismissed] = useState(false);
   const geo = useMemo(() => fitGeoTransform(umedaMap.nodes), []);
@@ -127,6 +130,8 @@ export default function App() {
           onGo={nav.goToSelected}
           onSetHere={nav.setHereSelected}
           onClose={nav.closeSheet}
+          favorite={favorites.isFavorite(nav.selectedPlace)}
+          onToggleFavorite={() => nav.selectedPlace && favorites.toggle(nav.selectedPlace)}
         />
       )}
 
@@ -183,6 +188,15 @@ export default function App() {
         />
       )}
 
+      {nav.sheet === 'favorites' && (
+        <FavoritesSheet
+          favorites={favorites.favorites}
+          onPick={nav.selectPlace}
+          onRemove={favorites.toggle}
+          onClose={nav.closeSheet}
+        />
+      )}
+
       {nav.sheet === 'menu' && (
         <MenuSheet dataVersion={umedaMap.dataVersion} onClose={nav.closeSheet} />
       )}
@@ -191,6 +205,7 @@ export default function App() {
         sheet={nav.sheet}
         onMap={nav.closeSheet}
         onSpots={nav.openSpots}
+        onFavorites={nav.openFavorites}
         onMenu={nav.openMenu}
       />
     </div>

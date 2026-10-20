@@ -144,4 +144,31 @@ describe('App map-first user flow', () => {
     expect(stepItems[0]).toHaveClass('done');
     expect(stepItems[1]).toHaveAttribute('aria-current', 'step');
   });
+
+  it('adds a place to favorites and starts directions from the favorites tab', async () => {
+    localStorage.clear();
+    const tabs = () => screen.getByRole('navigation', { name: 'メインメニュー' });
+    const user = userEvent.setup();
+    const { container } = render(<App />);
+
+    await user.click(within(tabs()).getByRole('button', { name: 'お気に入り' }));
+    expect(screen.getByText(/まだありません/)).toBeInTheDocument();
+
+    await user.click(container.querySelector('[data-node-id="wt-izumi"]') as Element);
+    const favButton = within(screen.getByRole('dialog', { name: /泉の広場/ })).getByRole('button', {
+      name: /お気に入りに登録/,
+    });
+    await user.click(favButton);
+    expect(favButton).toHaveAttribute('aria-pressed', 'true');
+
+    await user.click(within(tabs()).getByRole('button', { name: 'お気に入り' }));
+    const sheet = screen.getByRole('dialog', { name: 'お気に入り' });
+    await user.click(within(sheet).getByRole('button', { name: '泉の広場（Water Tree）' }));
+    expect(screen.getByRole('dialog', { name: /泉の広場/ })).toBeInTheDocument();
+
+    // 外すと一覧から消える
+    await user.click(within(tabs()).getByRole('button', { name: 'お気に入り' }));
+    await user.click(screen.getByRole('button', { name: /をお気に入りから外す/ }));
+    expect(screen.getByText(/まだありません/)).toBeInTheDocument();
+  });
 });

@@ -50,7 +50,15 @@ export const ja = {
     label: 'メインメニュー',
     map: '地図',
     spots: 'スポット',
+    favorites: 'お気に入り',
     menu: 'メニュー',
+  },
+  favorites: {
+    title: 'お気に入り',
+    empty: 'まだありません。場所を選んで「お気に入り」を押すと、ここからすぐ案内できます。',
+    add: 'お気に入りに登録',
+    removeNamed: '{{name}} をお気に入りから外す',
+    storageNote: 'お気に入りはこの端末の中にだけ保存されます。',
   },
   spots: {
     title: 'おすすめスポット',

@@ -54,7 +54,15 @@ export const en: Resource = {
     label: 'Main menu',
     map: 'Map',
     spots: 'Spots',
+    favorites: 'Favorites',
     menu: 'Menu',
+  },
+  favorites: {
+    title: 'Favorites',
+    empty: 'Nothing yet. Pick a place and tap "Favorite" to get directions from here quickly.',
+    add: 'Save to favorites',
+    removeNamed: 'Remove {{name}} from favorites',
+    storageNote: 'Favorites are stored only on this device.',
   },
   spots: {
     title: 'Recommended spots',
