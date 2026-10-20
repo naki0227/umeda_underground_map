@@ -45,6 +45,19 @@ describe('umedaMap data integrity', () => {
     }
   });
 
+  it('has shops inside the station and commercial buildings connected underground, with their floor', () => {
+    const inBuildings = umedaMap.shops.filter((s) => s.building !== undefined);
+    expect(inBuildings.length).toBeGreaterThanOrEqual(300);
+    for (const shop of inBuildings) {
+      expect(shop.building?.ja, shop.id).toBeTruthy();
+      if (shop.floor !== undefined) expect(shop.floor, shop.id).toMatch(/^(B\d|\d+F)$/);
+    }
+    const buildings = new Set(inBuildings.map((s) => s.building?.ja));
+    for (const name of ['ヨドバシ梅田タワー', 'ルクア大阪', 'HEP FIVE', 'JPタワー大阪']) {
+      expect(buildings.has(name), name).toBe(true);
+    }
+  });
+
   it('has localized names (ja and en) for all nodes and shops', () => {
     for (const node of umedaMap.nodes) {
       expect(node.name.ja.length, `${node.id} ja`).toBeGreaterThan(0);

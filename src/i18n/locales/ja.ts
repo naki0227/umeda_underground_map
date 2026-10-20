@@ -34,6 +34,7 @@ export const ja = {
     results: '検索結果',
     kindPoi: '地上',
     kindShop: '地下のお店',
+    kindBuildingShop: 'ビルのお店',
     kindNode: '出口・駅',
   },
   place: {

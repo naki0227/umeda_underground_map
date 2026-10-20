@@ -38,6 +38,7 @@ export const zh: Resource = {
     results: '搜索结果',
     kindPoi: '地面',
     kindShop: '地下店铺',
+    kindBuildingShop: '大楼内店铺',
     kindNode: '出口·车站',
   },
   place: {

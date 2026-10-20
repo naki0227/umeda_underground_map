@@ -3,6 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { BottomSheet } from './components/BottomSheet';
 import { TabBar } from './components/TabBar';
 import { umedaMap } from './data/map';
+import { isUndergroundShop } from './domain/shopLabel';
 import { fitGeoTransform, nearestNode } from './domain/geo';
 import { buildSteps, stepNodeIds } from './domain/directions';
 import { buildGraph } from './domain/graph';
@@ -19,6 +20,9 @@ import { SearchBar } from './features/search/SearchBar';
 import { SpotsSheet } from './features/spots/SpotsSheet';
 import { FavoritesSheet } from './features/favorites/FavoritesSheet';
 import { useFavorites } from './features/favorites/useFavorites';
+
+/** 地図と現在地の推定に使う地下の店（ビルの地上階の店は検索・目的地だけ） */
+const undergroundShops = umedaMap.shops.filter(isUndergroundShop);
 
 /** 画面下のシートが地図を隠すおおよその割合（地図を寄せるときに避ける） */
 const SHEET_INSET: Record<string, number> = { none: 0.1, place: 0.38 };
@@ -90,7 +94,7 @@ export default function App() {
     <div className="app-map">
       <InteractiveMap
         graph={graph}
-        shops={umedaMap.shops}
+        shops={undergroundShops}
         pois={umedaMap.pois}
         routeNodeIds={route?.nodeIds}
         focusNodeIds={focusNodeIds}
@@ -171,7 +175,7 @@ export default function App() {
           </div>
           <LocateScreen
             graph={graph}
-            shops={umedaMap.shops}
+            shops={undergroundShops}
             pois={umedaMap.pois}
             lost={nav.lost}
             initialGps={gpsHint?.inArea ? gps.position : null}
