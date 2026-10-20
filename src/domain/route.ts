@@ -1,9 +1,11 @@
-import type { Graph } from './graph';
+import type { AdjacentEdge, Graph } from './graph';
 import { nodeFloor, type NodeId } from './types';
 
 export interface RouteOptions {
   /** 階段を避ける（エレベーター・スロープ優先）。該当エッジにペナルティを課す。 */
   avoidStairs?: boolean;
+  /** いま通れない線（夜間に閉まる通路など）。true の線は使わない */
+  isClosed?: (from: NodeId, edge: AdjacentEdge) => boolean;
 }
 
 export interface Route {
@@ -95,6 +97,7 @@ export function findRoute(
     if (current.nodeId !== from && graph.nodes.get(current.nodeId)?.kind === 'exit') continue;
 
     for (const edge of graph.adjacency.get(current.nodeId) ?? []) {
+      if (options.isClosed?.(current.nodeId, edge)) continue;
       const penalty =
         options.avoidStairs && edge.attrs.includes('stairs') ? STAIRS_PENALTY_FACTOR : 1;
       const nextCost = current.cost + edge.distanceM * penalty;

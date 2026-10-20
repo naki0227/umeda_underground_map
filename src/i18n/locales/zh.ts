@@ -102,6 +102,8 @@ export const zh: Resource = {
     voice: '语音导航',
     spokenStep: '{{go}}。{{action}}',
     usesStairs: '此路线包含楼梯（未找到无楼梯的路线）。',
+    lateNight: '深夜和清晨，部分地下街通道可能关闭，自动扶梯可能停运。路线只反映了已知的开放时间。',
+    throughClosed: '只找到经过当前时段关闭的通道或设施的路线。请按照现场指示行走。',
     alreadyHere: '你已经在目的地了。',
     estimateNote: '当前位置是开始导航时的推测位置。如果偏离了，请点击“迷路了”重新定位。',
   },
