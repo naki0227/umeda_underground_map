@@ -140,6 +140,8 @@ export const ko: Resource = {
     station: '역 연결 통로',
   },
   map: {
+    legendRoute: '경로',
+    fitRoute: '경로 전체 보기',
     gpsHint: '대략적인 위치 (GPS)',
     locateGps: '내 대략적인 위치 표시',
     gpsOutOfArea: '우메다 지하상가 지도 범위 밖에 있는 것 같습니다.',

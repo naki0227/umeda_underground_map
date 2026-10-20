@@ -64,6 +64,9 @@ describe('InteractiveMap', () => {
       expect.objectContaining({ nodeId: 'wt-izumi', aboveGround: false }),
     );
 
+    // 店の点は全体表示では出さないので、拡大してから押す
+    expect(container.querySelector('[data-shop-id="wt-shop-starbucks"]')).toBeNull();
+    for (let i = 0; i < 3; i += 1) await user.click(screen.getByRole('button', { name: '拡大' }));
     await user.click(container.querySelector('[data-shop-id="wt-shop-starbucks"]') as Element);
     expect(onSelectPlace).toHaveBeenLastCalledWith(expect.objectContaining({ nodeId: 'wt-c4' }));
   });
@@ -106,5 +109,58 @@ describe('InteractiveMap', () => {
         aboveGround: true,
       }),
     );
+  });
+
+  it('shows more detail as the map is zoomed in', async () => {
+    const user = userEvent.setup();
+    render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onSelectPlace={() => {}}
+      />,
+    );
+    const map = screen.getByTestId('map-view');
+    expect(map).toHaveAttribute('data-detail', 'overview');
+    expect(screen.queryAllByTestId('map-shop-label')).toHaveLength(0);
+    for (let i = 0; i < 6; i += 1) await user.click(screen.getByRole('button', { name: '拡大' }));
+    expect(map).toHaveAttribute('data-detail', 'detail');
+    // 詳細表示では店名が出る
+    expect(screen.getAllByTestId('map-shop-label').length).toBeGreaterThan(0);
+  });
+
+  it('draws the route with direction arrows, dims the rest and offers a fit-route button', () => {
+    const route = findRoute(graph, 'wt-izumi', 'ex-C-93');
+    render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        routeNodeIds={route?.nodeIds}
+        onSelectPlace={() => {}}
+      />,
+    );
+    expect(screen.getByTestId('map-view')).toHaveClass('has-route');
+    expect(screen.getAllByTestId('map-route-arrow').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: '経路全体を表示' })).toBeInTheDocument();
+    expect(screen.getByTestId('map-legend')).toHaveTextContent('経路');
+  });
+
+  it('marks the selected place and links a selected spot to its exit', () => {
+    const hep = umedaMap.pois.find((p) => p.id === 'poi-hepfive');
+    render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        selectedNodeId={hep?.nodeId}
+        linkedPoiIds={['poi-hepfive']}
+        onSelectPlace={() => {}}
+      />,
+    );
+    expect(screen.getByTestId('map-selection')).toBeInTheDocument();
+    // 点線は選んだスポットの分だけ
+    expect(screen.getAllByTestId('stair-link')).toHaveLength(1);
   });
 });
