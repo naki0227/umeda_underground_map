@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { BottomSheet } from './components/BottomSheet';
 import { TabBar } from './components/TabBar';
 import { umedaMap } from './data/map';
-import { fitGeoToMap, nearestNode } from './domain/geo';
+import { fitGeoTransform, nearestNode } from './domain/geo';
 import { buildGraph } from './domain/graph';
 import { findRoute } from './domain/route';
 import { localized } from './i18n';
@@ -27,16 +27,16 @@ export default function App() {
   const [avoidStairs, setAvoidStairs] = useState(false);
   const gps = useInitialGeolocation();
   const [gpsNoteDismissed, setGpsNoteDismissed] = useState(false);
-  const geoToMap = useMemo(() => fitGeoToMap(umedaMap.nodes), []);
+  const geo = useMemo(() => fitGeoTransform(umedaMap.nodes), []);
 
   /** GPS の大まかな位置をマップ平面に置く。範囲外なら inArea=false */
   const gpsHint = useMemo(() => {
-    if (gps.position === null || geoToMap === null) return null;
-    const point = geoToMap(gps.position);
+    if (gps.position === null || geo === null) return null;
+    const point = geo.toMap(gps.position);
     const nearest = nearestNode(graph.nodes.values(), point);
     const inArea = nearest !== null && nearest.distanceM <= GPS_AREA_RANGE_M;
     return { ...point, accuracyM: gps.position.accuracyM, inArea };
-  }, [gps.position, geoToMap, graph]);
+  }, [gps.position, geo, graph]);
 
   const route = useMemo(() => {
     if (nav.currentNodeId === null || nav.destination === null) return null;

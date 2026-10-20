@@ -1,7 +1,13 @@
 import { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
-import { WALK_SPEED_M_PER_MIN } from '../../app/config';
+import {
+  ABOVE_GROUND_MIN_STRAIGHT_M,
+  ABOVE_GROUND_SUGGEST_RATIO,
+  WALK_SPEED_M_PER_MIN,
+} from '../../app/config';
+import { googleMapsWalkingUrl, shouldSuggestAboveGround } from '../../domain/aboveGround';
 import { buildSteps, type RouteStep } from '../../domain/directions';
+import { fitGeoTransform, type LatLng } from '../../domain/geo';
 import type { Graph } from '../../domain/graph';
 import { findRoute, routeUsesStairs } from '../../domain/route';
 import { nodeFloor, type LocalizedText, type NodeId } from '../../domain/types';
@@ -58,6 +64,36 @@ export function RouteScreen({
     if (route === null) return null;
     return { route, steps: buildSteps(graph, route), usesStairs: routeUsesStairs(graph, route) };
   }, [graph, fromNodeId, toNodeId, avoidStairs]);
+
+  /** 地上の方が近い可能性があるときの比較値と Google マップのリンク */
+  const aboveGroundSuggestion = useMemo(() => {
+    if (result === null) return null;
+    const from = graph.nodes.get(fromNodeId);
+    const to = graph.nodes.get(toNodeId);
+    if (!from || !to) return null;
+    const straightM = Math.hypot(to.x - from.x, to.y - from.y);
+    const undergroundM = result.route.totalDistanceM;
+    const suggest = shouldSuggestAboveGround({
+      undergroundM,
+      straightM,
+      ratio: ABOVE_GROUND_SUGGEST_RATIO,
+      minStraightM: ABOVE_GROUND_MIN_STRAIGHT_M,
+    });
+    if (!suggest) return null;
+    const transform = fitGeoTransform([...graph.nodes.values()]);
+    const geoOf = (node: typeof from): LatLng | null =>
+      node.lat !== undefined && node.lng !== undefined
+        ? { lat: node.lat, lng: node.lng }
+        : (transform?.toGeo(node) ?? null);
+    const origin = geoOf(from);
+    const destination = geoOf(to);
+    if (origin === null || destination === null) return null;
+    return {
+      straightM: Math.round(straightM),
+      undergroundM: Math.round(undergroundM),
+      url: googleMapsWalkingUrl(origin, destination),
+    };
+  }, [graph, fromNodeId, toNodeId, result]);
 
   const nodeName = (nodeId: NodeId) => {
     const node = graph.nodes.get(nodeId);
@@ -162,6 +198,21 @@ export function RouteScreen({
                   </span>
                 )}
               </div>
+            </div>
+          )}
+
+          {aboveGroundSuggestion !== null && (
+            <div className="above-ground-suggest" data-testid="above-ground-suggest">
+              <p>
+                {t('route.aboveGroundSuggest', {
+                  underground: aboveGroundSuggestion.undergroundM,
+                  straight: aboveGroundSuggestion.straightM,
+                })}
+              </p>
+              <a href={aboveGroundSuggestion.url} target="_blank" rel="noopener noreferrer">
+                {t('route.openGoogleMaps')}
+              </a>
+              <p className="hint">{t('route.aboveGroundReason')}</p>
             </div>
           )}
 

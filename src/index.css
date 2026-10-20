@@ -982,3 +982,21 @@ button.candidate:hover {
   text-align: left;
   z-index: 6;
 }
+
+.above-ground-suggest {
+  margin: 8px 0;
+  padding: 10px 12px;
+  border: 1px solid #f2d39b;
+  border-radius: var(--radius);
+  background: #fff8ea;
+  color: var(--text-strong);
+}
+
+.above-ground-suggest p {
+  margin: 0 0 6px;
+}
+
+.above-ground-suggest a {
+  color: var(--accent-strong);
+  font-weight: 700;
+}

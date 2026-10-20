@@ -12,12 +12,17 @@ export interface MapPoint {
 
 const METERS_PER_DEG_LAT = 111_320;
 
+export interface GeoTransform {
+  toMap: (p: LatLng) => MapPoint;
+  toGeo: (p: MapPoint) => LatLng;
+}
+
 /**
- * 緯度経度 → マップ平面座標（x=東 / y=北、メートル相当）の変換。
+ * 緯度経度 ⇔ マップ平面座標（x=東 / y=北、メートル相当）の変換。
  * 緯度経度と平面座標の両方を持つノード（出口・改札）から最小二乗で
  * アフィン変換を求める。対応点が3つ未満、または一直線上なら null。
  */
-export function fitGeoToMap(nodes: MapNode[]): ((p: LatLng) => MapPoint) | null {
+export function fitGeoTransform(nodes: MapNode[]): GeoTransform | null {
   const pairs = nodes.filter(
     (n): n is MapNode & LatLng => n.lat !== undefined && n.lng !== undefined,
   );
@@ -53,9 +58,22 @@ export function fitGeoToMap(nodes: MapNode[]): ((p: LatLng) => MapPoint) | null 
   const wy = solve3(ata, aty);
   if (wx === null || wy === null) return null;
 
-  return (p: LatLng) => {
-    const { e, n } = local(p);
-    return { x: wx[0] * e + wx[1] * n + wx[2], y: wy[0] * e + wy[1] * n + wy[2] };
+  // 逆変換: [x - cx, y - cy] = M [e, n] を解く
+  const det = wx[0] * wy[1] - wx[1] * wy[0];
+  if (Math.abs(det) < 1e-12) return null;
+
+  return {
+    toMap: (p: LatLng) => {
+      const { e, n } = local(p);
+      return { x: wx[0] * e + wx[1] * n + wx[2], y: wy[0] * e + wy[1] * n + wy[2] };
+    },
+    toGeo: (p: MapPoint) => {
+      const dx = p.x - wx[2];
+      const dy = p.y - wy[2];
+      const e = (wy[1] * dx - wx[1] * dy) / det;
+      const n = (-wy[0] * dx + wx[0] * dy) / det;
+      return { lat: lat0 + n / METERS_PER_DEG_LAT, lng: lng0 + e / (METERS_PER_DEG_LAT * cosLat) };
+    },
   };
 }
 

@@ -8,3 +8,10 @@ export const REPORT_FORM_URLS: Record<AppLanguage, string> = {
 
 /** 徒歩速度（分速メートル）。所要時間の概算に使う。 */
 export const WALK_SPEED_M_PER_MIN = 70;
+
+/**
+ * 地上ルートを提案する条件: 地下経路の距離が地上の直線距離のこの倍数を超え、
+ * かつ直線距離が ABOVE_GROUND_MIN_STRAIGHT_M 以上のとき。
+ */
+export const ABOVE_GROUND_SUGGEST_RATIO = 1.6;
+export const ABOVE_GROUND_MIN_STRAIGHT_M = 150;

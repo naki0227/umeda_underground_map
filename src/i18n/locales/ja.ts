@@ -81,6 +81,10 @@ export const ja = {
     finish: '終了',
     floorNow: '現在:{{floor}}',
     floorNext: '次:{{floor}}',
+    aboveGroundSuggest:
+      '地上を歩いた方が近いかもしれません（地下 約{{underground}}m／直線 約{{straight}}m）',
+    openGoogleMaps: 'Googleマップで地上の徒歩ルートを見る',
+    aboveGroundReason: '日差しや雨を避けたいときは、このまま地下の案内をどうぞ。',
     usesStairs: 'この経路には階段があります（階段を通らない経路が見つかりませんでした）',
     alreadyHere: '目的地は現在地です',
     estimateNote: '現在地は開始時の推定位置です。ずれてきたら「迷った」で再測位してください。',
