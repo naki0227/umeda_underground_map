@@ -95,23 +95,23 @@ C の実績（OSM 抽出 2026-10-20、`scripts/osm/build.mjs`）:
 
 ### D. 公開（PR: docs-deploy）
 
-- [ ] D-1 デプロイ先（GitHub Pages）、仕組み（`deploy.yml`）、手順、ロールバック方法を README（または `docs/DEPLOY.md`）に書く
-- [ ] D-2 オーナーの手作業を手順として書く（Pages の Source 設定、任意の独自ドメイン設定と DNS、報告フォームの管理）
-- [ ] D-3 main マージ後のデプロイが成功し、公開 URL で最新版が表示される（マージはオーナーが行うため、マージ後に確認する手順として記載）
+- [x] D-1 デプロイ先（GitHub Pages）、仕組み（`deploy.yml`）、手順、ロールバック方法を README（または `docs/DEPLOY.md`）に書く
+- [x] D-2 オーナーの手作業を手順として書く（Pages の Source 設定、任意の独自ドメイン設定と DNS、報告フォームの管理）
+- [x] D-3 main マージ後のデプロイが成功し、公開 URL で最新版が表示される（マージはオーナーが行うため、マージ後に確認する手順として記載）
 
 ### E. README（PR: docs-readme）
 
-- [ ] E-1 何のアプリか・使い方（スクリーンショットは自前のものだけ）
-- [ ] E-2 開発・テスト・ビルドのコマンド
-- [ ] E-3 データの出典・ライセンス・帰属表示、データ更新方法
-- [ ] E-4 公開 URL・デプロイ手順へのリンク
-- [ ] E-5 誤り報告の方法
+- [x] E-1 何のアプリか・使い方（スクリーンショットは自前のものだけ）
+- [x] E-2 開発・テスト・ビルドのコマンド
+- [x] E-3 データの出典・ライセンス・帰属表示、データ更新方法
+- [x] E-4 公開 URL・デプロイ手順へのリンク
+- [x] E-5 誤り報告の方法
 
 ### F. 品質ゲート（全 PR 共通）
 
 - [ ] F-1 CI が全 PR で緑（typecheck / format / lint / test / build）
-- [ ] F-2 新しい domain ロジック・データ規則にはユニットテスト、UI フローには Testing Library のテスト
-- [ ] F-3 `docs/TODO.md` と `docs/reports/` を PR ごとに更新
+- [x] F-2 新しい domain ロジック・データ規則にはユニットテスト、UI フローには Testing Library のテスト
+- [x] F-3 `docs/TODO.md` と `docs/reports/` を PR ごとに更新
 
 ---
 
