@@ -12,6 +12,24 @@ export interface MapPoint {
 
 const METERS_PER_DEG_LAT = 111_320;
 
+/**
+ * マップ平面座標の原点（JR大阪駅 御堂筋口付近）。x=東, y=北 のメートル。
+ * scripts/osm/overlay.mjs の ORIGIN と同じ値にすること。
+ */
+export const PLANE_ORIGIN: LatLng = { lat: 34.7025, lng: 135.4959 };
+
+/**
+ * 緯度経度 → マップ平面座標（正距円筒図法の近似。梅田の範囲なら誤差は数cm）。
+ * マップデータの x, y はすべてこれで計算する。
+ */
+export function projectToPlane(p: LatLng): MapPoint {
+  const cos0 = Math.cos((PLANE_ORIGIN.lat * Math.PI) / 180);
+  return {
+    x: (p.lng - PLANE_ORIGIN.lng) * METERS_PER_DEG_LAT * cos0,
+    y: (p.lat - PLANE_ORIGIN.lat) * METERS_PER_DEG_LAT,
+  };
+}
+
 export interface GeoTransform {
   toMap: (p: LatLng) => MapPoint;
   toGeo: (p: MapPoint) => LatLng;

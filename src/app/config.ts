@@ -1,7 +1,5 @@
-import type { AppLanguage } from '../i18n';
-
-/** 誤り報告用Googleフォーム（2026-07-09作成、日本語版・英語版） */
-export const REPORT_FORM_URLS: Record<AppLanguage, string> = {
+/** 誤り報告用Googleフォーム（2026-07-09作成、日本語版・英語版）。中国語・韓国語は英語版 */
+export const REPORT_FORM_URLS: Record<'ja' | 'en', string> = {
   ja: 'https://docs.google.com/forms/d/e/1FAIpQLSdEPsm1gCPNWhKNbl3A5EfGZM0irOg9nzy7Wm3Hwl4NKBg51A/viewform',
   en: 'https://docs.google.com/forms/d/e/1FAIpQLSfQdkhyJl913T427bVISLa0dDnSDL_7NaaCfy0-X4KlMDaq_Q/viewform',
 };
