@@ -281,6 +281,54 @@ body {
   box-shadow: 0 2px 8px rgba(22, 35, 44, 0.08);
 }
 
+/* 表示する階の切り替え（左側、ズームボタンと同じ高さ） */
+.floor-switcher {
+  position: absolute;
+  left: 12px;
+  bottom: 30%;
+  display: grid;
+  gap: 0;
+  z-index: 5;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(22, 35, 44, 0.08);
+}
+
+.floor-switcher button {
+  width: 46px;
+  height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: var(--bg);
+  color: var(--text-strong);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.floor-switcher button + button {
+  border-top: 1px solid var(--border);
+}
+
+.floor-switcher button[aria-pressed='true'] {
+  background: var(--accent-strong);
+  color: #ffffff;
+}
+
+/* ほかの階の通路・経路は薄く残す（どこにいるか分かるように） */
+.map-edge.off-floor,
+.map-edge-side.off-floor,
+.map-zone.off-floor {
+  opacity: 0.18;
+}
+
+.off-floor .map-route,
+.off-floor .map-route-casing {
+  opacity: 0.4;
+  stroke-dasharray: 6 6;
+}
+
 .sheet {
   position: absolute;
   left: 12px;

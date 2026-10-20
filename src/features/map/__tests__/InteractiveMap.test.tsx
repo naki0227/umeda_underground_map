@@ -164,4 +164,45 @@ describe('InteractiveMap', { timeout: 15_000 }, () => {
     // 点線は選んだスポットの分だけ
     expect(screen.getAllByTestId('stair-link')).toHaveLength(1);
   });
+
+  it('shows one floor at a time and switches floors with the floor buttons', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onSelectPlace={() => {}}
+      />,
+    );
+    const map = screen.getByTestId('map-view');
+    expect(map).toHaveAttribute('data-floor', 'B1');
+    const exitsOnB1 = container.querySelectorAll('.map-exit-badge').length;
+    expect(screen.getByRole('button', { name: 'B1 を表示' })).toHaveAttribute(
+      'aria-pressed',
+      'true',
+    );
+
+    await user.click(screen.getByRole('button', { name: 'B2 を表示' }));
+    expect(map).toHaveAttribute('data-floor', 'B2');
+    // B2 では、B2 につながらない出口は出さず、B1 の通路は薄く残す
+    expect(container.querySelectorAll('.map-exit-badge').length).toBeLessThan(exitsOnB1);
+    expect(container.querySelectorAll('.map-edge.off-floor').length).toBeGreaterThan(0);
+  });
+
+  it('follows the floor of the current step while navigating', () => {
+    const b2 = umedaMap.nodes.find((n) => n.floor === 'B2');
+    expect(b2).toBeDefined();
+    const neighbor = graph.adjacency.get(b2?.id ?? '')?.[0]?.to ?? '';
+    render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        focusNodeIds={[b2?.id ?? '', neighbor]}
+        onSelectPlace={() => {}}
+      />,
+    );
+    expect(screen.getByTestId('map-view')).toHaveAttribute('data-floor', 'B2');
+  });
 });

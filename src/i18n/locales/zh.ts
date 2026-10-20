@@ -148,6 +148,8 @@ export const zh: Resource = {
     destination: '目的地',
     caption: '此地图为示意图，距离和位置均为大致数值。',
     zoomIn: '放大',
+    floors: '楼层',
+    showFloor: '显示 {{floor}}',
     zoomOut: '缩小',
     resetView: '显示全部',
     legendUnderground: '地下街',

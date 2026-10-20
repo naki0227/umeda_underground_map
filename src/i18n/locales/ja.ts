@@ -148,6 +148,8 @@ export const ja = {
     destination: '目的地',
     caption: 'マップは概略図です。距離・位置関係はおおよその目安です。',
     zoomIn: '拡大',
+    floors: 'フロア',
+    showFloor: '{{floor}} を表示',
     zoomOut: '縮小',
     resetView: '全体表示',
     legendUnderground: '地下街',

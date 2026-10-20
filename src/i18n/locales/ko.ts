@@ -155,6 +155,8 @@ export const ko: Resource = {
     destination: '목적지',
     caption: '이 지도는 개략도입니다. 거리와 위치는 대략적인 값입니다.',
     zoomIn: '확대',
+    floors: '층',
+    showFloor: '{{floor}} 보기',
     zoomOut: '축소',
     resetView: '전체 보기',
     legendUnderground: '지하상가',

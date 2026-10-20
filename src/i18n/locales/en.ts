@@ -154,6 +154,8 @@ export const en: Resource = {
     destination: 'Destination',
     caption: 'This map is schematic. Distances and positions are approximate.',
     zoomIn: 'Zoom in',
+    floors: 'Floors',
+    showFloor: 'Show {{floor}}',
     zoomOut: 'Zoom out',
     resetView: 'Fit view',
     legendUnderground: 'Underground',
