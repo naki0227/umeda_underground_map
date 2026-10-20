@@ -52,7 +52,15 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
     expect(screen.getByText(/地上です/)).toBeInTheDocument();
     expect(screen.getByText(/到着まで 約\d+分・\d+m/)).toBeInTheDocument();
     expect(screen.getByTestId('next-step')).toBeInTheDocument();
-    expect(screen.getByTestId('map-route')).toBeInTheDocument();
+    expect(screen.getAllByTestId('map-route').length).toBeGreaterThan(0);
+
+    // 5b. 案内が始まると一人称の表示（左右の一覧）が出て、地図に切り替えられる
+    expect(screen.getByTestId('first-person')).toBeInTheDocument();
+    expect(screen.getByRole('region', { name: '左' })).toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: '地図で見る' }));
+    expect(screen.queryByTestId('first-person')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: '一人称' }));
+    expect(screen.getByTestId('first-person')).toBeInTheDocument();
 
     // 6. 経路シートを閉じても案内は続き、バナーから再表示できる
     await user.click(

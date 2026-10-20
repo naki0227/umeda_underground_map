@@ -574,7 +574,14 @@ for (const [index, nodeId] of attachToNode) {
   if (seenShop.has(key)) continue;
   seenShop.add(key);
   const en = t['name:en'] ?? t['brand:en'] ?? (/^[\x20-\x7e]+$/.test(t.name) ? t.name : ja);
-  shops.push({ id: `osm-${s.ref.toLowerCase()}`, name: { ja, en }, category: category(t), nodeId });
+  shops.push({
+    id: `osm-${s.ref.toLowerCase()}`,
+    name: { ja, en },
+    category: category(t),
+    nodeId,
+    lat: round6(s.lat),
+    lng: round6(s.lon),
+  });
 }
 
 // ---- 5b. 地下とつながる駅ビル・商業ビルの中の店（地上階も含む）
@@ -669,6 +676,8 @@ for (const s of shopCandidates) {
     name: { ja, en },
     category: category(t),
     nodeId,
+    lat: round6(s.lat),
+    lng: round6(s.lon),
     building: { ja: buildingJa, en: building['name:en'] ?? buildingJa },
     ...(floor ? { floor } : {}),
   });

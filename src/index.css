@@ -1267,3 +1267,138 @@ button.candidate {
 [data-detail='overview'] .map-zone-label {
   font-size: 16px;
 }
+
+/* 案内中の一人称の表示（画面上部。進む方向を正面にした通路と、左右の一覧） */
+.first-person {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  right: 12px;
+  max-width: 560px;
+  max-height: 44vh;
+  margin: 0 auto;
+  overflow-y: auto;
+  padding: 10px 12px 12px;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 4px 16px rgba(22, 35, 44, 0.12);
+  z-index: 15;
+}
+
+.fpv-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 6px;
+}
+
+.fpv-ahead {
+  font-weight: 700;
+  color: var(--text-strong);
+  font-variant-numeric: tabular-nums;
+}
+
+.fpv-scene {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: var(--radius);
+  background: var(--bg-soft);
+}
+
+.fpv-ceiling {
+  fill: #e7ecf5;
+}
+
+.fpv-wall {
+  fill: var(--accent-soft);
+  stroke: var(--border);
+}
+
+.fpv-floor {
+  fill: #c9e2ec;
+}
+
+.fpv-end {
+  fill: var(--route);
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.fpv-sign rect {
+  fill: var(--bg);
+  stroke: var(--accent-strong);
+  stroke-width: 1;
+}
+
+.fpv-sign text {
+  fill: var(--text-strong);
+  font-weight: 700;
+}
+
+.fpv-sign.exit rect {
+  fill: var(--accent-strong);
+}
+
+.fpv-sign.exit text {
+  fill: #ffffff;
+}
+
+.fpv-sign.passage rect {
+  fill: var(--bg-soft);
+  stroke-dasharray: 3 2;
+}
+
+.fpv-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  margin-top: 8px;
+}
+
+.fpv-column h3 {
+  margin: 0 0 4px;
+  font-size: 0.8rem;
+  color: var(--text);
+}
+
+.fpv-column ul {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 4px;
+}
+
+.fpv-column li {
+  display: flex;
+  justify-content: space-between;
+  gap: 6px;
+  font-size: 0.85rem;
+}
+
+.fpv-column li.exit .fpv-name {
+  font-weight: 700;
+  color: var(--accent-strong);
+}
+
+.fpv-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.fpv-distance {
+  flex: none;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
+
+.fpv-none,
+.fpv-along {
+  margin: 4px 0 0;
+  font-size: 0.8rem;
+  color: var(--text);
+}
