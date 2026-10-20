@@ -17,6 +17,7 @@ export const ja = {
     gpsFailed: '位置情報を取得できませんでした（地下では失敗しやすいです）',
     shopsLabel: '近くに見えるお店（複数選択可）',
     shopsPlaceholder: '店名で検索',
+    shopsHint: '店名の一部を入力すると候補が出ます',
     locateButton: '現在地を推定する',
     quickLabel: 'よく使う目印から選ぶ（タップ）',
     estimatedTitle: '推定位置',
@@ -55,7 +56,7 @@ export const ja = {
   },
   favorites: {
     title: 'お気に入り',
-    empty: 'まだありません。場所を選んで「お気に入り」を押すと、ここからすぐ案内できます。',
+    empty: 'まだありません。場所を選んで「お気に入りに登録」を押すと、ここからすぐ案内できます。',
     add: 'お気に入りに登録',
     removeNamed: '{{name}} をお気に入りから外す',
     storageNote: 'お気に入りはこの端末の中にだけ保存されます。',
@@ -132,6 +133,8 @@ export const ja = {
     station: '駅構内・連絡通路',
   },
   map: {
+    legendRoute: '経路',
+    fitRoute: '経路全体を表示',
     gpsHint: 'おおよその現在地（GPS）',
     locateGps: 'おおよその現在地を表示',
     gpsOutOfArea: '梅田の地下街の地図の範囲外にいるようです',
@@ -144,6 +147,12 @@ export const ja = {
     resetView: '全体表示',
     legendUnderground: '地下街',
     legendGround: '地上',
+  },
+  attribution: {
+    title: 'データの出典',
+    osm: '通路・出口・地下の店・地上スポットの位置:',
+    official:
+      '店名の一部は各地下街の公式サイト掲載情報（ホワイティうめだ・ディアモール大阪・阪急三番街・ekimo梅田・ドージマ地下センター）を参照しています。',
   },
   language: {
     label: '言語',

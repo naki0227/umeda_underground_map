@@ -9,7 +9,8 @@ beforeAll(() => {
   return i18n.changeLanguage('ja');
 });
 
-describe('App map-first user flow', () => {
+// 画面をまたぐ長いフロー（検索・位置確定・案内）を通すので、遅い CI でも足りる時間にする
+describe('App map-first user flow', { timeout: 15_000 }, () => {
   it('searches a place, sets location via shops, and shows directions', async () => {
     const user = userEvent.setup();
     render(<App />);
@@ -29,10 +30,18 @@ describe('App map-first user flow', () => {
 
     // 4. 近くの店を2つ選んで推定 → 推定位置カードから案内開始
     const locateSheet = screen.getByRole('dialog', { name: '現在地を確認する' });
+    const shopSearch = within(locateSheet).getByPlaceholderText('店名で検索');
+    await user.type(shopSearch, 'スターバックス');
     await user.click(
       within(locateSheet).getByLabelText(/スターバックスコーヒー ホワイティうめだ店/),
     );
+    await user.clear(shopSearch);
+    await user.type(shopSearch, '古潭');
     await user.click(within(locateSheet).getByLabelText(/古潭 ホワイティうめだ店/));
+    // 選んだ店は検索を変えても残る
+    expect(
+      within(locateSheet).getByLabelText(/スターバックスコーヒー ホワイティうめだ店/),
+    ).toBeChecked();
     await user.click(screen.getByRole('button', { name: '現在地を推定する' }));
     expect(screen.getByText('推定位置')).toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: 'この位置で案内開始' }));
@@ -121,7 +130,7 @@ describe('App map-first user flow', () => {
     await user.click(container.querySelector('[data-node-id="wt-izumi"]') as Element);
     await user.click(screen.getByRole('button', { name: 'いまここにいる' }));
     const search = screen.getByRole('searchbox', { name: '目的地を入力（お店・出口・スポット）' });
-    await user.type(search, 'C-90');
+    await user.type(search, 'C-93');
     await user.click(
       within(screen.getByRole('list', { name: '検索結果' })).getAllByRole('button')[0],
     );

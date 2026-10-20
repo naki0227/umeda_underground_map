@@ -10,7 +10,10 @@ export interface Speech {
 
 /** 表示言語 → 読み上げの言語タグ */
 function speechLang(language: string): string {
-  return language.startsWith('ja') ? 'ja-JP' : 'en-US';
+  if (language.startsWith('ja')) return 'ja-JP';
+  if (language.startsWith('zh')) return 'zh-CN';
+  if (language.startsWith('ko')) return 'ko-KR';
+  return 'en-US';
 }
 
 /**

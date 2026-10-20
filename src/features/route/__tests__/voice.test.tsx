@@ -37,7 +37,7 @@ const renderRoute = (stepIndex = 0) =>
     <RouteScreen
       graph={graph}
       fromNodeId="wt-izumi"
-      toNodeId="dj-exit-c90"
+      toNodeId="ex-C-93"
       destinationLabel={null}
       aboveGround={false}
       avoidStairs={false}
@@ -69,7 +69,7 @@ describe('voice guidance', () => {
       <RouteScreen
         graph={graph}
         fromNodeId="wt-izumi"
-        toNodeId="dj-exit-c90"
+        toNodeId="ex-C-93"
         destinationLabel={null}
         aboveGround={false}
         avoidStairs={false}

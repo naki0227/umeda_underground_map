@@ -21,6 +21,7 @@ export const en: Resource = {
     gpsFailed: 'Could not get location (GPS is unreliable underground)',
     shopsLabel: 'Shops you can see nearby (multiple allowed)',
     shopsPlaceholder: 'Search shop name',
+    shopsHint: 'Type part of a shop name to see matches',
     locateButton: 'Estimate my location',
     quickLabel: 'Pick a common landmark (tap)',
     estimatedTitle: 'Estimated position',
@@ -59,7 +60,8 @@ export const en: Resource = {
   },
   favorites: {
     title: 'Favorites',
-    empty: 'Nothing yet. Pick a place and tap "Favorite" to get directions from here quickly.',
+    empty:
+      'Nothing yet. Pick a place and tap "Save to favorites" to get directions from here quickly.',
     add: 'Save to favorites',
     removeNamed: 'Remove {{name}} from favorites',
     storageNote: 'Favorites are stored only on this device.',
@@ -137,6 +139,8 @@ export const en: Resource = {
     station: 'Station corridors',
   },
   map: {
+    legendRoute: 'Route',
+    fitRoute: 'Show the whole route',
     gpsHint: 'Approx. location (GPS)',
     locateGps: 'Show my approximate location',
     gpsOutOfArea: 'You seem to be outside the Umeda underground map.',
@@ -149,6 +153,12 @@ export const en: Resource = {
     resetView: 'Fit view',
     legendUnderground: 'Underground',
     legendGround: 'Above ground',
+  },
+  attribution: {
+    title: 'Data sources',
+    osm: 'Passages, exits, underground shops and above-ground spots:',
+    official:
+      'Some shop names are taken from the official websites of each underground mall (Whity Umeda, Diamor Osaka, Hankyu Sanbangai, ekimo Umeda, Dojima Underground Center).',
   },
   language: {
     label: 'Language',
