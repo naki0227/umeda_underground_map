@@ -20,7 +20,7 @@ export const umedaPois: Poi[] = [
   {
     id: 'poi-hanshin-dept',
     name: { ja: '阪神百貨店 梅田本店', en: 'Hanshin Department Store Umeda' },
-    nodeId: 'st-j-hanshinmae',
+    nodeId: 'st-hanshin',
   },
   {
     id: 'poi-higashidori',
@@ -30,7 +30,7 @@ export const umedaPois: Poi[] = [
   {
     id: 'poi-ohatsutenjin',
     name: { ja: 'お初天神（露天神社）', en: 'Ohatsu Tenjin Shrine (Tsuyunoten)' },
-    nodeId: 'wt-s2',
+    nodeId: 'st-higashiumeda',
   },
   {
     id: 'poi-chayamachi',
@@ -70,7 +70,7 @@ export const umedaPois: Poi[] = [
   {
     id: 'poi-ekimae-bldg',
     name: { ja: '大阪駅前ビル（第1〜4ビル）', en: 'Osaka Ekimae Buildings (No.1-4)' },
-    nodeId: 'dm-b2',
+    nodeId: 'dm-exit-d1',
   },
   {
     id: 'poi-kitashinchi',

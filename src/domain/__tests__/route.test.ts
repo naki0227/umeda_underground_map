@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { buildGraph } from '../graph';
-import { findRoute } from '../route';
+import { findRoute, routeUsesStairs } from '../route';
 import { testEdges, testNodes } from './fixtures';
 
 const graph = buildGraph({ nodes: testNodes, edges: testEdges });
@@ -43,5 +43,34 @@ describe('findRoute', () => {
       edges: testEdges,
     });
     expect(findRoute(isolated, 'j1', 'island')).toBeNull();
+  });
+});
+
+describe('routeUsesStairs', () => {
+  it('detects a stairs edge on the route', () => {
+    const route = findRoute(graph, 'j3', 'j5');
+    expect(route && routeUsesStairs(graph, route)).toBe(true);
+  });
+
+  it('is false for a step-free route', () => {
+    const route = findRoute(graph, 'j3', 'j5', { avoidStairs: true });
+    expect(route && routeUsesStairs(graph, route)).toBe(false);
+  });
+
+  it('treats a floor change without a step-free facility as stairs', () => {
+    // exit1 は 1F、j1 は B1。エッジに設備属性がないので階段扱い
+    const route = findRoute(graph, 'j1', 'exit1');
+    expect(route && routeUsesStairs(graph, route)).toBe(true);
+  });
+
+  it('is false when the floor change uses an elevator', () => {
+    const lifted = buildGraph({
+      nodes: testNodes,
+      edges: testEdges.map((e) =>
+        e.from === 'exit1' ? { ...e, attrs: ['elevator' as const] } : e,
+      ),
+    });
+    const route = findRoute(lifted, 'j1', 'exit1');
+    expect(route && routeUsesStairs(lifted, route)).toBe(false);
   });
 });

@@ -134,7 +134,7 @@ export const stationNodes: MapNode[] = [
 
 export const stationEdges: MapEdge[] = [
   { from: 'st-jr-midosuji', to: 'st-j-central', distanceM: 80 },
-  { from: 'st-jr-midosuji', to: 'st-exit-central', distanceM: 50 },
+  { from: 'st-jr-midosuji', to: 'st-exit-central', distanceM: 50, attrs: ['stairs'] },
   { from: 'st-jr-midosuji', to: 'st-jr-sakurabashi', distanceM: 180 },
   { from: 'st-jr-sakurabashi', to: 'st-j-sakurabashi-s', distanceM: 150 },
   { from: 'st-j-sakurabashi-s', to: 'st-nishiumeda', distanceM: 205, attrs: ['slope'] },

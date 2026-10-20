@@ -55,6 +55,14 @@ describe('umedaMap data integrity', () => {
     }
   });
 
+  it('every POI points at an exit or a gate (a place where you can reach street level)', () => {
+    const nodes = new Map(umedaMap.nodes.map((n) => [n.id, n]));
+    for (const poi of umedaMap.pois) {
+      const kind = nodes.get(poi.nodeId)?.kind;
+      expect(['exit', 'gate'], `poi ${poi.id} -> ${poi.nodeId} (${kind})`).toContain(kind);
+    }
+  });
+
   it('can route across areas: Izumi Plaza -> Dotica South', () => {
     const graph = buildGraph(umedaMap);
     const route = findRoute(graph, 'wt-izumi', 'dj-3');
