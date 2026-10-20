@@ -87,4 +87,38 @@ describe('useMapNavigation', () => {
     act(() => result.current.closeSheet());
     expect(result.current.sheet).toBe('route');
   });
+
+  it('closing the route sheet shows the map and openRoute brings it back', () => {
+    const { result } = renderHook(() => useMapNavigation());
+    act(() => result.current.selectPlace(izumi));
+    act(() => result.current.setHereSelected());
+    act(() => result.current.selectPlace(hepFive));
+    act(() => result.current.goToSelected());
+    expect(result.current.sheet).toBe('route');
+    act(() => result.current.closeSheet());
+    expect(result.current.sheet).toBe('none');
+    expect(result.current.destination?.nodeId).toBe('wt-exit-h8');
+    act(() => result.current.openRoute());
+    expect(result.current.sheet).toBe('route');
+  });
+
+  it('flags the lost state until a location is confirmed again', () => {
+    const { result } = renderHook(() => useMapNavigation());
+    act(() => result.current.selectPlace(izumi));
+    act(() => result.current.setHereSelected());
+    expect(result.current.lost).toBe(false);
+    act(() => result.current.markLost());
+    expect(result.current.lost).toBe(true);
+    act(() => result.current.confirmLocation('wt-c2'));
+    expect(result.current.lost).toBe(false);
+  });
+
+  it('ignores goToSelected and setHereSelected when nothing is selected', () => {
+    const { result } = renderHook(() => useMapNavigation());
+    act(() => result.current.goToSelected());
+    act(() => result.current.setHereSelected());
+    expect(result.current.sheet).toBe('none');
+    expect(result.current.destination).toBeNull();
+    expect(result.current.currentNodeId).toBeNull();
+  });
 });

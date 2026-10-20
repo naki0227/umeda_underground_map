@@ -90,6 +90,9 @@ export interface Poi {
   name: LocalizedText;
   /** 最寄りの地下ノード（原則 exit / gate） */
   nodeId: NodeId;
+  /** 位置（あれば）。最寄り出口の計算と地図表示に使う */
+  lat?: number;
+  lng?: number;
 }
 
 export interface UndergroundMap {
