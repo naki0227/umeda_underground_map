@@ -37,6 +37,14 @@ describe('umedaMap data integrity', () => {
     }
   });
 
+  it('never links one exit directly to another (that would be a walk on the street)', () => {
+    const kindOf = new Map(umedaMap.nodes.map((n) => [n.id, n.kind]));
+    for (const edge of umedaMap.edges) {
+      const bothExits = kindOf.get(edge.from) === 'exit' && kindOf.get(edge.to) === 'exit';
+      expect(bothExits, `${edge.from} - ${edge.to}`).toBe(false);
+    }
+  });
+
   it('has localized names (ja and en) for all nodes and shops', () => {
     for (const node of umedaMap.nodes) {
       expect(node.name.ja.length, `${node.id} ja`).toBeGreaterThan(0);

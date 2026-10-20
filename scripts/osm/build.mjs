@@ -221,6 +221,11 @@ for (const [id, place] of placeInfo) {
 // ---- 3. 縮約
 const keep = new Set([...placeInfo.keys()]);
 for (const e of walk.entrances) if (g.has(e.id) && e.tags.ref) keep.add(e.id);
+// 2つ以上の出口につながる点は残す（縮約で消すと出口どうしが直接つながってしまう）
+for (const [id, m] of g) {
+  const exits = [...m.keys()].filter((o) => isEntranceId.has(o) && osm.nodes.get(o)?.tags.ref);
+  if (exits.length >= 2) keep.add(id);
+}
 let net = simplify(g, keep);
 
 // 連結成分: JR大阪駅 御堂筋口を含む成分だけ残す
@@ -238,6 +243,38 @@ for (const id of [...net.keys()]) {
   }
 }
 net = simplify(net, keep);
+
+// 出口を通らずには主な通路網へ行けない小さなかたまり（階段の踊り場など）は、
+// 主な通路網の最寄り点が近ければ直接つなぐ。出口は経路の途中では通らない（地上に出てしまう）ため
+const FRAGMENT_LINK_M = 20;
+const isExitNode = (id) => isEntranceId.has(id) && osm.nodes.get(id)?.tags.ref !== undefined;
+const withoutExits = new Map(
+  [...net]
+    .filter(([id]) => !isExitNode(id))
+    .map(([id, m]) => [id, new Map([...m].filter(([other]) => !isExitNode(other)))]),
+);
+const fragComp = components(withoutExits);
+const fragSize = new Map();
+for (const c of fragComp.values()) fragSize.set(c, (fragSize.get(c) ?? 0) + 1);
+const mainFrag = fragComp.get('st-jr-midosuji');
+let fragmentLinks = 0;
+for (const c of fragSize.keys()) {
+  if (c === mainFrag) continue;
+  const members = [...fragComp].filter(([, k]) => k === c).map(([id]) => id);
+  let best = null;
+  for (const a of members)
+    for (const [b, k] of fragComp) {
+      if (k !== mainFrag) continue;
+      const d = distanceM(positions.get(a), positions.get(b));
+      if (!best || d < best.d) best = { a, b, d };
+    }
+  if (!best || best.d > FRAGMENT_LINK_M) continue;
+  const lengthM = Math.max(1, best.d * 1.15);
+  const attrs = floorOf(best.a) === floorOf(best.b) ? [] : ['stairs'];
+  net.get(best.a).set(best.b, { lengthM, attrs });
+  net.get(best.b).set(best.a, { lengthM, attrs });
+  fragmentLinks += 1;
+}
 
 // ---- 4. エリア判定（OSM の地下街ポリゴン）
 const polygons = Object.entries(AREA_POLYGONS).map(([area, name]) => {
@@ -261,6 +298,91 @@ const areaOf = (id) => {
   const p = toPlane(positions.get(id));
   return polygons.find((poly) => inside(p, poly.pts))?.area ?? 'station';
 };
+
+// 地下街（OSM の地下街ポリゴン）の中の行き止まり（階段の下端など）は、同じ地下街の
+// 近くの通路とつなぐ（今の経路が大回りのときだけ）。地下街の中は歩ける床なので、
+// OSM で線がつながっていないだけとみなす
+const DEAD_END_LINK_M = 25;
+const polygonAreaOf = (id) => {
+  const p = toPlane(positions.get(id));
+  return polygons.find((poly) => inside(p, poly.pts))?.area;
+};
+/** 出口を通らずに a から b へ行く距離（limit を超えたら Infinity） */
+const pathLengthM = (a, b, limit) => {
+  const dist = new Map([[a, 0]]);
+  const queue = [[0, a]];
+  while (queue.length > 0) {
+    queue.sort((x, y) => x[0] - y[0]);
+    const [d, u] = queue.shift();
+    if (u === b) return d;
+    if (d > limit || d > dist.get(u)) continue;
+    if (u !== a && isExitNode(u)) continue;
+    for (const [v, e] of net.get(u)) {
+      const nd = d + e.lengthM;
+      if (nd < (dist.get(v) ?? Infinity)) {
+        dist.set(v, nd);
+        queue.push([nd, v]);
+      }
+    }
+  }
+  return Infinity;
+};
+let deadEndLinks = 0;
+for (const [id, m] of net) {
+  if (isExitNode(id)) continue;
+  const inner = [...m.keys()].filter((o) => !isExitNode(o));
+  if (inner.length !== 1) continue;
+  const area = polygonAreaOf(id);
+  if (area === undefined) continue;
+  let best = null;
+  for (const other of net.keys()) {
+    if (other === id || other === inner[0] || isExitNode(other) || m.has(other)) continue;
+    if (polygonAreaOf(other) !== area || floorOf(other) !== floorOf(id)) continue;
+    const d = distanceM(positions.get(id), positions.get(other));
+    if (d <= DEAD_END_LINK_M && (!best || d < best.d)) best = { other, d };
+  }
+  // すでに近い経路でつながっているなら足さない
+  if (!best || pathLengthM(id, best.other, best.d * 3 + 50) <= best.d * 3 + 50) continue;
+  const edge = { lengthM: Math.max(1, best.d * 1.15), attrs: [] };
+  m.set(best.other, edge);
+  net.get(best.other).set(id, edge);
+  deadEndLinks += 1;
+}
+
+// ビルの B1（大阪駅前第1・第2・第4ビル）はフロア全体が歩けるので、建物の外形の中か
+// 外形から 15m 以内にある B1 の通路の点すべてとつなぐ（建物の中心から1本だけだと大回りになる）
+const BUILDING_EDGE_M = 15;
+const segmentDistance = (p, a, b) => {
+  const dx = b.x - a.x;
+  const dy = b.y - a.y;
+  const t = Math.min(
+    1,
+    Math.max(0, ((p.x - a.x) * dx + (p.y - a.y) * dy) / (dx * dx + dy * dy || 1)),
+  );
+  return Math.hypot(a.x + t * dx - p.x, a.y + t * dy - p.y);
+};
+let buildingLinks = 0;
+for (const anchor of BUILDING_ANCHORS) {
+  if (!anchor.osmWay || !net.has(anchor.node)) continue;
+  const pts = wayById.get(anchor.osmWay).nds.map((id) => toPlane(osm.nodes.get(id)));
+  const center = positions.get(anchor.node);
+  for (const id of net.keys()) {
+    if (id === anchor.node || isExitNode(id) || placeInfo.get(id)?.kind === 'landmark') continue;
+    if (floorOf(id) !== 'B1' || net.get(anchor.node).has(id)) continue;
+    const p = toPlane(positions.get(id));
+    let edgeM = Infinity;
+    for (let i = 0; i < pts.length - 1; i += 1)
+      edgeM = Math.min(edgeM, segmentDistance(p, pts[i], pts[i + 1]));
+    if (!inside(p, pts) && edgeM > BUILDING_EDGE_M) continue;
+    const edge = {
+      lengthM: Math.max(1, distanceM(center, positions.get(id)) * 1.15),
+      attrs: [],
+    };
+    net.get(anchor.node).set(id, edge);
+    net.get(id).set(anchor.node, edge);
+    buildingLinks += 1;
+  }
+}
 
 // ---- 5. 店舗（OSM の地下の店）
 const levelsOf = (t) =>
@@ -570,5 +692,5 @@ export const osmData: GeneratedMapData = {
 `,
 );
 console.log(
-  `nodes ${nodes.length} (exits ${nodes.filter((n) => n.kind === 'exit').length}), edges ${edges.length}, shops ${shops.length}, pois ${pois.length}`,
+  `nodes ${nodes.length} (exits ${nodes.filter((n) => n.kind === 'exit').length}), edges ${edges.length}, shops ${shops.length}, pois ${pois.length}, fragment links ${fragmentLinks}, dead-end links ${deadEndLinks}, building links ${buildingLinks}`,
 );
