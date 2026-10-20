@@ -63,6 +63,7 @@ export const en: Resource = {
     walk: '{{minutes}} min walk / approx. {{distance}}m',
   },
   sheet: {
+    resize: 'Resize sheet',
     close: 'Close',
   },
   route: {

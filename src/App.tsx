@@ -1,5 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { BottomSheet } from './components/BottomSheet';
 import { TabBar } from './components/TabBar';
 import { umedaMap } from './data/map';
 import { buildGraph } from './domain/graph';
@@ -81,7 +82,7 @@ export default function App() {
       )}
 
       {nav.sheet === 'locate' && (
-        <div className="sheet" role="dialog" aria-label={t('locate.title')}>
+        <BottomSheet label={t('locate.title')} initialSnap="full">
           <div className="sheet-header">
             <h2>{t('locate.title')}</h2>
             <button
@@ -100,11 +101,11 @@ export default function App() {
             lost={nav.lost}
             onConfirm={nav.confirmLocation}
           />
-        </div>
+        </BottomSheet>
       )}
 
       {nav.sheet === 'route' && nav.currentNodeId !== null && nav.destination !== null && (
-        <div className="sheet" role="dialog" aria-label={t('route.title')}>
+        <BottomSheet label={t('route.title')}>
           <RouteScreen
             graph={graph}
             fromNodeId={nav.currentNodeId}
@@ -117,7 +118,7 @@ export default function App() {
             onFinish={nav.clearDestination}
             onClose={nav.closeSheet}
           />
-        </div>
+        </BottomSheet>
       )}
 
       {nav.sheet === 'spots' && (

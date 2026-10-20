@@ -59,6 +59,7 @@ export const ja = {
     walk: '徒歩{{minutes}}分・約{{distance}}m',
   },
   sheet: {
+    resize: 'シートの高さを変える',
     close: '閉じる',
   },
   route: {

@@ -279,13 +279,44 @@ body {
   max-width: 560px;
   margin: 0 auto;
   max-height: 60%;
+  display: flex;
+  flex-direction: column;
+  transition: max-height 0.18s ease-out;
   overflow-y: auto;
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 14px;
-  padding: 16px 20px;
+  padding: 0 20px 16px;
   box-shadow: 0 6px 24px rgba(22, 35, 44, 0.16);
   z-index: 20;
+}
+
+.sheet.dragging {
+  transition: none;
+}
+
+.sheet-handle {
+  flex: none;
+  align-self: stretch;
+  display: flex;
+  justify-content: center;
+  padding: 10px 0 8px;
+  margin: 0 -20px;
+  background: transparent;
+  border: none;
+  cursor: grab;
+  touch-action: none;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  background: var(--bg);
+}
+
+.sheet-handle span {
+  width: 44px;
+  height: 5px;
+  border-radius: 999px;
+  background: var(--border);
 }
 
 .sheet h1 {
@@ -323,7 +354,7 @@ body {
 .map-pin ellipse {
   fill: var(--bg);
   stroke: var(--accent-strong);
-  stroke-width: 4;
+  stroke-width: 2;
   cursor: pointer;
 }
 
@@ -335,7 +366,7 @@ body {
   fill: var(--warn);
   opacity: 0.75;
   stroke: #ffffff;
-  stroke-width: 2;
+  stroke-width: 1;
   cursor: pointer;
 }
 
@@ -719,7 +750,7 @@ button.candidate:hover {
 }
 
 .marker-stem {
-  stroke-width: 4;
+  stroke-width: 2.5;
 }
 
 .marker-stem.current {
@@ -756,7 +787,7 @@ button.candidate:hover {
 }
 
 .map-zone-label {
-  font-size: 26px;
+  font-size: 14px;
   font-weight: 700;
   fill: #7a86b8;
   opacity: 0.9;
@@ -766,14 +797,21 @@ button.candidate:hover {
 .map-exit-badge rect {
   fill: var(--accent-strong);
   stroke: #ffffff;
-  stroke-width: 3;
+  stroke-width: 1.5;
   cursor: pointer;
 }
 
 .map-exit-badge text {
-  font-size: 20px;
+  font-size: 12px;
   font-weight: 700;
   fill: #ffffff;
+  cursor: pointer;
+}
+
+.map-exit-badge.compact circle {
+  fill: var(--accent-strong);
+  stroke: #ffffff;
+  stroke-width: 1.5;
   cursor: pointer;
 }
 
@@ -788,12 +826,12 @@ button.candidate:hover {
 .map-facility rect {
   fill: #ffffff;
   stroke: var(--border);
-  stroke-width: 2;
+  stroke-width: 1;
   opacity: 0.95;
 }
 
 .map-facility text {
-  font-size: 18px;
+  font-size: 11px;
   font-weight: 600;
   fill: var(--accent-strong);
   text-anchor: middle;
@@ -842,24 +880,24 @@ button.candidate:hover {
 }
 
 .map-label {
-  font-size: 22px;
+  font-size: 12px;
   fill: #5c7482;
 }
 
 .map-marker.current {
   fill: var(--accent-strong);
   stroke: #ffffff;
-  stroke-width: 5;
+  stroke-width: 2.5;
 }
 
 .map-marker.destination {
   fill: var(--warn);
   stroke: #ffffff;
-  stroke-width: 5;
+  stroke-width: 2.5;
 }
 
 .map-marker-label {
-  font-size: 28px;
+  font-size: 14px;
   font-weight: 700;
 }
 
