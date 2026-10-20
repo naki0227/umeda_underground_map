@@ -1,3 +1,7 @@
+/*
+ * :hover はマウス端末だけに当てる（@media (hover: hover) and (pointer: fine)）。
+ * タッチ端末ではタップ後にホバーの色が残るため。
+ */
 :root {
   --text: #3a4750;
   --text-strong: #16232c;
@@ -237,9 +241,11 @@ body {
   padding: 10px 8px;
 }
 
-.search-results button:hover {
-  background: var(--accent-soft);
-  border-radius: var(--radius);
+@media (hover: hover) and (pointer: fine) {
+  .search-results button:hover {
+    background: var(--accent-soft);
+    border-radius: var(--radius);
+  }
 }
 
 .search-kind {
@@ -359,8 +365,10 @@ body {
   cursor: pointer;
 }
 
-.map-pin:hover ellipse {
-  fill: var(--accent-soft);
+@media (hover: hover) and (pointer: fine) {
+  .map-pin:hover ellipse {
+    fill: var(--accent-soft);
+  }
 }
 
 .map-shop-pin {
@@ -414,8 +422,10 @@ button.primary {
   font-weight: 600;
 }
 
-button.primary:hover {
-  background: var(--accent-strong);
+@media (hover: hover) and (pointer: fine) {
+  button.primary:hover {
+    background: var(--accent-strong);
+  }
 }
 
 button.secondary {
@@ -523,9 +533,11 @@ button.candidate {
   color: var(--text-strong);
 }
 
-button.candidate:hover {
-  border-color: var(--accent);
-  background: var(--accent-soft);
+@media (hover: hover) and (pointer: fine) {
+  button.candidate:hover {
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
 }
 
 .confidence {
@@ -743,8 +755,10 @@ button.candidate:hover {
   stroke-width: 2;
 }
 
-.building:hover .building-top {
-  fill: var(--accent-soft);
+@media (hover: hover) and (pointer: fine) {
+  .building:hover .building-top {
+    fill: var(--accent-soft);
+  }
 }
 
 .building-label {
@@ -817,8 +831,10 @@ button.candidate:hover {
   cursor: pointer;
 }
 
-.map-exit-badge:hover rect {
-  fill: var(--accent);
+@media (hover: hover) and (pointer: fine) {
+  .map-exit-badge:hover rect {
+    fill: var(--accent);
+  }
 }
 
 .map-facility {

@@ -54,7 +54,12 @@ export function LocateScreen({
   // 推定結果カードは画面外に出やすいので、表示されたら見える位置へ寄せる
   useEffect(() => {
     if (candidates !== null && candidates.length > 0) {
-      estimateRef.current?.scrollIntoView?.({ behavior: 'smooth', block: 'nearest' });
+      // 「視差効果を減らす」設定ならアニメーションせずに移る
+      const reduceMotion = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
+      estimateRef.current?.scrollIntoView?.({
+        behavior: reduceMotion ? 'auto' : 'smooth',
+        block: 'nearest',
+      });
     }
   }, [candidates]);
 
