@@ -135,6 +135,8 @@ export const zh: Resource = {
     station: '车站通道',
   },
   map: {
+    legendRoute: '路线',
+    fitRoute: '显示整条路线',
     gpsHint: '大致位置（GPS）',
     locateGps: '显示我的大致位置',
     gpsOutOfArea: '你似乎不在梅田地下街地图的范围内。',
