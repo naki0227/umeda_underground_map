@@ -105,6 +105,10 @@ export const en: Resource = {
     voice: 'Voice',
     spokenStep: '{{go}}. {{action}}',
     usesStairs: 'This route includes stairs (no step-free route was found).',
+    lateNight:
+      'Late at night and early in the morning, some underground passages may be closed and escalators stopped. Only the hours we know are reflected in the route.',
+    throughClosed:
+      'Only a route through passages or facilities that are closed at this hour was found. Please follow the signs on site.',
     alreadyHere: 'You are already at the destination.',
     estimateNote:
       'Your position is the estimate from when guidance started. Tap "I\'m lost" if it drifts.',

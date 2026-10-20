@@ -67,3 +67,47 @@ describe('RouteScreen above-ground suggestion', () => {
     expect(screen.queryByTestId('above-ground-suggest')).not.toBeInTheDocument();
   });
 });
+
+describe('RouteScreen passage hours', () => {
+  // ホワイティのエスカレーターは 6:00〜23:30（app/config の TIMED_PASSAGES）。経路はエスカレーターだけ
+  const whity = (id: string, x: number, lng: number): MapNode => ({
+    ...node(id, x, 0, 34.7, lng),
+    area: 'whity',
+  });
+  const escalatorOnly = buildGraph({
+    nodes: [whity('a', 0, 135.5), whity('b', 50, 135.50055)],
+    edges: [{ from: 'a', to: 'b', distanceM: 50, attrs: ['escalator'] }],
+  });
+  const renderAt = (iso: string) =>
+    render(
+      <RouteScreen
+        graph={escalatorOnly}
+        fromNodeId="a"
+        toNodeId="b"
+        destinationLabel={null}
+        aboveGround={false}
+        avoidStairs={false}
+        onToggleAvoidStairs={() => {}}
+        onLost={() => {}}
+        onFinish={() => {}}
+        onClose={() => {}}
+        now={new Date(iso)}
+      />,
+    );
+
+  it('shows no note during the day', () => {
+    renderAt('2026-10-20T03:00:00Z'); // 12:00 JST
+    expect(screen.queryByTestId('late-night-note')).toBeNull();
+    expect(screen.queryByTestId('closed-warning')).toBeNull();
+  });
+
+  it('warns late at night and when the only route uses a closed facility', () => {
+    renderAt('2026-10-20T17:00:00Z'); // 02:00 JST
+    expect(screen.getByTestId('late-night-note')).toHaveTextContent('夜遅く・早朝は');
+    expect(screen.getByTestId('closed-warning')).toHaveTextContent(
+      'いまの時間に閉まっている通路・設備を通る経路しか見つかりませんでした',
+    );
+    // 経路は出す（現地の案内に従ってもらう）
+    expect(screen.getByTestId('next-step')).toBeInTheDocument();
+  });
+});

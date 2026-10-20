@@ -3,12 +3,15 @@ import { useTranslation } from 'react-i18next';
 import {
   ABOVE_GROUND_MIN_STRAIGHT_M,
   ABOVE_GROUND_SUGGEST_RATIO,
+  LATE_NIGHT,
+  TIMED_PASSAGES,
   WALK_SPEED_M_PER_MIN,
 } from '../../app/config';
 import { googleMapsWalkingUrl, shouldSuggestAboveGround } from '../../domain/aboveGround';
 import { buildSteps, type RouteStep } from '../../domain/directions';
 import { fitGeoTransform, type LatLng } from '../../domain/geo';
 import type { Graph } from '../../domain/graph';
+import { closedEdgePredicate, isWithin, minuteOfDayInTokyo } from '../../domain/hours';
 import { findRoute, routeUsesStairs } from '../../domain/route';
 import { nodeFloor, type LocalizedText, type NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
@@ -32,6 +35,8 @@ interface Props {
   stepIndex?: number;
   /** 「次へ」「前へ」・一覧のタップでステップを選んだとき */
   onStepChange?: (index: number) => void;
+  /** いまの時刻（テスト用）。省略時はシートを開いた時刻 */
+  now?: Date;
 }
 
 /** ステップの種類をアイコン1文字で表す */
@@ -63,14 +68,27 @@ export function RouteScreen({
   onClose,
   stepIndex = 0,
   onStepChange,
+  now,
 }: Props) {
   const { t, i18n } = useTranslation();
+  const [openedAt] = useState(() => new Date());
+  const minute = minuteOfDayInTokyo(now ?? openedAt);
+  const lateNight = isWithin(minute, LATE_NIGHT);
 
   const result = useMemo(() => {
-    const route = findRoute(graph, fromNodeId, toNodeId, { avoidStairs });
+    // いま閉まっている通路・設備は使わない。それで経路がなければ、閉まっている所も通る経路を出して注意する
+    const isClosed = closedEdgePredicate(graph, TIMED_PASSAGES, minute);
+    let route = findRoute(graph, fromNodeId, toNodeId, { avoidStairs, isClosed });
+    const throughClosed = route === null;
+    if (route === null) route = findRoute(graph, fromNodeId, toNodeId, { avoidStairs });
     if (route === null) return null;
-    return { route, steps: buildSteps(graph, route), usesStairs: routeUsesStairs(graph, route) };
-  }, [graph, fromNodeId, toNodeId, avoidStairs]);
+    return {
+      route,
+      steps: buildSteps(graph, route),
+      usesStairs: routeUsesStairs(graph, route),
+      throughClosed,
+    };
+  }, [graph, fromNodeId, toNodeId, avoidStairs, minute]);
 
   /** 地上の方が近い可能性があるときの比較値と Google マップのリンク */
   const aboveGroundSuggestion = useMemo(() => {
@@ -220,6 +238,16 @@ export function RouteScreen({
           {avoidStairs && result.usesStairs && (
             <p className="hint warn" data-testid="stairs-warning">
               {t('route.usesStairs')}
+            </p>
+          )}
+          {result.throughClosed && (
+            <p className="hint warn" data-testid="closed-warning">
+              {t('route.throughClosed')}
+            </p>
+          )}
+          {lateNight && (
+            <p className="hint" data-testid="late-night-note">
+              {t('route.lateNight')}
             </p>
           )}
           {next !== null && (
