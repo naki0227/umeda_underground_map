@@ -6,8 +6,9 @@ import { pwaIncludeAssets, pwaManifest } from './src/app/pwaManifest.ts';
 
 // https://vite.dev/config/
 export default defineConfig({
-  // GitHub Pages (https://naki0227.github.io/umeda_underground_map/) 配下で配信するため
-  base: '/umeda_underground_map/',
+  // GitHub Pages (https://naki0227.github.io/umeda_underground_map/) 配下で配信するため。
+  // 独自ドメインの直下で配信する場合は BASE_PATH=/ でビルドする（docs/DEPLOY.md）
+  base: process.env.BASE_PATH ?? '/umeda_underground_map/',
   plugins: [
     react(),
     VitePWA({
