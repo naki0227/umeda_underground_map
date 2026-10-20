@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
+import { shopPlaceName } from '../../domain/shopLabel';
 import type { Poi, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
 import type { Place } from '../map/InteractiveMap';
@@ -38,12 +39,14 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
         place: { nodeId: p.nodeId, name: p.name, aboveGround: true },
         kindLabel: t('search.kindPoi'),
       }));
+    // ビルの中の店はビル名でも見つかるようにする（「ヨドバシ」で中の店も出る）
     const shopResults: Result[] = shops
-      .filter((s) => matches(s.name.ja, s.name.en))
-      .map((s) => ({
+      .map((s) => ({ shop: s, name: shopPlaceName(s) }))
+      .filter(({ name }) => matches(name.ja, name.en))
+      .map(({ shop: s, name }) => ({
         key: s.id,
-        place: { nodeId: s.nodeId, name: s.name, aboveGround: false },
-        kindLabel: t('search.kindShop'),
+        place: { nodeId: s.nodeId, name, aboveGround: false },
+        kindLabel: t(s.building === undefined ? 'search.kindShop' : 'search.kindBuildingShop'),
       }));
     // 出口・駅・広場を先に、通路の分岐（「ekimo梅田 北」など）は後ろに並べる
     const nodeResults: Result[] = [...graph.nodes.values()]

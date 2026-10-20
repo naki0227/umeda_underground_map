@@ -39,6 +39,7 @@ export const ko: Resource = {
     results: '검색 결과',
     kindPoi: '지상',
     kindShop: '지하 가게',
+    kindBuildingShop: '빌딩 안 가게',
     kindNode: '출구·역',
   },
   place: {

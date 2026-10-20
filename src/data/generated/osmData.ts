@@ -7944,6 +7944,72 @@ export const osmData: GeneratedMapData = {
   ],
   shops: [
     {
+      id: 'osm-n10091579984',
+      name: {
+        ja: 'ウィゴー',
+        en: 'WEGO',
+      },
+      category: 'fashion',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+    },
+    {
+      id: 'osm-n10091579985',
+      name: {
+        ja: 'SPINNS',
+        en: 'SPINNS',
+      },
+      category: 'fashion',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+    },
+    {
+      id: 'osm-n10091579986',
+      name: {
+        ja: 'HUF',
+        en: 'HUF',
+      },
+      category: 'fashion',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+    },
+    {
+      id: 'osm-n10297713928',
+      name: {
+        ja: 'クロサワバイオリン',
+        en: 'Kurosawa Violin',
+      },
+      category: 'goods',
+      nodeId: 'dm-b4',
+      building: {
+        ja: '大阪駅前第4ビル',
+        en: 'Osaka Ekimae Fourth Building',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n10599107209',
+      name: {
+        ja: 'PCコンフル 梅田店',
+        en: 'PCコンフル 梅田店',
+      },
+      category: 'goods',
+      nodeId: 'dm-b4',
+      building: {
+        ja: '大阪駅前第4ビル',
+        en: 'Osaka Ekimae Fourth Building',
+      },
+    },
+    {
       id: 'osm-n10672651091',
       name: {
         ja: 'サカグラ',
@@ -7951,6 +8017,47 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'dm-b2',
+    },
+    {
+      id: 'osm-n10857710337',
+      name: {
+        ja: 'bills',
+        en: 'bills',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n10976497206',
+      name: {
+        ja: '東京ガパオ',
+        en: '東京ガパオ',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+    },
+    {
+      id: 'osm-n10976497207',
+      name: {
+        ja: '香港茶龍',
+        en: '香港茶龍',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
     },
     {
       id: 'osm-n11046323488',
@@ -7962,6 +8069,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b3',
     },
     {
+      id: 'osm-n11046323490',
+      name: {
+        ja: 'ジャンヌダルク',
+        en: 'ジャンヌダルク',
+      },
+      category: 'goods',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n11052511305',
       name: {
         ja: '花狩人 かとう',
@@ -7969,6 +8090,33 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'dm-b3',
+    },
+    {
+      id: 'osm-n11090875095',
+      name: {
+        ja: 'マクドナルド',
+        en: "McDonald's",
+      },
+      category: 'restaurant',
+      nodeId: 'ex-C-92',
+      building: {
+        ja: '堂島グランドビル',
+        en: 'Dojima Grand Bldg.',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n11133832278',
+      name: {
+        ja: 'すぱじろう',
+        en: 'SPAJIRO',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
     },
     {
       id: 'osm-n11348247628',
@@ -7989,6 +8137,34 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n5852387965-exit',
     },
     {
+      id: 'osm-n11388907869',
+      name: {
+        ja: '星乃珈琲店',
+        en: 'Hoshino Coffee',
+      },
+      category: 'cafe',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n11396024378',
+      name: {
+        ja: '俺のフレンチ',
+        en: '俺のフレンチ',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-7-72',
+      building: {
+        ja: 'ミスターりんビル',
+        en: 'ミスターりんビル',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n11396024379',
       name: {
         ja: 'HUB',
@@ -8005,6 +8181,34 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'n5024365348-exit',
+    },
+    {
+      id: 'osm-n11491161145',
+      name: {
+        ja: '果汁屋',
+        en: '果汁屋',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-s',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n11521914911',
+      name: {
+        ja: 'ユニクロ',
+        en: 'UNIQLO',
+      },
+      category: 'fashion',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
     },
     {
       id: 'osm-n11576327499',
@@ -8034,6 +8238,48 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b1',
     },
     {
+      id: 'osm-n11578739100',
+      name: {
+        ja: '若菜そば',
+        en: '若菜そば',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n11578739101',
+      name: {
+        ja: '獅子林',
+        en: '獅子林',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n11578739102',
+      name: {
+        ja: '煮干しらーめん玉五郎',
+        en: '煮干しらーめん玉五郎',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n11591420345',
       name: {
         ja: '遙華',
@@ -8041,6 +8287,19 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'nsplit-11',
+    },
+    {
+      id: 'osm-n11672122813',
+      name: {
+        ja: 'GOZEN',
+        en: 'GOZEN',
+      },
+      category: 'goods',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
     },
     {
       id: 'osm-n11716551803',
@@ -8097,6 +8356,34 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n9320739978',
     },
     {
+      id: 'osm-n11736587558',
+      name: {
+        ja: 'BASIC AND ACCENT',
+        en: 'BASIC AND ACCENT',
+      },
+      category: 'goods',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n11736587560',
+      name: {
+        ja: 'UNITED TOKYO',
+        en: 'UNITED TOKYO',
+      },
+      category: 'fashion',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+      floor: '7F',
+    },
+    {
       id: 'osm-n11739057255',
       name: {
         ja: 'セブン-イレブン',
@@ -8115,6 +8402,34 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n9320740014',
     },
     {
+      id: 'osm-n11834471402',
+      name: {
+        ja: 'ナノ・ユニバース',
+        en: 'nano universe',
+      },
+      category: 'fashion',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+      floor: '5F',
+    },
+    {
+      id: 'osm-n11834471403',
+      name: {
+        ja: 'ユニクロ',
+        en: 'UNIQLO',
+      },
+      category: 'fashion',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+      floor: 'B1',
+    },
+    {
       id: 'osm-n11834471405',
       name: {
         ja: 'ジーユー',
@@ -8122,6 +8437,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'fashion',
       nodeId: 'nsplit-9',
+    },
+    {
+      id: 'osm-n11892985852',
+      name: {
+        ja: 'スリーコインズ',
+        en: '3COINS',
+      },
+      category: 'goods',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
     },
     {
       id: 'osm-n12000565562',
@@ -8160,6 +8489,19 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n12153650955',
+      name: {
+        ja: '新世界　いっとく',
+        en: '新世界　いっとく',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+    },
+    {
       id: 'osm-n12154532612',
       name: {
         ja: 'ファミリマート',
@@ -8167,6 +8509,199 @@ export const osmData: GeneratedMapData = {
       },
       category: 'convenience',
       nodeId: 'n12154532651',
+    },
+    {
+      id: 'osm-n12157787194',
+      name: {
+        ja: 'ニンテンドーオオサカ',
+        en: 'Nintendo OSAKA',
+      },
+      category: 'goods',
+      nodeId: 'n13382704679',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '13F',
+    },
+    {
+      id: 'osm-n12167701095',
+      name: {
+        ja: 'HIS',
+        en: 'HIS',
+      },
+      category: 'service',
+      nodeId: 'n12215302951',
+      building: {
+        ja: '大阪第一生命ビル',
+        en: 'Osaka Daiichi Seimei Building',
+      },
+    },
+    {
+      id: 'osm-n12167701321',
+      name: {
+        ja: 'Bvlgari',
+        en: 'Bvlgari',
+      },
+      category: 'fashion',
+      nodeId: 'ex-4-B',
+      building: {
+        ja: 'ヒルトンプラザ ウエスト',
+        en: 'Hilton Plaza West',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n12167701342',
+      name: {
+        ja: '@JP Cafe',
+        en: '@JP Cafe',
+      },
+      category: 'cafe',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n12167701964',
+      name: {
+        ja: 'Louis Vuitton',
+        en: 'Louis Vuitton',
+      },
+      category: 'fashion',
+      nodeId: 'ex-4-B',
+      building: {
+        ja: 'ヒルトンプラザ ウエスト',
+        en: 'Hilton Plaza West',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n12167706026',
+      name: {
+        ja: 'あのん CAFE',
+        en: 'あのん CAFE',
+      },
+      category: 'cafe',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n12167706029',
+      name: {
+        ja: '三輪山本',
+        en: '三輪山本',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n12167706031',
+      name: {
+        ja: '兵庫県おみやげ発掘屋',
+        en: '兵庫県おみやげ発掘屋',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n12167706032',
+      name: {
+        ja: 'Gucci',
+        en: 'Gucci',
+      },
+      category: 'fashion',
+      nodeId: 'n5887069694-exit',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n12167712992',
+      name: {
+        ja: 'かごしま屋',
+        en: 'かごしま屋',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n12167730150',
+      name: {
+        ja: '出雲しめなわや',
+        en: '出雲しめなわや',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n12167730151',
+      name: {
+        ja: 'とさとさ',
+        en: 'とさとさ',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n12169376401',
+      name: {
+        ja: 'トラジャコーヒー 富国生命ビル店',
+        en: 'Toraja Coffee',
+      },
+      category: 'cafe',
+      nodeId: 'ex-7-58',
+      building: {
+        ja: '大阪富国生命ビル',
+        en: 'Osaka Fukoku Seimei Building',
+      },
+    },
+    {
+      id: 'osm-n12181678324',
+      name: {
+        ja: 'NICO AND ... COFFEE',
+        en: 'NICO AND ... COFFEE',
+      },
+      category: 'cafe',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
     },
     {
       id: 'osm-n12181967542',
@@ -8194,6 +8729,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'dm-b4',
+    },
+    {
+      id: 'osm-n12287786460',
+      name: {
+        ja: 'ダイソー',
+        en: 'Daiso',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '5F',
     },
     {
       id: 'osm-n12293777541',
@@ -8268,6 +8817,60 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n2360458675-exit',
     },
     {
+      id: 'osm-n12543232212',
+      name: {
+        ja: '甲賀流',
+        en: '甲賀流',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-H-32',
+      building: {
+        ja: 'HEP NAVIO',
+        en: 'HEP Navio',
+      },
+    },
+    {
+      id: 'osm-n12543232213',
+      name: {
+        ja: '会津屋',
+        en: '会津屋',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-H-32',
+      building: {
+        ja: 'HEP NAVIO',
+        en: 'HEP Navio',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n12543247037',
+      name: {
+        ja: '道頓堀くくる',
+        en: '道頓堀くくる',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n12546345176',
+      name: {
+        ja: 'ファミリーマート',
+        en: 'FamilyMart',
+      },
+      category: 'convenience',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+    },
+    {
       id: 'osm-n12561406760',
       name: {
         ja: 'The Second Room Cafe / Vegan & Glutenfree Osaka',
@@ -8275,6 +8878,153 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'dm-b4',
+    },
+    {
+      id: 'osm-n12615165953',
+      name: {
+        ja: 'MIKIMOTO',
+        en: 'MIKIMOTO',
+      },
+      category: 'fashion',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n12655220501',
+      name: {
+        ja: 'CIO Store',
+        en: 'CIO Store',
+      },
+      category: 'goods',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+      floor: '9F',
+    },
+    {
+      id: 'osm-n12698900302',
+      name: {
+        ja: '観音屋',
+        en: '観音屋',
+      },
+      category: 'cafe',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n12718146924',
+      name: {
+        ja: 'ミスタードーナツ',
+        en: 'Mister Donut',
+      },
+      category: 'restaurant',
+      nodeId: 'n10748809601',
+      building: {
+        ja: 'うめきたグリーンプレイス',
+        en: 'Umekita Green Place',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n12752086586',
+      name: {
+        ja: 'ディップガーデンテラス  KITTE大版店',
+        en: 'ディップガーデンテラス  KITTE大版店',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+    },
+    {
+      id: 'osm-n12833518025',
+      name: {
+        ja: 'バーガーキング',
+        en: 'Burger King',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+    },
+    {
+      id: 'osm-n12836922325',
+      name: {
+        ja: 'Tendon Tenkushi Kushikatsu Ishinoya',
+        en: 'Tendon Tenkushi Kushikatsu Ishinoya',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+    },
+    {
+      id: 'osm-n12840937975',
+      name: {
+        ja: 'Soba to Tempura Ishiraku MARK IS Minatomirai',
+        en: 'Soba to Tempura Ishiraku MARK IS Minatomirai',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+    },
+    {
+      id: 'osm-n12876707901',
+      name: {
+        ja: 'Mansion Kayser',
+        en: 'Mansion Kayser',
+      },
+      category: 'bakery',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+    },
+    {
+      id: 'osm-n12989500937',
+      name: {
+        ja: 'セントラム',
+        en: 'CENTRUM',
+      },
+      category: 'restaurant',
+      nodeId: 'n12215302938',
+      building: {
+        ja: 'ヒルトンプラザ イースト',
+        en: 'Hilton Plaza East',
+      },
+    },
+    {
+      id: 'osm-n12989616303',
+      name: {
+        ja: 'マイプレイス　カフェ＆バー',
+        en: 'MYPLACE Cafe & Bar',
+      },
+      category: 'cafe',
+      nodeId: 'ndm-w-link',
+      building: {
+        ja: 'ヒルトンプラザ イースト',
+        en: 'Hilton Plaza East',
+      },
     },
     {
       id: 'osm-n12992121637',
@@ -8383,6 +9133,34 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'n2360458675-exit',
+    },
+    {
+      id: 'osm-n13598531629',
+      name: {
+        ja: '大阪サンセイ',
+        en: '大阪サンセイ',
+      },
+      category: 'goods',
+      nodeId: 'dm-b4',
+      building: {
+        ja: '大阪駅前第4ビル',
+        en: 'Osaka Ekimae Fourth Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n13608695001',
+      name: {
+        ja: 'セブン-イレブン',
+        en: '7-Eleven',
+      },
+      category: 'convenience',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+      floor: '1F',
     },
     {
       id: 'osm-n13647113413',
@@ -8835,6 +9613,90 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n3394153477-exit',
     },
     {
+      id: 'osm-n14026329294',
+      name: {
+        ja: 'おにぎり家一粒',
+        en: 'おにぎり家一粒',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-19',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n14026329295',
+      name: {
+        ja: 'PHOENIX',
+        en: 'PHOENIX',
+      },
+      category: 'goods',
+      nodeId: 'nst-hankyu-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n14026329297',
+      name: {
+        ja: 'スターバックス',
+        en: 'Starbucks',
+      },
+      category: 'cafe',
+      nodeId: 'n9014035682',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14041438137',
+      name: {
+        ja: '米福',
+        en: 'Komefuku',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-C-92',
+      building: {
+        ja: '堂島グランドビル',
+        en: 'Dojima Grand Bldg.',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n14041438139',
+      name: {
+        ja: '鉄板焼鳥ニワ',
+        en: '鉄板焼鳥ニワ',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-C-92',
+      building: {
+        ja: '堂島グランドビル',
+        en: 'Dojima Grand Bldg.',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14041438140',
+      name: {
+        ja: '野口次郎ラーメン',
+        en: '野口次郎ラーメン',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-C-92',
+      building: {
+        ja: '堂島グランドビル',
+        en: 'Dojima Grand Bldg.',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n14051464388',
       name: {
         ja: '2417 Cafè apartment',
@@ -8907,6 +9769,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n12215302940',
     },
     {
+      id: 'osm-n14076075488',
+      name: {
+        ja: 'ミスタードーナツ',
+        en: 'Mister Donut',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-19',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
       id: 'osm-n14080261611',
       name: {
         ja: 'TREVOR',
@@ -8970,6 +9846,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b1',
     },
     {
+      id: 'osm-n14091699534',
+      name: {
+        ja: 'SUIT SQUARE',
+        en: 'SUIT SQUARE',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
       id: 'osm-n14091699535',
       name: {
         ja: 'サブウェイ',
@@ -8988,6 +9878,972 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n9320739999',
     },
     {
+      id: 'osm-n14091699537',
+      name: {
+        ja: '漁師酒場あらき',
+        en: '漁師酒場あらき',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699538',
+      name: {
+        ja: '函館函太郎',
+        en: '函館函太郎',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699539',
+      name: {
+        ja: 'ビストロ酒場ウオスケ',
+        en: 'ビストロ酒場ウオスケ',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699540',
+      name: {
+        ja: 'らーめん桐麺',
+        en: 'らーめん桐麺',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699541',
+      name: {
+        ja: '中華酒場ワカバヤシ',
+        en: '中華酒場ワカバヤシ',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699542',
+      name: {
+        ja: 'しんちゃん',
+        en: 'しんちゃん',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699543',
+      name: {
+        ja: 'おっど',
+        en: 'ODD',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699544',
+      name: {
+        ja: 'たこ酒場くれおーる',
+        en: 'たこ酒場くれおーる',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699545',
+      name: {
+        ja: '大阪串カツどて焼金の粉',
+        en: '大阪串カツどて焼金の粉',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699546',
+      name: {
+        ja: '肉処大阪ブラウン',
+        en: '肉処大阪ブラウン',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699547',
+      name: {
+        ja: 'タケル',
+        en: 'タケル',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699548',
+      name: {
+        ja: '神戸元町ドリア',
+        en: 'Kobe Motomachi Doria',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699549',
+      name: {
+        ja: 'とんかつ和幸',
+        en: 'Tonkatsu Wako',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699550',
+      name: {
+        ja: '紅虎餃子房',
+        en: '紅虎餃子房',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699551',
+      name: {
+        ja: '豚と炭火。こぶた家',
+        en: '豚と炭火。こぶた家',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699552',
+      name: {
+        ja: '博多おおやま',
+        en: '博多おおやま',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699553',
+      name: {
+        ja: '酒場食堂ニューワクラ',
+        en: 'Nwe Wakura',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699554',
+      name: {
+        ja: '難波千日前釜たけうどん',
+        en: '難波千日前釜たけうどん',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699555',
+      name: {
+        ja: '舎鈴',
+        en: '舎鈴',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699556',
+      name: {
+        ja: 'カプリチョーザ',
+        en: 'Capricciosa',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699557',
+      name: {
+        ja: 'ねぎし',
+        en: 'Negishi',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699558',
+      name: {
+        ja: '麺屋優光',
+        en: '麺屋優光',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699559',
+      name: {
+        ja: '月島もんじゃくうや',
+        en: '月島もんじゃくうや',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699560',
+      name: {
+        ja: 'ベアフットカレー',
+        en: 'barrfoot Curry',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699561',
+      name: {
+        ja: '但馬屋',
+        en: '但馬屋',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699562',
+      name: {
+        ja: '鉄板肉食堂テッパチ',
+        en: '鉄板肉食堂テッパチ',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699563',
+      name: {
+        ja: '天ぷら寿し米福',
+        en: '天ぷら寿し米福',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699564',
+      name: {
+        ja: 'ポルケッタ',
+        en: 'PORCHETTA',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699565',
+      name: {
+        ja: 'ポムの樹',
+        en: 'ポムの樹',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699566',
+      name: {
+        ja: '京都勝牛',
+        en: '京都勝牛',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699567',
+      name: {
+        ja: '鳥料理藤よし',
+        en: '鳥料理藤よし',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699568',
+      name: {
+        ja: 'スターバックス',
+        en: 'Starbucks',
+      },
+      category: 'cafe',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699569',
+      name: {
+        ja: '炭炉まん',
+        en: 'Sumi Roman',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699570',
+      name: {
+        ja: '虎鶏屋',
+        en: '虎鶏屋',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699571',
+      name: {
+        ja: '焼肉の牛太本陣',
+        en: 'Yakiniku no Gyuta Honjin',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14091699572',
+      name: {
+        ja: '洋服の青山',
+        en: 'Aoyama Tailor',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n14091699574',
+      name: {
+        ja: 'Eat & Walk',
+        en: 'Eat & Walk',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091699575',
+      name: {
+        ja: 'アシックスウォーキング',
+        en: 'ASICS WALKING',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n14091699576',
+      name: {
+        ja: 'BunBun',
+        en: 'BunBun',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n14091699577',
+      name: {
+        ja: 'オンデーズ',
+        en: 'OWNDAYS',
+      },
+      category: 'service',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n14091699579',
+      name: {
+        ja: 'コンタクトのハートアップ',
+        en: 'コンタクトのハートアップ',
+      },
+      category: 'service',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n14091699580',
+      name: {
+        ja: 'Swallowtail',
+        en: 'Swallowtail',
+      },
+      category: 'service',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n14091699582',
+      name: {
+        ja: 'REGAL',
+        en: 'REGAL',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n14091699583',
+      name: {
+        ja: 'ART SPORTS',
+        en: 'ART SPORTS',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699584',
+      name: {
+        ja: '石井スポーツ',
+        en: 'Ishii Sports',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699585',
+      name: {
+        ja: 'FITNESS Shop',
+        en: 'FITNESS Shop',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699586',
+      name: {
+        ja: "LEVI'S",
+        en: "LEVI'S",
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699587',
+      name: {
+        ja: 'SHIRTS PLAZA',
+        en: 'SHIRTS PLAZA',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699588',
+      name: {
+        ja: "GEAR's JAM",
+        en: "GEAR's JAM",
+      },
+      category: 'goods',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699589',
+      name: {
+        ja: 'UNION STATION',
+        en: 'UNION STATION',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699590',
+      name: {
+        ja: 'TRANS CONTINENTS',
+        en: 'TRANS CONTINENTS',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699591',
+      name: {
+        ja: "GRAN SAC'S",
+        en: "GRAN SAC'S",
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699592',
+      name: {
+        ja: 'ROCOCO',
+        en: 'ROCOCO',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699593',
+      name: {
+        ja: 'HIDE AWAYS',
+        en: 'HIDE AWAYS',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699594',
+      name: {
+        ja: 'CALL & RESPONSE',
+        en: 'CALL & RESPONSE',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699595',
+      name: {
+        ja: 'TORUNE',
+        en: 'TORUNE',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699596',
+      name: {
+        ja: 'NYS COLLECTION',
+        en: 'NYS COLLECTION',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n14091699599',
+      name: {
+        ja: 'ハニーズ',
+        en: 'Honeys',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '5F',
+    },
+    {
+      id: 'osm-n14091699600',
+      name: {
+        ja: 'アニメイト',
+        en: 'Animate',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '5F',
+    },
+    {
+      id: 'osm-n14091701701',
+      name: {
+        ja: 'キャラトラステーション',
+        en: 'キャラトラステーション',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '5F',
+    },
+    {
+      id: 'osm-n14091701702',
+      name: {
+        ja: 'サンキューマート',
+        en: 'THANK YOU MART',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '5F',
+    },
+    {
+      id: 'osm-n14091701703',
+      name: {
+        ja: 'graniph',
+        en: 'graniph',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n14091701704',
+      name: {
+        ja: '貢茶',
+        en: 'Gong Cha',
+      },
+      category: 'cafe',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n14091701705',
+      name: {
+        ja: 'IKKA LOUNGE',
+        en: 'IKKA LOUNGE',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n14091701706',
+      name: {
+        ja: 'AZUL',
+        en: 'AZUL',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n14091701707',
+      name: {
+        ja: 'スーパースポーツゼビオ',
+        en: 'Super Sports Xebio',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n14091701708',
+      name: {
+        ja: 'PET PARADISE',
+        en: 'PET PARADISE',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n14091701709',
+      name: {
+        ja: 'FLAVA HAT',
+        en: 'FLAVA HAT',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n14091701710',
+      name: {
+        ja: 'Luck Rack',
+        en: 'Luck Rack',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
       id: 'osm-n14091701712',
       name: {
         ja: '青山フラワーマーケット',
@@ -8995,6 +10851,356 @@ export const osmData: GeneratedMapData = {
       },
       category: 'goods',
       nodeId: 'n9320739999',
+    },
+    {
+      id: 'osm-n14091701713',
+      name: {
+        ja: 'Wonder Fruits',
+        en: 'Wonder Fruits',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14091701714',
+      name: {
+        ja: 'earth music & ecology',
+        en: 'earth music & ecology',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14091701715',
+      name: {
+        ja: 'お直しラボ',
+        en: 'Onaoshi Lab',
+      },
+      category: 'service',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14091701716',
+      name: {
+        ja: 'FUN',
+        en: 'FUN',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14091701717',
+      name: {
+        ja: 'Vision Style',
+        en: 'Vision Style',
+      },
+      category: 'service',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14091701718',
+      name: {
+        ja: 'LUPIS',
+        en: 'LUPIS',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14091701719',
+      name: {
+        ja: 'ジーユー',
+        en: 'GU',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14091701720',
+      name: {
+        ja: 'スリーコインズ',
+        en: '3COINS',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14091701721',
+      name: {
+        ja: 'ジンズ',
+        en: 'JINS',
+      },
+      category: 'service',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14091701722',
+      name: {
+        ja: 'アインズ＆トルペ',
+        en: 'AINZ & TULPE',
+      },
+      category: 'drugstore',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14091701723',
+      name: {
+        ja: 'ファミリーマート',
+        en: 'FamilyMart',
+      },
+      category: 'convenience',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n14091701726',
+      name: {
+        ja: 'みどりの雑貨屋',
+        en: 'Midori no Zakkaya',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701727',
+      name: {
+        ja: '沖縄物産の店わしたショップ',
+        en: '沖縄物産の店わしたショップ',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701728',
+      name: {
+        ja: 'さち福や',
+        en: 'さち福や',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701729',
+      name: {
+        ja: 'ハンタイム',
+        en: 'ハンタイム',
+      },
+      category: 'convenience',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701730',
+      name: {
+        ja: '鈴音',
+        en: '鈴音',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701731',
+      name: {
+        ja: 'うまいもん酒場',
+        en: 'うまいもん酒場',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701732',
+      name: {
+        ja: 'ニューすしセンター',
+        en: 'ニューすしセンター',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701733',
+      name: {
+        ja: '焼肉ジャパン',
+        en: '焼肉ジャパン',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701734',
+      name: {
+        ja: 'HUB',
+        en: 'HUB',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701735',
+      name: {
+        ja: 'もつ焼もつ福',
+        en: 'もつ焼もつ福',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701736',
+      name: {
+        ja: '竹乃屋',
+        en: '竹乃屋',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701737',
+      name: {
+        ja: '堂山食堂',
+        en: 'Doyama Syokudo',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701738',
+      name: {
+        ja: 'ボトルバード',
+        en: 'ボトルバード',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14091701739',
+      name: {
+        ja: 'Beau Atout',
+        en: 'Beau Atout',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
     },
     {
       id: 'osm-n14091916383',
@@ -9022,6 +11228,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'nsplit-3',
+    },
+    {
+      id: 'osm-n14107163590',
+      name: {
+        ja: 'Falette Flowers',
+        en: 'Falette Flowers',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '1F',
     },
     {
       id: 'osm-n14118804590',
@@ -9249,6 +11469,76 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n5852387923-exit',
     },
     {
+      id: 'osm-n14141872364',
+      name: {
+        ja: '旨いもん酒場章',
+        en: '旨いもん酒場章',
+      },
+      category: 'restaurant',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n14141872365',
+      name: {
+        ja: 'お弁当物語',
+        en: 'お弁当物語',
+      },
+      category: 'restaurant',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n14144667538',
+      name: {
+        ja: 'セブン銀行',
+        en: 'Seven Bank',
+      },
+      category: 'service',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n14148584328',
+      name: {
+        ja: 'かるがも薬局',
+        en: 'かるがも薬局',
+      },
+      category: 'drugstore',
+      nodeId: 'ex-J-2',
+      building: {
+        ja: 'OSビル',
+        en: 'OS Building',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n14162602574',
+      name: {
+        ja: 'cafe de Clever',
+        en: 'cafe de Clever',
+      },
+      category: 'cafe',
+      nodeId: 'nsplit-8',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n14166423522',
       name: {
         ja: '碧',
@@ -9256,6 +11546,19 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'nsplit-2',
+    },
+    {
+      id: 'osm-n14178049752',
+      name: {
+        ja: 'THE PUBLIC PLUM UMEDA',
+        en: 'THE PUBLIC PLUM UMEDA',
+      },
+      category: 'restaurant',
+      nodeId: 'n10748809587',
+      building: {
+        ja: 'うめきたグリーンプレイス',
+        en: 'Umekita Green Place',
+      },
     },
     {
       id: 'osm-n14180459970',
@@ -9699,6 +12002,48 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n14234707490',
+      name: {
+        ja: 'セブン-イレブン',
+        en: '7-Eleven',
+      },
+      category: 'convenience',
+      nodeId: 'ex-H-68',
+      building: {
+        ja: '清和梅田ビル',
+        en: '清和梅田ビル',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n14234778613',
+      name: {
+        ja: 'セブン銀行',
+        en: 'Seven Bank',
+      },
+      category: 'service',
+      nodeId: 'ex-H-68',
+      building: {
+        ja: '清和梅田ビル',
+        en: '清和梅田ビル',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n14239362730',
+      name: {
+        ja: 'アクセア',
+        en: 'アクセア',
+      },
+      category: 'cafe',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ノースゲートビルディング',
+        en: 'North Gate Building',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n14251860274',
       name: {
         ja: '成城石井',
@@ -9744,6 +12089,216 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n2360458675-exit',
     },
     {
+      id: 'osm-n14252047726',
+      name: {
+        ja: 'nail salon Sou',
+        en: 'nail salon Sou',
+      },
+      category: 'service',
+      nodeId: 'ex-C-61',
+      building: {
+        ja: '関電不動産西梅田ビル',
+        en: 'Nishiumeda MID Bldg.',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n14252516545',
+      name: {
+        ja: '杉養蜂園',
+        en: '杉養蜂園',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n14252516546',
+      name: {
+        ja: 'akinai大阪',
+        en: 'akinai大阪',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516547',
+      name: {
+        ja: '北海道うまいもの館',
+        en: '北海道うまいもの館',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516548',
+      name: {
+        ja: 'クラシキ',
+        en: 'クラシキ',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516549',
+      name: {
+        ja: '沖縄宝島',
+        en: '沖縄宝島',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516550',
+      name: {
+        ja: '巡る徳島・香川+小川生薬',
+        en: '巡る徳島・香川+小川生薬',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516551',
+      name: {
+        ja: 'ひろしまIPPIN',
+        en: 'ひろしまIPPIN',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516552',
+      name: {
+        ja: 'みやざき館 KONNE',
+        en: 'みやざき館 KONNE',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516553',
+      name: {
+        ja: 'ゆったり、まったり ゆあさんぽ',
+        en: 'ゆったり、まったり ゆあさんぽ',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516554',
+      name: {
+        ja: 'メイドイントーカイ',
+        en: 'メイドイントーカイ',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516555',
+      name: {
+        ja: 'HOKURIKU+',
+        en: 'HOKURIKU+',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516556',
+      name: {
+        ja: 'コメダ珈琲店',
+        en: "Komeda's Coffee",
+      },
+      category: 'cafe',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n14252516557',
+      name: {
+        ja: 'カプコンコネクトスペース',
+        en: 'カプコンコネクトスペース',
+      },
+      category: 'goods',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n14252516558',
+      name: {
+        ja: 'ちいかわベーカリー',
+        en: 'ちいかわベーカリー',
+      },
+      category: 'bakery',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '3F',
+    },
+    {
       id: 'osm-n14255274183',
       name: {
         ja: '炉端焼き酒場中々',
@@ -9762,6 +12317,33 @@ export const osmData: GeneratedMapData = {
       nodeId: 'nsplit-1',
     },
     {
+      id: 'osm-n14299028233',
+      name: {
+        ja: '高石クリニック',
+        en: 'Takaishi Clinic',
+      },
+      category: 'service',
+      nodeId: 'dm-b2',
+      building: {
+        ja: '大阪駅前第2ビル',
+        en: 'Osaka Ekimae Second Building',
+      },
+    },
+    {
+      id: 'osm-n1734162900',
+      name: {
+        ja: '梅田ロフト',
+        en: 'Umeda Loft',
+      },
+      category: 'goods',
+      nodeId: 'n12300527177',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '6F',
+    },
+    {
       id: 'osm-n1740972029',
       name: {
         ja: 'ファミリーマート',
@@ -9769,6 +12351,89 @@ export const osmData: GeneratedMapData = {
       },
       category: 'convenience',
       nodeId: 'dm-b4',
+    },
+    {
+      id: 'osm-n1740980814',
+      name: {
+        ja: 'セブン-イレブン',
+        en: '7-Eleven',
+      },
+      category: 'convenience',
+      nodeId: 'ex-6-30',
+      building: {
+        ja: '梅田ダイビル',
+        en: '梅田ダイビル',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n1741173461',
+      name: {
+        ja: '三菱UFJ銀行',
+        en: 'MUFG Bank',
+      },
+      category: 'service',
+      nodeId: 'n12215302951',
+      building: {
+        ja: '大阪第一生命ビル',
+        en: 'Osaka Daiichi Seimei Building',
+      },
+    },
+    {
+      id: 'osm-n2293356930',
+      name: {
+        ja: 'エイチ アンド エム',
+        en: 'H&M',
+      },
+      category: 'fashion',
+      nodeId: 'ex-H-8',
+      building: {
+        ja: 'ABC-MART梅田ビル',
+        en: 'ABC Mart Umeda Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n2293357571',
+      name: {
+        ja: 'ABCマート',
+        en: 'ABC Mart',
+      },
+      category: 'fashion',
+      nodeId: 'ex-H-8',
+      building: {
+        ja: 'ABC-MART梅田ビル',
+        en: 'ABC Mart Umeda Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n2293358318',
+      name: {
+        ja: 'サンマルクカフェ',
+        en: 'Saint Marc Cafe',
+      },
+      category: 'cafe',
+      nodeId: 'ex-H-8',
+      building: {
+        ja: 'ABC-MART梅田ビル',
+        en: 'ABC Mart Umeda Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n2293364375',
+      name: {
+        ja: 'フランフラン',
+        en: 'Francfranc',
+      },
+      category: 'goods',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
     },
     {
       id: 'osm-n2293427531',
@@ -9780,6 +12445,76 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n5024365350-exit',
     },
     {
+      id: 'osm-n2314355694',
+      name: {
+        ja: 'ファミリーマート',
+        en: 'FamilyMart',
+      },
+      category: 'convenience',
+      nodeId: 'dm-b2',
+      building: {
+        ja: '大阪駅前第2ビル',
+        en: 'Osaka Ekimae Second Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n2314389968',
+      name: {
+        ja: 'ダイコクドラッグ',
+        en: 'Daikoku Drug',
+      },
+      category: 'drugstore',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n2318274963',
+      name: {
+        ja: 'シャンデリアテーブル',
+        en: 'シャンデリアテーブル',
+      },
+      category: 'restaurant',
+      nodeId: 'n12215302976',
+      building: {
+        ja: '大阪梅田ツインタワーズ・ノース',
+        en: 'Osaka Umeda Twin Towers ・ North',
+      },
+      floor: '13F',
+    },
+    {
+      id: 'osm-n2330451165',
+      name: {
+        ja: 'Buzz',
+        en: 'Buzz',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-7-58',
+      building: {
+        ja: '大阪富国生命ビル',
+        en: 'Osaka Fukoku Seimei Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n2330451989',
+      name: {
+        ja: 'しのぶ庵',
+        en: 'しのぶ庵',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-7-66',
+      building: {
+        ja: '大阪富国生命ビル',
+        en: 'Osaka Fukoku Seimei Building',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n2330452480',
       name: {
         ja: 'サブウェイ',
@@ -9789,6 +12524,74 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n5024365372-exit',
     },
     {
+      id: 'osm-n2330456226',
+      name: {
+        ja: 'ゆかり',
+        en: 'Yukari',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-7-66',
+      building: {
+        ja: '大阪富国生命ビル',
+        en: 'Osaka Fukoku Seimei Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n2330456391',
+      name: {
+        ja: 'ワイモバイル',
+        en: 'Y!mobile',
+      },
+      category: 'service',
+      nodeId: 'ex-J-2',
+      building: {
+        ja: 'OSビル',
+        en: 'OS Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n2808846191',
+      name: {
+        ja: '大阪バスチケットセンター',
+        en: 'Highway Bus Ticket Center',
+      },
+      category: 'service',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+    },
+    {
+      id: 'osm-n2917167001',
+      name: {
+        ja: '阪急そば',
+        en: '阪急そば',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+    },
+    {
+      id: 'osm-n3150235530',
+      name: {
+        ja: '青冥',
+        en: 'ching ming',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: 'B2',
+    },
+    {
       id: 'osm-n3174629720',
       name: {
         ja: 'だまれトリ',
@@ -9796,6 +12599,34 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'nsplit-21',
+    },
+    {
+      id: 'osm-n3184448863',
+      name: {
+        ja: 'みずほ銀行',
+        en: 'Mizuho Bank',
+      },
+      category: 'service',
+      nodeId: 'dm-b4',
+      building: {
+        ja: '大阪駅前第4ビル',
+        en: 'Osaka Ekimae Fourth Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n3204227061',
+      name: {
+        ja: '阪急そば',
+        en: '阪急そば',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-15',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '3F',
     },
     {
       id: 'osm-n3469254238',
@@ -9823,6 +12654,19 @@ export const osmData: GeneratedMapData = {
       },
       category: 'cafe',
       nodeId: 'dm-b1',
+    },
+    {
+      id: 'osm-n3668348834',
+      name: {
+        ja: 'ホリーズカフェ',
+        en: "Holly's Cafe",
+      },
+      category: 'cafe',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
     },
     {
       id: 'osm-n3668361221',
@@ -9861,6 +12705,19 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n5852387965-exit',
     },
     {
+      id: 'osm-n3910191061',
+      name: {
+        ja: '三菱UFJ銀行',
+        en: 'MUFG Bank',
+      },
+      category: 'service',
+      nodeId: 'ex-C-61',
+      building: {
+        ja: '関電不動産西梅田ビル',
+        en: 'Nishiumeda MID Bldg.',
+      },
+    },
+    {
       id: 'osm-n3910230031',
       name: {
         ja: 'つるとんたん',
@@ -9870,6 +12727,34 @@ export const osmData: GeneratedMapData = {
       nodeId: 'ndm-b1-link',
     },
     {
+      id: 'osm-n4162932692',
+      name: {
+        ja: 'Samantha Vega',
+        en: 'Samantha Vega',
+      },
+      category: 'fashion',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n4213387689',
+      name: {
+        ja: 'グリルキャピタル東洋亭',
+        en: 'Toyotei',
+      },
+      category: 'restaurant',
+      nodeId: 'n12215302976',
+      building: {
+        ja: '大阪梅田ツインタワーズ・ノース',
+        en: 'Osaka Umeda Twin Towers ・ North',
+      },
+      floor: '12F',
+    },
+    {
       id: 'osm-n4213400891',
       name: {
         ja: '上島珈琲店',
@@ -9877,6 +12762,75 @@ export const osmData: GeneratedMapData = {
       },
       category: 'cafe',
       nodeId: 'nsplit-15',
+    },
+    {
+      id: 'osm-n4224513092',
+      name: {
+        ja: 'かんじん堂',
+        en: 'かんじん堂',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-7-58',
+      building: {
+        ja: '大阪富国生命ビル',
+        en: 'Osaka Fukoku Seimei Building',
+      },
+    },
+    {
+      id: 'osm-n4262568990',
+      name: {
+        ja: '鶴橋風月',
+        en: 'FUGETSU Okonomeniyaki',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n4328301119',
+      name: {
+        ja: 'ポケモンセンター',
+        en: 'Pokémon Center',
+      },
+      category: 'goods',
+      nodeId: 'nsplit-8',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '14F',
+    },
+    {
+      id: 'osm-n4358381492',
+      name: {
+        ja: 'どうとんぼり神座',
+        en: 'KAMUKURA',
+      },
+      category: 'restaurant',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n4366584394',
+      name: {
+        ja: 'スキンフード',
+        en: 'skin food',
+      },
+      category: 'service',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+      floor: '8F',
     },
     {
       id: 'osm-n4496336591',
@@ -9895,6 +12849,19 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'n12241180666',
+    },
+    {
+      id: 'osm-n4502199090',
+      name: {
+        ja: '近畿産業信用組合',
+        en: '近畿産業信用組合',
+      },
+      category: 'service',
+      nodeId: 'ex-H-80',
+      building: {
+        ja: '梅田セントラルビル',
+        en: '梅田セントラルビル',
+      },
     },
     {
       id: 'osm-n4555493332',
@@ -9924,6 +12891,19 @@ export const osmData: GeneratedMapData = {
       nodeId: 'sb-s-b2',
     },
     {
+      id: 'osm-n4628827489',
+      name: {
+        ja: 'スポーツラボ バイ アトモス',
+        en: 'Sports Lab by ATMOS',
+      },
+      category: 'fashion',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+    },
+    {
       id: 'osm-n4646429191',
       name: {
         ja: '大阪トンテキ',
@@ -9949,6 +12929,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'cafe',
       nodeId: 'dm-b3',
+    },
+    {
+      id: 'osm-n4675834190',
+      name: {
+        ja: 'だし藏 だし茶漬け',
+        en: 'DASHI GURA KANSAI ODASHI',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: 'B2',
     },
     {
       id: 'osm-n4750296921',
@@ -9978,6 +12972,48 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n5852387923-exit',
     },
     {
+      id: 'osm-n4865954221',
+      name: {
+        ja: 'ハーブス',
+        en: 'Harbs',
+      },
+      category: 'cafe',
+      nodeId: 'n5887069694-exit',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n4870411421',
+      name: {
+        ja: 'ABC-MART GRAND STAGE',
+        en: 'ABC-Mart',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n4927025027',
+      name: {
+        ja: '大阪新世界元祖串かつ だるま',
+        en: 'Kushikatsu Daruma Lucua Osaka Store',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+      floor: '10F',
+    },
+    {
       id: 'osm-n4927025122',
       name: {
         ja: '博多新風 ラーメン食堂',
@@ -9994,6 +13030,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'sb-w',
+    },
+    {
+      id: 'osm-n4930283824',
+      name: {
+        ja: 'みずほ銀行',
+        en: 'Mizuho Bank',
+      },
+      category: 'service',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
     },
     {
       id: 'osm-n4955196024',
@@ -10032,6 +13082,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n5017248155',
+      name: {
+        ja: '星乃珈琲店',
+        en: 'Hoshino Coffee',
+      },
+      category: 'cafe',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
       id: 'osm-n5017248161',
       name: {
         ja: '星乃珈琲店',
@@ -10057,6 +13121,74 @@ export const osmData: GeneratedMapData = {
       },
       category: 'goods',
       nodeId: 'sb-w',
+    },
+    {
+      id: 'osm-n5023923392',
+      name: {
+        ja: 'ユザワヤ',
+        en: 'Yuzawaya',
+      },
+      category: 'goods',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n5051066996',
+      name: {
+        ja: 'ユニクロ',
+        en: 'UNIQLO',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5051066997',
+      name: {
+        ja: 'エイチ・アイ・エス',
+        en: 'H.I.S.',
+      },
+      category: 'service',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n5051067004',
+      name: {
+        ja: 'りそな銀行',
+        en: 'Resona Bank',
+      },
+      category: 'service',
+      nodeId: 'nsplit-15',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+    },
+    {
+      id: 'osm-n5051067005',
+      name: {
+        ja: 'ゆうちょ銀行',
+        en: 'Japan Post Bank',
+      },
+      category: 'service',
+      nodeId: 'nsplit-15',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
     },
     {
       id: 'osm-n5058151890',
@@ -10131,6 +13263,48 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n9320740009',
     },
     {
+      id: 'osm-n5085933521',
+      name: {
+        ja: 'クリスピー・クリーム・ドーナツ',
+        en: 'Krispy Kreme Doughnuts',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ノースゲートビルディング',
+        en: 'North Gate Building',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n5096563470',
+      name: {
+        ja: 'むさし乃',
+        en: 'むさし乃',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5118683890',
+      name: {
+        ja: 'ロッテリア',
+        en: 'Lotteria',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n5121995204',
       name: {
         ja: 'ダイコクドラッグ',
@@ -10138,6 +13312,62 @@ export const osmData: GeneratedMapData = {
       },
       category: 'drugstore',
       nodeId: 'dm-b2',
+    },
+    {
+      id: 'osm-n5128425605',
+      name: {
+        ja: "Seattle's Best Coffee",
+        en: "SEATTLE'S BEST COFFEE",
+      },
+      category: 'cafe',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5152027301',
+      name: {
+        ja: '無印良品',
+        en: 'MUJI',
+      },
+      category: 'goods',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n5152027303',
+      name: {
+        ja: 'ユニクロ',
+        en: 'UNIQLO',
+      },
+      category: 'fashion',
+      nodeId: 'n13382704679',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '13F',
+    },
+    {
+      id: 'osm-n5152027304',
+      name: {
+        ja: 'ハンズ',
+        en: 'Hands',
+      },
+      category: 'goods',
+      nodeId: 'n5887069694-exit',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '10F',
     },
     {
       id: 'osm-n5160783795',
@@ -10158,6 +13388,47 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b3',
     },
     {
+      id: 'osm-n5178187488',
+      name: {
+        ja: '赤白',
+        en: 'Kohaku',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5197886446',
+      name: {
+        ja: '大阪中央郵便局',
+        en: 'Osaka Chuo Post Office',
+      },
+      category: 'service',
+      nodeId: 'ex-6-70',
+      building: {
+        ja: 'JPタワー大阪',
+        en: 'JP TOWER OSAKA',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5206521430',
+      name: {
+        ja: 'ピーチジョン ザ ストア',
+        en: 'Peace John The Store',
+      },
+      category: 'drugstore',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+    },
+    {
       id: 'osm-n5208153028',
       name: {
         ja: 'つるとんたん',
@@ -10174,6 +13445,215 @@ export const osmData: GeneratedMapData = {
       },
       category: 'cafe',
       nodeId: 'nsplit-17',
+    },
+    {
+      id: 'osm-n5208153030',
+      name: {
+        ja: 'サラベス',
+        en: 'サラベス',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ノースゲートビルディング',
+        en: 'North Gate Building',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n5208153031',
+      name: {
+        ja: 'Tendon Tenkushi Kushikatsu Ishinoya',
+        en: 'Tendon Tenkushi Kushikatsu Ishinoya',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: 'B2',
+    },
+    {
+      id: 'osm-n5226406219',
+      name: {
+        ja: 'ビクター',
+        en: 'Victor',
+      },
+      category: 'cafe',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5226429658',
+      name: {
+        ja: '大林',
+        en: '大林',
+      },
+      category: 'goods',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5226429659',
+      name: {
+        ja: '信長書店',
+        en: '信長書店',
+      },
+      category: 'goods',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5226429660',
+      name: {
+        ja: 'ウインザーラケットショップ',
+        en: 'ウインザーラケットショップ',
+      },
+      category: 'goods',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5226429661',
+      name: {
+        ja: '大阪厚生信用金庫',
+        en: '大阪厚生信用金庫',
+      },
+      category: 'service',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5226429662',
+      name: {
+        ja: 'ヤトゴルフ',
+        en: 'ヤトゴルフ',
+      },
+      category: 'goods',
+      nodeId: 'dm-b2',
+      building: {
+        ja: '大阪駅前第2ビル',
+        en: 'Osaka Ekimae Second Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5226429663',
+      name: {
+        ja: 'フォーエル',
+        en: 'フォーエル',
+      },
+      category: 'fashion',
+      nodeId: 'nsplit-14',
+      building: {
+        ja: '大阪駅前第2ビル',
+        en: 'Osaka Ekimae Second Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5226429664',
+      name: {
+        ja: 'Mt.石井スポーツ',
+        en: 'Mt.石井スポーツ',
+      },
+      category: 'goods',
+      nodeId: 'nsplit-14',
+      building: {
+        ja: '大阪駅前第2ビル',
+        en: 'Osaka Ekimae Second Building',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5242643218',
+      name: {
+        ja: 'ライトオン',
+        en: 'Right-on',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n5242643219',
+      name: {
+        ja: 'グローバルワーク',
+        en: 'Global Work',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n5246918083',
+      name: {
+        ja: '眼鏡市場',
+        en: 'Megane Ichiba',
+      },
+      category: 'service',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n5255571623',
+      name: {
+        ja: 'スターバックス',
+        en: 'Starbucks',
+      },
+      category: 'cafe',
+      nodeId: 'nsplit-8',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+    },
+    {
+      id: 'osm-n5255597321',
+      name: {
+        ja: 'スターバックス',
+        en: 'Starbucks',
+      },
+      category: 'cafe',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ノースゲートビルディング',
+        en: 'North Gate Building',
+      },
+      floor: '1F',
     },
     {
       id: 'osm-n5291849555',
@@ -10203,6 +13683,34 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n5024365387-exit',
     },
     {
+      id: 'osm-n5475761039',
+      name: {
+        ja: 'ココカラファイン',
+        en: 'Cocokara Fine',
+      },
+      category: 'drugstore',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5550125010',
+      name: {
+        ja: 'マサラ',
+        en: 'Masara',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-18',
+      building: {
+        ja: '阪急サン広場地下通り',
+        en: 'Hankyu SUN Plaza Underground Street',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n5550125011',
       name: {
         ja: '豚々亭',
@@ -10221,6 +13729,48 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n5563301253',
+      name: {
+        ja: '赤のれん',
+        en: 'Akanoren',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5582388774',
+      name: {
+        ja: 'うなぎの中庄',
+        en: 'Unagi no Nakasho',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n5589737821',
+      name: {
+        ja: 'ORiental TRaffic',
+        en: 'ORiental TRaffic',
+      },
+      category: 'fashion',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+      floor: 'B1',
+    },
+    {
       id: 'osm-n5617561329',
       name: {
         ja: '大衆酒場ぎふや',
@@ -10228,6 +13778,62 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'wt-n2',
+    },
+    {
+      id: 'osm-n5634080297',
+      name: {
+        ja: 'スターバックス',
+        en: 'Starbucks',
+      },
+      category: 'cafe',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n5634080298',
+      name: {
+        ja: 'semanticdesign',
+        en: 'semanticdesign',
+      },
+      category: 'fashion',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+      floor: '5F',
+    },
+    {
+      id: 'osm-n5634080300',
+      name: {
+        ja: 'ビームス',
+        en: 'Beams',
+      },
+      category: 'fashion',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5634080301',
+      name: {
+        ja: 'ニコアンド',
+        en: 'niko and ...',
+      },
+      category: 'fashion',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+      floor: '1F',
     },
     {
       id: 'osm-n5634107190',
@@ -10246,6 +13852,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'dm-b2',
+    },
+    {
+      id: 'osm-n5666518541',
+      name: {
+        ja: '高木鮮魚店',
+        en: '高木鮮魚店',
+      },
+      category: 'goods',
+      nodeId: 'nsplit-15',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
     },
     {
       id: 'osm-n5682041667',
@@ -10338,6 +13958,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n6048835150-exit',
     },
     {
+      id: 'osm-n5714662622',
+      name: {
+        ja: 'スフレ',
+        en: 'スフレ',
+      },
+      category: 'goods',
+      nodeId: 'n12300527177',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n5733936532',
       name: {
         ja: '新・酒場なじみ野',
@@ -10354,6 +13988,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'dm-b2',
+    },
+    {
+      id: 'osm-n5733936535',
+      name: {
+        ja: 'asnas exp-b',
+        en: 'asnas exp-b',
+      },
+      category: 'goods',
+      nodeId: 'nsplit-15',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
     },
     {
       id: 'osm-n5736513052',
@@ -10383,6 +14031,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'wt-c4',
     },
     {
+      id: 'osm-n5756410724',
+      name: {
+        ja: '東春閣',
+        en: '東春閣',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-s',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: 'B2',
+    },
+    {
       id: 'osm-n5760549760',
       name: {
         ja: 'Yui',
@@ -10392,6 +14054,90 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n5778272093',
+      name: {
+        ja: 'はなだこ',
+        en: 'はなだこ',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-18',
+      building: {
+        ja: '阪急サン広場地下通り',
+        en: 'Hankyu SUN Plaza Underground Street',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5785412655',
+      name: {
+        ja: 'タシロ コーヒー ロースターズ',
+        en: 'タシロ コーヒー ロースターズ',
+      },
+      category: 'cafe',
+      nodeId: 'n12300527177',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5785412656',
+      name: {
+        ja: 'シェイクシャック',
+        en: 'Shake Shack',
+      },
+      category: 'restaurant',
+      nodeId: 'n12241180681',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n5785412657',
+      name: {
+        ja: 'コスメキッチンアダプテーション',
+        en: 'Cosme Kitchen Adaptation',
+      },
+      category: 'cafe',
+      nodeId: 'n12300527177',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n5785412658',
+      name: {
+        ja: '喫茶館 英國屋倶楽部',
+        en: '喫茶館 英國屋倶楽部',
+      },
+      category: 'cafe',
+      nodeId: 'n12300527177',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n5785412659',
+      name: {
+        ja: 'カフェ モロゾフ',
+        en: 'Cafe Morozoff',
+      },
+      category: 'cafe',
+      nodeId: 'n12300527177',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '5F',
+    },
+    {
       id: 'osm-n5785412660',
       name: {
         ja: 'スナックパーク',
@@ -10399,6 +14145,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'n12241180681',
+    },
+    {
+      id: 'osm-n5797424232',
+      name: {
+        ja: '蔦屋書店',
+        en: 'Umeda Tsutaya Books',
+      },
+      category: 'bookstore',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+      floor: '9F',
     },
     {
       id: 'osm-n5806113335',
@@ -10419,6 +14179,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n5824797505',
+      name: {
+        ja: 'ローソン',
+        en: 'Lawson',
+      },
+      category: 'convenience',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '3F',
+    },
+    {
       id: 'osm-n5858941191',
       name: {
         ja: 'ゲーマーズ',
@@ -10435,6 +14209,19 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'dm-b4',
+    },
+    {
+      id: 'osm-n5865318498',
+      name: {
+        ja: 'スィーティーズ',
+        en: "Sweet's",
+      },
+      category: 'bakery',
+      nodeId: 'n12183308983',
+      building: {
+        ja: '阪急サン広場地下通り',
+        en: 'Hankyu SUN Plaza Underground Street',
+      },
     },
     {
       id: 'osm-n5890883052',
@@ -10464,6 +14251,48 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n9320740016',
     },
     {
+      id: 'osm-n5896269887',
+      name: {
+        ja: 'ジャンプショップ',
+        en: 'Jump Shop',
+      },
+      category: 'goods',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n5898159335',
+      name: {
+        ja: 'asnas exp-b',
+        en: 'asnas exp-b',
+      },
+      category: 'goods',
+      nodeId: 'sb-s',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n5899709994',
+      name: {
+        ja: 'トミカ',
+        en: 'Tomica',
+      },
+      category: 'goods',
+      nodeId: 'nsplit-8',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '13F',
+    },
+    {
       id: 'osm-n5971950160',
       name: {
         ja: 'ピヨ',
@@ -10482,6 +14311,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b3',
     },
     {
+      id: 'osm-n5989816217',
+      name: {
+        ja: 'Yama Chan',
+        en: 'Yama Chan',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-H-30',
+      building: {
+        ja: 'HEP FIVE',
+        en: 'HEP Five',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n5989816218',
       name: {
         ja: 'めん次郎',
@@ -10489,6 +14332,62 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'dm-b3',
+    },
+    {
+      id: 'osm-n5989816219',
+      name: {
+        ja: 'タリーズコーヒー',
+        en: "Tully's Coffee",
+      },
+      category: 'cafe',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n6024790831',
+      name: {
+        ja: 'エーワンベーカリー',
+        en: 'A-1 Bakery',
+      },
+      category: 'bakery',
+      nodeId: 'nsplit-17',
+      building: {
+        ja: '阪急サン広場地下通り',
+        en: 'Hankyu SUN Plaza Underground Street',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n6024790833',
+      name: {
+        ja: '御座候',
+        en: '御座候',
+      },
+      category: 'bakery',
+      nodeId: 'nsplit-18',
+      building: {
+        ja: '阪急サン広場地下通り',
+        en: 'Hankyu SUN Plaza Underground Street',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n6027152589',
+      name: {
+        ja: 'フレッズカフェ',
+        en: "Fred's Cafe",
+      },
+      category: 'cafe',
+      nodeId: 'sb-s',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
     },
     {
       id: 'osm-n6130552675',
@@ -10516,6 +14415,34 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'nsplit-12',
+    },
+    {
+      id: 'osm-n6163703511',
+      name: {
+        ja: '四六時中',
+        en: '四六時中',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-8',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '16F',
+    },
+    {
+      id: 'osm-n6165845178',
+      name: {
+        ja: 'サンマルク',
+        en: 'サンマルク',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-8',
+      building: {
+        ja: 'サウスゲートビルディング',
+        en: 'South Gate Building',
+      },
+      floor: '16F',
     },
     {
       id: 'osm-n6182794085',
@@ -10572,6 +14499,34 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n6333103987',
+      name: {
+        ja: 'タリーズコーヒー',
+        en: "Tully's Coffee",
+      },
+      category: 'cafe',
+      nodeId: 'nst-hankyu-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n6333103988',
+      name: {
+        ja: 'カスカード',
+        en: 'カスカード',
+      },
+      category: 'bakery',
+      nodeId: 'nsplit-19',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n6336018229',
       name: {
         ja: '梅田ジュースコーナー',
@@ -10590,6 +14545,34 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n9320740004',
     },
     {
+      id: 'osm-n6350018410',
+      name: {
+        ja: 'グレディ ブリリアン',
+        en: 'greedy brilliant',
+      },
+      category: 'fashion',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n6393791331',
+      name: {
+        ja: 'Soup Stock Tokyo',
+        en: 'Soup Stock Tokyo',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-s',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n6417441521',
       name: {
         ja: 'cut-A',
@@ -10597,6 +14580,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'service',
       nodeId: 'dm-b2',
+    },
+    {
+      id: 'osm-n6417441522',
+      name: {
+        ja: '武道具 明倫産業',
+        en: '武道具 明倫産業',
+      },
+      category: 'goods',
+      nodeId: 'dm-b2',
+      building: {
+        ja: '大阪駅前第2ビル',
+        en: 'Osaka Ekimae Second Building',
+      },
+      floor: '2F',
     },
     {
       id: 'osm-n6417441523',
@@ -10608,6 +14605,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b2',
     },
     {
+      id: 'osm-n6423375444',
+      name: {
+        ja: 'ブックファースト',
+        en: 'Book1st',
+      },
+      category: 'bookstore',
+      nodeId: 'sb-s',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
       id: 'osm-n6501394863',
       name: {
         ja: 'グリル異人館',
@@ -10615,6 +14626,89 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'nsplit-13',
+    },
+    {
+      id: 'osm-n6586380247',
+      name: {
+        ja: 'ローソン',
+        en: 'Lawson',
+      },
+      category: 'convenience',
+      nodeId: 'nst-hankyu-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n6586380248',
+      name: {
+        ja: 'PatSat',
+        en: 'PatSat',
+      },
+      category: 'service',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n6586380249',
+      name: {
+        ja: 'ローソン',
+        en: 'Lawson',
+      },
+      category: 'convenience',
+      nodeId: 'nsplit-19',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n6586380250',
+      name: {
+        ja: 'タリーズコーヒー',
+        en: "Tully's Coffee",
+      },
+      category: 'cafe',
+      nodeId: 'nsplit-16',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n6698975461',
+      name: {
+        ja: '神仙夜市',
+        en: '神仙夜市',
+      },
+      category: 'restaurant',
+      nodeId: 'dm-b1',
+      building: {
+        ja: '大阪駅前第1ビル',
+        en: 'Osaka Ekimae First Building',
+      },
+    },
+    {
+      id: 'osm-n6723137087',
+      name: {
+        ja: '博多もつ鍋 おおやま',
+        en: 'Hakata motsunabe ooyama Osaka',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア イーレ',
+        en: 'LUCUA 1100',
+      },
+      floor: '10F',
     },
     {
       id: 'osm-n6726515644',
@@ -10635,6 +14729,62 @@ export const osmData: GeneratedMapData = {
       nodeId: 'nsplit-10',
     },
     {
+      id: 'osm-n6991502498',
+      name: {
+        ja: 'ニトリ',
+        en: 'Nitori',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n6991502502',
+      name: {
+        ja: 'ヨドバシカメラ',
+        en: 'Yodobashi Camera',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B2',
+    },
+    {
+      id: 'osm-n7028385412',
+      name: {
+        ja: 'ビームス',
+        en: 'Beams',
+      },
+      category: 'fashion',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n7028385414',
+      name: {
+        ja: 'ポンパドウル',
+        en: 'Pompadour',
+      },
+      category: 'bakery',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
       id: 'osm-n7037609685',
       name: {
         ja: 'スターバックス',
@@ -10651,6 +14801,89 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'dm-b1',
+    },
+    {
+      id: 'osm-n7081911849',
+      name: {
+        ja: 'ワイヤードカフェ',
+        en: 'ワイヤードカフェ',
+      },
+      category: 'cafe',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+    },
+    {
+      id: 'osm-n7216740540',
+      name: {
+        ja: '笑卵',
+        en: '笑卵',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-18',
+      building: {
+        ja: '阪急サン広場地下通り',
+        en: 'Hankyu SUN Plaza Underground Street',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n7216740541',
+      name: {
+        ja: 'ザ・ステーキ・バー',
+        en: 'The Steak Bar',
+      },
+      category: 'restaurant',
+      nodeId: 'nsplit-18',
+      building: {
+        ja: '阪急サン広場地下通り',
+        en: 'Hankyu SUN Plaza Underground Street',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n7514508621',
+      name: {
+        ja: 'コスメキッチンリュクス',
+        en: 'Cosme Kitchen',
+      },
+      category: 'drugstore',
+      nodeId: 'n12215302976',
+      building: {
+        ja: '大阪梅田ツインタワーズ・ノース',
+        en: 'Osaka Umeda Twin Towers ・ North',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n7514508622',
+      name: {
+        ja: 'カラーフィールド',
+        en: 'カラーフィールド',
+      },
+      category: 'fashion',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n7514508623',
+      name: {
+        ja: '成城石井',
+        en: 'Seijo Ishii',
+      },
+      category: 'convenience',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
     },
     {
       id: 'osm-n7514508624',
@@ -10680,6 +14913,20 @@ export const osmData: GeneratedMapData = {
       nodeId: 'nsplit-19',
     },
     {
+      id: 'osm-n7516366438',
+      name: {
+        ja: 'タリーズコーヒー',
+        en: "Tully's Coffee",
+      },
+      category: 'cafe',
+      nodeId: 'n12215302976',
+      building: {
+        ja: '大阪梅田ツインタワーズ・ノース',
+        en: 'Osaka Umeda Twin Towers ・ North',
+      },
+      floor: '8F',
+    },
+    {
       id: 'osm-n7516366439',
       name: {
         ja: 'ルピシア',
@@ -10687,6 +14934,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'goods',
       nodeId: 'nsplit-18',
+    },
+    {
+      id: 'osm-n7559250286',
+      name: {
+        ja: 'ロフト',
+        en: 'Loft',
+      },
+      category: 'goods',
+      nodeId: 'nsplit-6',
+      building: {
+        ja: 'ルクア大阪',
+        en: 'LUCUA osaka',
+      },
+      floor: '9F',
     },
     {
       id: 'osm-n7918822285',
@@ -10734,6 +14995,48 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dm-b1',
     },
     {
+      id: 'osm-n8074470216',
+      name: {
+        ja: 'スギ薬局',
+        en: 'Sugi Pharmacy',
+      },
+      category: 'drugstore',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n8074503817',
+      name: {
+        ja: 'マクドナルド',
+        en: "McDonald's",
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
+      id: 'osm-n8074503818',
+      name: {
+        ja: 'ハーベス',
+        en: 'Harves',
+      },
+      category: 'convenience',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: 'B1',
+    },
+    {
       id: 'osm-n8137176411',
       name: {
         ja: 'ドトールコーヒーショップ',
@@ -10743,6 +15046,34 @@ export const osmData: GeneratedMapData = {
       nodeId: 'dj-3',
     },
     {
+      id: 'osm-n8184090113',
+      name: {
+        ja: 'おさかなキッチン',
+        en: 'おさかなキッチン',
+      },
+      category: 'restaurant',
+      nodeId: 'nst-hankyu-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n8878597295',
+      name: {
+        ja: 'ファミリーマート',
+        en: 'FamilyMart',
+      },
+      category: 'convenience',
+      nodeId: 'ex-J-2',
+      building: {
+        ja: 'OSビル',
+        en: 'OS Building',
+      },
+      floor: '1F',
+    },
+    {
       id: 'osm-n8882820911',
       name: {
         ja: 'くら寿司',
@@ -10750,6 +15081,20 @@ export const osmData: GeneratedMapData = {
       },
       category: 'restaurant',
       nodeId: 'wt-n1',
+    },
+    {
+      id: 'osm-n8882848619',
+      name: {
+        ja: 'リンガーハット',
+        en: 'Ringer Hut',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-7-66',
+      building: {
+        ja: '大阪富国生命ビル',
+        en: 'Osaka Fukoku Seimei Building',
+      },
+      floor: '1F',
     },
     {
       id: 'osm-n8928684222',
@@ -10770,6 +15115,187 @@ export const osmData: GeneratedMapData = {
       nodeId: 'n5884732540-exit',
     },
     {
+      id: 'osm-n9014035662',
+      name: {
+        ja: 'バケット',
+        en: 'Baqet',
+      },
+      category: 'restaurant',
+      nodeId: 'ex-3-2',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '8F',
+    },
+    {
+      id: 'osm-n9060312953',
+      name: {
+        ja: 'SMBC日興証券',
+        en: 'SMBC日興証券',
+      },
+      category: 'service',
+      nodeId: 'ex-H-82',
+      building: {
+        ja: '大阪日興ビル',
+        en: '大阪日興ビル',
+      },
+    },
+    {
+      id: 'osm-n9289756546',
+      name: {
+        ja: 'Taco Bell',
+        en: 'TACO BELL',
+      },
+      category: 'restaurant',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n9289756549',
+      name: {
+        ja: 'アートスポーツ',
+        en: 'アートスポーツ',
+      },
+      category: 'goods',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n9289756550',
+      name: {
+        ja: 'coca',
+        en: 'coca',
+      },
+      category: 'fashion',
+      nodeId: 'ex-3-4',
+      building: {
+        ja: 'ヨドバシ梅田タワー',
+        en: 'Yodobashi Umeda Tower',
+      },
+      floor: '3F',
+    },
+    {
+      id: 'osm-n9355260795',
+      name: {
+        ja: 'フルーツ',
+        en: 'フルーツ',
+      },
+      category: 'cafe',
+      nodeId: 'n12300527177',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '4F',
+    },
+    {
+      id: 'osm-n9355260796',
+      name: {
+        ja: 'マザームーンカフェ',
+        en: 'マザームーンカフェ',
+      },
+      category: 'cafe',
+      nodeId: 'n12300527177',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '6F',
+    },
+    {
+      id: 'osm-n9355260797',
+      name: {
+        ja: '生活の木',
+        en: '生活の木',
+      },
+      category: 'goods',
+      nodeId: 'n12183308980',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n9355260798',
+      name: {
+        ja: 'アフタヌーンティーリビング',
+        en: 'アフタヌーンティーリビング',
+      },
+      category: 'goods',
+      nodeId: 'n12215302955',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n9355260799',
+      name: {
+        ja: 'アフタヌーンティー・ティールーム',
+        en: 'アフタヌーンティー・ティールーム',
+      },
+      category: 'cafe',
+      nodeId: 'n12183308980',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n9355260801',
+      name: {
+        ja: '無印良品',
+        en: 'MUJI',
+      },
+      category: 'goods',
+      nodeId: 'n12241180681',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '7F',
+    },
+    {
+      id: 'osm-n9355260804',
+      name: {
+        ja: 'スターバックス',
+        en: 'Starbucks',
+      },
+      category: 'cafe',
+      nodeId: 'n12300527177',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '9F',
+    },
+    {
+      id: 'osm-n9449454223',
+      name: {
+        ja: 'Biople by CosmeKitchen',
+        en: 'Biople by CosmeKitchen',
+      },
+      category: 'goods',
+      nodeId: 'n12183308980',
+      building: {
+        ja: '大阪梅田ツインタワーズ・サウス',
+        en: 'Osaka Umeda Twin Towers ・ South',
+      },
+      floor: '4F',
+    },
+    {
       id: 'osm-n9449454224',
       name: {
         ja: 'Biople by CosmeKitchen',
@@ -10777,6 +15303,230 @@ export const osmData: GeneratedMapData = {
       },
       category: 'goods',
       nodeId: 'nsplit-6',
+    },
+    {
+      id: 'osm-n9833372322',
+      name: {
+        ja: '大和証券',
+        en: '大和証券',
+      },
+      category: 'service',
+      nodeId: 'sb-s',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n9833372323',
+      name: {
+        ja: 'みずほ証券',
+        en: 'みずほ証券',
+      },
+      category: 'service',
+      nodeId: 'nsb-s-link',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n9833372334',
+      name: {
+        ja: 'アフタヌーンティーリビング',
+        en: 'アフタヌーンティーリビング',
+      },
+      category: 'goods',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n9833372345',
+      name: {
+        ja: 'ミオール',
+        en: 'MIOR',
+      },
+      category: 'cafe',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n9836021639',
+      name: {
+        ja: 'アトリエ ハルカ',
+        en: 'アトリエ ハルカ',
+      },
+      category: 'service',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n9836021640',
+      name: {
+        ja: 'QBハウス',
+        en: 'QB HOUSE',
+      },
+      category: 'service',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n9836021641',
+      name: {
+        ja: 'Dr.ストレッチ',
+        en: 'Dr.ストレッチ',
+      },
+      category: 'service',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n9836021647',
+      name: {
+        ja: 'レゴストア',
+        en: 'レゴストア',
+      },
+      category: 'goods',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n9836021661',
+      name: {
+        ja: 'PatSat',
+        en: 'PatSat',
+      },
+      category: 'service',
+      nodeId: 'sb-n',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n9836021662',
+      name: {
+        ja: 'カフェ・ド・クリエ',
+        en: 'CAFE de CRIE',
+      },
+      category: 'cafe',
+      nodeId: 'sb-s',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n9836021666',
+      name: {
+        ja: 'キーフェル',
+        en: 'Kiefel',
+      },
+      category: 'cafe',
+      nodeId: 'nsplit-16',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n9836021667',
+      name: {
+        ja: 'タビオメン',
+        en: 'タビオメン',
+      },
+      category: 'fashion',
+      nodeId: 'nsplit-16',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
+    },
+    {
+      id: 'osm-n9836021668',
+      name: {
+        ja: 'ローソン',
+        en: 'Lawson',
+      },
+      category: 'convenience',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n9836021669',
+      name: {
+        ja: 'PatSat',
+        en: 'PatSat',
+      },
+      category: 'service',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-n9836021670',
+      name: {
+        ja: 'チュチュアンナ',
+        en: 'tutu anna',
+      },
+      category: 'fashion',
+      nodeId: 'sb-w',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '2F',
+    },
+    {
+      id: 'osm-w362616258',
+      name: {
+        ja: '紀伊國屋書店',
+        en: 'Books Kinokuniya',
+      },
+      category: 'bookstore',
+      nodeId: 'sb-s',
+      building: {
+        ja: '大阪梅田',
+        en: 'Osaka Umeda',
+      },
+      floor: '1F',
     },
   ],
   pois: [

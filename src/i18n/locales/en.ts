@@ -38,6 +38,7 @@ export const en: Resource = {
     results: 'Search results',
     kindPoi: 'Above ground',
     kindShop: 'Shop',
+    kindBuildingShop: 'Shop in a building',
     kindNode: 'Exit / Station',
   },
   place: {
