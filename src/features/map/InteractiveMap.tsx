@@ -1,9 +1,11 @@
-import { memo, useEffect, useMemo, useRef, type ReactNode } from 'react';
+import { memo, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
-import type { LocalizedText, MapNode, NodeId, Poi, Shop } from '../../domain/types';
+import type { FloorId, LocalizedText, MapNode, NodeId, Poi, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
 import { detailLevel } from './detail';
+import { buildFloorView, floorForNodes, splitRouteByFloor } from './floorView';
+import { FloorSwitcher } from './FloorSwitcher';
 import { buildBuildings } from './ground';
 import { project, SLAB_DEPTH, type ScreenPoint } from './iso';
 import { placeLabels } from './labelLayout';
@@ -132,6 +134,25 @@ function InteractiveMapView({
 
   const buildings = useMemo(() => buildBuildings(graph, pois), [graph, pois]);
 
+  // 表示する階。案内中はいまのステップの階、場所を選んだらその場所の階に合わせる。
+  // ボタンで選んだ階は、ステップや選んだ場所が変わるまで優先する
+  const floorView = useMemo(() => buildFloorView(graph), [graph]);
+  const floorContext = focusNodeIds?.join('>') || (selectedNodeId ?? '');
+  const [chosenFloor, setChosenFloor] = useState<{ floor: FloorId; context: string }>({
+    floor: 'B1',
+    context: '',
+  });
+  const floor = useMemo<FloorId>(() => {
+    if (chosenFloor.context === floorContext) return chosenFloor.floor;
+    if (focusNodeIds && focusNodeIds.length > 0)
+      return floorForNodes(floorView, focusNodeIds) ?? chosenFloor.floor;
+    if (selectedNodeId !== null && !floorView.isNodeOnFloor(selectedNodeId, chosenFloor.floor))
+      return floorView.floorOf(selectedNodeId);
+    return chosenFloor.floor;
+  }, [chosenFloor, floorContext, focusNodeIds, selectedNodeId, floorView]);
+  const chooseFloor = (next: FloorId) => setChosenFloor({ floor: next, context: floorContext });
+  const isNodeOnFloor = (id: NodeId) => floorView.isNodeOnFloor(id, floor);
+
   const zones = useMemo(() => {
     const list = buildAreaZones(nodes);
     // 駅構内ゾーンは広く重なるので最背面に敷く
@@ -229,14 +250,14 @@ function InteractiveMapView({
 
   /** 通路スラブ。奥→手前の順に描く */
   const slabs = useMemo(() => {
-    const result: { key: string; a: ScreenPoint; b: ScreenPoint }[] = [];
+    const result: { key: string; from: NodeId; to: NodeId; a: ScreenPoint; b: ScreenPoint }[] = [];
     for (const [fromId, edges] of graph.adjacency) {
       for (const edge of edges) {
         if (fromId >= edge.to) continue;
         const a = screenOf.get(fromId);
         const b = screenOf.get(edge.to);
         if (!a || !b) continue;
-        result.push({ key: `${fromId}--${edge.to}`, a, b });
+        result.push({ key: `${fromId}--${edge.to}`, from: fromId, to: edge.to, a, b });
       }
     }
     return result.sort((s, u) => Math.max(s.a.py, s.b.py) - Math.max(u.a.py, u.b.py));
@@ -247,7 +268,7 @@ function InteractiveMapView({
     const result: { key: string; label: string; mid: ScreenPoint }[] = [];
     for (const [fromId, edges] of graph.adjacency) {
       for (const edge of edges) {
-        if (fromId >= edge.to) continue;
+        if (fromId >= edge.to || !floorView.isEdgeOnFloor(fromId, edge.to, floor)) continue;
         const attr = (['escalator', 'elevator', 'stairs'] as const).find((a) =>
           edge.attrs.includes(a),
         );
@@ -263,21 +284,25 @@ function InteractiveMapView({
       }
     }
     return result;
-  }, [graph, screenOf, t]);
+  }, [graph, screenOf, t, floorView, floor]);
 
-  const routeScreen = useMemo(
-    () =>
-      routeNodeIds && routeNodeIds.length >= 2
-        ? routeNodeIds
-            .map((id) => screenOf.get(id))
-            .filter((p): p is ScreenPoint => p !== undefined)
-        : null,
-    [routeNodeIds, screenOf],
-  );
-  const routePoints = routeScreen?.map((p) => `${p.px},${p.py}`).join(' ') ?? null;
+  /** 経路をいまの階に出る区間と出ない区間に分ける（ほかの階の区間は点線で薄く描く） */
+  const routeRuns = useMemo(() => {
+    if (!routeNodeIds || routeNodeIds.length < 2) return null;
+    return splitRouteByFloor(floorView, routeNodeIds, floor).map((run) => {
+      const points = run.ids
+        .map((id) => screenOf.get(id))
+        .filter((p): p is ScreenPoint => p !== undefined);
+      return { onFloor: run.onFloor, points, attr: points.map((p) => `${p.px},${p.py}`).join(' ') };
+    });
+  }, [routeNodeIds, screenOf, floorView, floor]);
+  const routePoints = routeRuns === null ? null : routeRuns.map((run) => run.attr).join(' ');
   const arrows = useMemo(
-    () => (routeScreen ? routeArrows(routeScreen, ARROW_SPACING_PX * k) : []),
-    [routeScreen, k],
+    () =>
+      (routeRuns ?? [])
+        .filter((run) => run.onFloor)
+        .flatMap((run) => routeArrows(run.points, ARROW_SPACING_PX * k)),
+    [routeRuns, k],
   );
 
   const focusPoints = useMemo(() => {
@@ -289,15 +314,21 @@ function InteractiveMapView({
       .join(' ');
   }, [focusNodeIds, screenOf]);
 
-  /** 店名を出す店。案内中はいまの区間沿い、詳細表示ではすべて */
+  /** いまの階の店（店の前の点がその階にある店） */
+  const floorShops = useMemo(
+    () => shops.filter((shop) => floorView.floorOf(shop.nodeId) === floor),
+    [shops, floorView, floor],
+  );
+
+  /** 店名を出す店。案内中はいまの区間沿い、詳細表示ではいまの階のすべて */
   const labelShops = useMemo(() => {
     const onSegment = new Set(focusNodeIds ?? []);
-    const focus = shops.filter((shop) => onSegment.has(shop.nodeId));
+    const focus = floorShops.filter((shop) => onSegment.has(shop.nodeId));
     const focusIds = new Set(focus.map((shop) => shop.id));
     const others =
-      level === 'detail' ? shops.filter((shop) => !focusIds.has(shop.id)) : ([] as Shop[]);
+      level === 'detail' ? floorShops.filter((shop) => !focusIds.has(shop.id)) : ([] as Shop[]);
     return { focus, others };
-  }, [focusNodeIds, shops, level]);
+  }, [focusNodeIds, floorShops, level]);
   const orderedLabelShops = useMemo(
     () => [...labelShops.focus, ...labelShops.others],
     [labelShops],
@@ -305,23 +336,29 @@ function InteractiveMapView({
 
   const shopsByNode = useMemo(() => {
     const groups = new Map<NodeId, Shop[]>();
-    for (const shop of shops) {
+    for (const shop of floorShops) {
       const list = groups.get(shop.nodeId);
       if (list) list.push(shop);
       else groups.set(shop.nodeId, [shop]);
     }
     return groups;
-  }, [shops]);
+  }, [floorShops]);
 
   const pick = (place: Place) => {
     if (viewport.isDragging()) return;
     onSelectPlace(place);
   };
 
-  const exits = useMemo(() => nodes.filter((n) => n.kind === 'exit'), [nodes]);
+  const exits = useMemo(
+    () => nodes.filter((n) => n.kind === 'exit' && floorView.isNodeOnFloor(n.id, floor)),
+    [nodes, floorView, floor],
+  );
   const pins = useMemo(
-    () => nodes.filter((n) => n.kind === 'gate' || n.kind === 'landmark'),
-    [nodes],
+    () =>
+      nodes.filter(
+        (n) => (n.kind === 'gate' || n.kind === 'landmark') && floorView.isNodeOnFloor(n.id, floor),
+      ),
+    [nodes, floorView, floor],
   );
   const routeSet = useMemo(() => new Set(routeNodeIds ?? []), [routeNodeIds]);
   const language = i18n.language;
@@ -368,6 +405,7 @@ function InteractiveMapView({
         aria-label={t('map.title')}
         data-testid="map-view"
         data-detail={level}
+        data-floor={floor}
         className={hasRoute ? 'has-route' : undefined}
         {...viewport.handlers}
       >
@@ -375,7 +413,7 @@ function InteractiveMapView({
         {zones.map((zone) => (
           <polygon
             key={zone.area}
-            className={`map-zone zone-${zone.area}`}
+            className={`map-zone zone-${zone.area}${floor === 'B1' ? '' : ' off-floor'}`}
             data-area={zone.area}
             points={zone.points}
           />
@@ -392,32 +430,45 @@ function InteractiveMapView({
 
         {/* 地下フロア: 通路スラブ（側面→上面） */}
         <g className="map-network">
-          {slabs.map(({ key, a, b }) => (
+          {slabs.map(({ key, from, to, a, b }) => (
             <polygon
               key={`side-${key}`}
-              className="map-edge-side"
+              className={
+                floorView.isEdgeOnFloor(from, to, floor)
+                  ? 'map-edge-side'
+                  : 'map-edge-side off-floor'
+              }
               points={`${a.px},${a.py} ${b.px},${b.py} ${b.px},${b.py + SLAB_DEPTH} ${a.px},${a.py + SLAB_DEPTH}`}
             />
           ))}
-          {slabs.map(({ key, a, b }) => (
-            <line key={`top-${key}`} className="map-edge" x1={a.px} y1={a.py} x2={b.px} y2={b.py} />
+          {slabs.map(({ key, from, to, a, b }) => (
+            <line
+              key={`top-${key}`}
+              className={
+                floorView.isEdgeOnFloor(from, to, floor) ? 'map-edge' : 'map-edge off-floor'
+              }
+              x1={a.px}
+              y1={a.py}
+              x2={b.px}
+              y2={b.py}
+            />
           ))}
         </g>
-        {routePoints !== null && (
-          <>
+        {routeRuns?.map((run, index) => (
+          <g key={`route-${index}`} className={run.onFloor ? undefined : 'off-floor'}>
             <polyline
               className="map-route-casing"
-              points={routePoints}
+              points={run.attr}
               vectorEffect="non-scaling-stroke"
             />
             <polyline
               className="map-route"
-              points={routePoints}
+              points={run.attr}
               data-testid="map-route"
               vectorEffect="non-scaling-stroke"
             />
-          </>
-        )}
+          </g>
+        ))}
         {focusPoints !== null && (
           <polyline
             className="map-route-focus"
@@ -438,7 +489,7 @@ function InteractiveMapView({
         ))}
         {level === 'detail' &&
           nodes
-            .filter((n) => n.kind === 'junction')
+            .filter((n) => n.kind === 'junction' && isNodeOnFloor(n.id))
             .map((node) => (
               <Fixed key={node.id} at={at(node.id)} k={k}>
                 <ellipse className="map-node" rx={4} ry={2.5} />
@@ -606,6 +657,7 @@ function InteractiveMapView({
           </span>
         )}
       </div>
+      <FloorSwitcher floors={floorView.floors} current={floor} onChange={chooseFloor} />
       <div className="map-zoom-controls">
         <button type="button" aria-label={t('map.zoomIn')} onClick={viewport.zoomIn}>
           ＋

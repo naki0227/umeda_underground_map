@@ -574,7 +574,115 @@ for (const [index, nodeId] of attachToNode) {
   if (seenShop.has(key)) continue;
   seenShop.add(key);
   const en = t['name:en'] ?? t['brand:en'] ?? (/^[\x20-\x7e]+$/.test(t.name) ? t.name : ja);
-  shops.push({ id: `osm-${s.ref.toLowerCase()}`, name: { ja, en }, category: category(t), nodeId });
+  shops.push({
+    id: `osm-${s.ref.toLowerCase()}`,
+    name: { ja, en },
+    category: category(t),
+    nodeId,
+    lat: round6(s.lat),
+    lng: round6(s.lon),
+  });
+}
+
+// ---- 5b. 地下とつながる駅ビル・商業ビルの中の店（地上階も含む）
+// 地下の通路網が建物の真下を通っている（通路の点が建物の外形の中にある）ビルと、番号付きの出口が
+// 建物の中か縁にあるビルを、地下とつながるビルとみなす。店は、店を含むいちばん小さな名前付きの建物を表示名にし、その建物（またはそれを
+// 含む建物）の中の通路の点に付ける。階は level（0 → 1F、-1 → B1）
+const BUILDING_SHOP_KINDS = new Set(['retail', 'commercial', 'train_station', 'office', 'yes']);
+const isBuildingLike = (w) =>
+  w.tags.name &&
+  w.nds.length > 3 &&
+  w.nds[0] === w.nds.at(-1) &&
+  (['mall', 'department_store'].includes(w.tags.shop) ||
+    BUILDING_SHOP_KINDS.has(w.tags.building) ||
+    w.tags.railway === 'station') &&
+  !Object.values(AREA_POLYGONS).includes(w.tags.name);
+const polygonArea = (pts) =>
+  Math.abs(
+    pts.reduce(
+      (sum, p, i) => sum + p.x * pts[(i + 1) % pts.length].y - pts[(i + 1) % pts.length].x * p.y,
+      0,
+    ),
+  ) / 2;
+const buildingPolys = osm.ways.filter(isBuildingLike).map((w) => {
+  const pts = w.nds.map((id) => toPlane(osm.nodes.get(id)));
+  return { way: w, pts, area: polygonArea(pts) };
+});
+const corridorIds = [...net.keys()].filter((id) => !isExitNode(id) && floorOf(id) !== '1F');
+// 番号付きの出口が建物の中か縁（3m 以内）にあるビルも、その出口から入れるビルとみなす
+const BUILDING_EXIT_M = 3;
+const exitIds = [...net.keys()].filter(isExitNode);
+const outlineDistance = (p, pts) => {
+  if (inside(p, pts)) return 0;
+  let d = Infinity;
+  for (let i = 0; i < pts.length - 1; i += 1)
+    d = Math.min(d, segmentDistance(p, pts[i], pts[i + 1]));
+  return d;
+};
+const nodesInside = new Map(
+  buildingPolys.map((b) => {
+    const corridors = corridorIds.filter((id) => inside(toPlane(positions.get(id)), b.pts));
+    const exits = exitIds.filter(
+      (id) => outlineDistance(toPlane(positions.get(id)), b.pts) <= BUILDING_EXIT_M,
+    );
+    return [b.way.id, corridors.length > 0 ? corridors : exits];
+  }),
+);
+const floorLabel = (t) => {
+  const lv = levelsOf(t);
+  if (lv.length === 0) return undefined;
+  const l = Math.min(...lv);
+  return l >= 0 ? `${l + 1}F` : `B${-l}`;
+};
+const usedShopRefs = new Set(shops.map((shop) => shop.id));
+let buildingShopCount = 0;
+for (const s of shopCandidates) {
+  const t = s.tags;
+  if (
+    !t.name ||
+    !(
+      t.shop ||
+      FOOD_AMENITY.has(t.amenity) ||
+      ['cafe', 'ice_cream', 'pharmacy', ...SERVICE_AMENITY].includes(t.amenity)
+    )
+  )
+    continue;
+  if (['mall', 'department_store'].includes(t.shop)) continue;
+  const id = `osm-${s.ref.toLowerCase()}`;
+  if (usedShopRefs.has(id)) continue;
+  const p = toPlane(s);
+  const containing = buildingPolys.filter((b) => inside(p, b.pts)).sort((a, b) => a.area - b.area);
+  const host = containing.find((b) => nodesInside.get(b.way.id).length > 0);
+  if (!host) continue;
+  let nodeId = null;
+  let best = Infinity;
+  for (const nid of nodesInside.get(host.way.id)) {
+    const d = distanceM(s, positions.get(nid));
+    if (d < best) {
+      best = d;
+      nodeId = nid;
+    }
+  }
+  const building = containing[0].way.tags;
+  const ja = t['name:ja'] ?? t.name;
+  const key = `${ja}@${nodeId}`;
+  if (seenShop.has(key)) continue;
+  seenShop.add(key);
+  const en = t['name:en'] ?? t['brand:en'] ?? (/^[\x20-\x7e]+$/.test(t.name) ? t.name : ja);
+  const buildingJa = building['name:ja'] ?? building.name;
+  const floor = floorLabel(t);
+  shops.push({
+    id,
+    name: { ja, en },
+    category: category(t),
+    nodeId,
+    lat: round6(s.lat),
+    lng: round6(s.lon),
+    building: { ja: buildingJa, en: building['name:en'] ?? buildingJa },
+    ...(floor ? { floor } : {}),
+  });
+  usedShopRefs.add(id);
+  buildingShopCount += 1;
 }
 
 // ---- 6. 名前のない分岐の名前（近くの出口 → 近くの店 → エリアの通路）
@@ -598,6 +706,8 @@ for (const id of netIds) {
 }
 const finalId = (id) => exitIdOf.get(id) ?? (placeInfo.has(id) ? id : `n${id.replace(/~/g, '-')}`);
 
+// 分岐の名前の目印には地下の店だけを使う（ビルの地上階の店は通路から見えない）
+const namingShops = shops.filter((shop) => !shop.building || shop.floor?.startsWith('B'));
 const nameJunction = (id) => {
   const pos = positions.get(id);
   let ex = null;
@@ -606,11 +716,11 @@ const nameJunction = (id) => {
     if (d <= 35 && (!ex || d < ex.d)) ex = { ref: osm.nodes.get(e).tags.ref, d };
   }
   if (ex) return { ja: `${ex.ref}出口付近`, en: `Near Exit ${ex.ref}` };
-  const nearShop = shops.find((s) => s.nodeId === id);
+  const nearShop = namingShops.find((s) => s.nodeId === id);
   if (nearShop) return { ja: `${nearShop.name.ja}前`, en: `In front of ${nearShop.name.en}` };
   // 店が付いていない分岐は、30m 以内で店のある点の店名を目印にする
   let landmark = null;
-  for (const shop of shops) {
+  for (const shop of namingShops) {
     const d = distanceM(pos, positions.get(shop.nodeId));
     if (d <= 30 && (!landmark || d < landmark.d)) landmark = { shop, d };
   }
@@ -692,5 +802,5 @@ export const osmData: GeneratedMapData = {
 `,
 );
 console.log(
-  `nodes ${nodes.length} (exits ${nodes.filter((n) => n.kind === 'exit').length}), edges ${edges.length}, shops ${shops.length}, pois ${pois.length}, fragment links ${fragmentLinks}, dead-end links ${deadEndLinks}, building links ${buildingLinks}`,
+  `nodes ${nodes.length} (exits ${nodes.filter((n) => n.kind === 'exit').length}), edges ${edges.length}, shops ${shops.length}, pois ${pois.length}, fragment links ${fragmentLinks}, dead-end links ${deadEndLinks}, building links ${buildingLinks}, building shops ${buildingShopCount}`,
 );

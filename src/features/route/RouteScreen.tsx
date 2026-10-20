@@ -37,6 +37,9 @@ interface Props {
   onStepChange?: (index: number) => void;
   /** いまの時刻（テスト用）。省略時はシートを開いた時刻 */
   now?: Date;
+  /** 一人称の表示を出しているか。未指定なら切り替えボタンを出さない */
+  firstPerson?: boolean;
+  onToggleFirstPerson?: () => void;
 }
 
 /** ステップの種類をアイコン1文字で表す */
@@ -69,6 +72,8 @@ export function RouteScreen({
   stepIndex = 0,
   onStepChange,
   now,
+  firstPerson,
+  onToggleFirstPerson,
 }: Props) {
   const { t, i18n } = useTranslation();
   const [openedAt] = useState(() => new Date());
@@ -201,6 +206,16 @@ export function RouteScreen({
         >
           {t('route.avoidStairs')}
         </button>
+        {onToggleFirstPerson !== undefined && (
+          <button
+            type="button"
+            className={firstPerson ? 'chip active' : 'chip'}
+            aria-pressed={firstPerson === true}
+            onClick={onToggleFirstPerson}
+          >
+            {t('fpv.showFirstPerson')}
+          </button>
+        )}
         {speech.supported && (
           <button
             type="button"

@@ -3,10 +3,12 @@ import { useTranslation } from 'react-i18next';
 import { BottomSheet } from './components/BottomSheet';
 import { TabBar } from './components/TabBar';
 import { umedaMap } from './data/map';
+import { isUndergroundShop } from './domain/shopLabel';
 import { fitGeoTransform, nearestNode } from './domain/geo';
 import { buildSteps, stepNodeIds } from './domain/directions';
 import { buildGraph } from './domain/graph';
 import { findRoute } from './domain/route';
+import { buildSideView } from './domain/sideView';
 import { localized } from './i18n';
 import { InteractiveMap } from './features/map/InteractiveMap';
 import { PlaceSheet } from './features/map/PlaceSheet';
@@ -14,11 +16,15 @@ import { MenuSheet } from './features/menu/MenuSheet';
 import { useMapNavigation } from './features/navigation/useMapNavigation';
 import { LocateScreen } from './features/locate/LocateScreen';
 import { useInitialGeolocation } from './features/locate/useGeolocation';
+import { FirstPersonView } from './features/route/FirstPersonView';
 import { RouteScreen } from './features/route/RouteScreen';
 import { SearchBar } from './features/search/SearchBar';
 import { SpotsSheet } from './features/spots/SpotsSheet';
 import { FavoritesSheet } from './features/favorites/FavoritesSheet';
 import { useFavorites } from './features/favorites/useFavorites';
+
+/** 地図と現在地の推定に使う地下の店（ビルの地上階の店は検索・目的地だけ） */
+const undergroundShops = umedaMap.shops.filter(isUndergroundShop);
 
 /** 画面下のシートが地図を隠すおおよその割合（地図を寄せるときに避ける） */
 const SHEET_INSET: Record<string, number> = { none: 0.1, place: 0.38 };
@@ -61,12 +67,28 @@ export default function App() {
   const [stepState, setStepState] = useState({ routeKey: '', index: 0 });
   const stepIndex = stepState.routeKey === routeKey ? stepState.index : 0;
   const setStepIndex = (index: number) => setStepState({ routeKey, index });
-  const focusNodeIds = useMemo(() => {
-    if (route === null || nav.sheet !== 'route') return undefined;
+  const currentStep = useMemo(() => {
+    if (route === null || nav.sheet !== 'route') return null;
     const steps = buildSteps(graph, route);
     const step = steps[Math.min(stepIndex, steps.length - 1)];
-    return step ? stepNodeIds(route, step) : undefined;
+    if (!step) return null;
+    const nodeIds = stepNodeIds(route, step);
+    // 次の区間で進む点（曲がり角の先）は、脇の通路として数えない
+    const next = route.nodeIds[route.nodeIds.lastIndexOf(step.atNodeId) + 1];
+    return { step, nodeIds, next: next === undefined ? [] : [next] };
   }, [graph, route, stepIndex, nav.sheet]);
+  const focusNodeIds = currentStep?.nodeIds;
+  const sideView = useMemo(
+    () =>
+      currentStep === null
+        ? null
+        : buildSideView(graph, undergroundShops, currentStep.nodeIds, currentStep.next),
+    [graph, currentStep],
+  );
+  // 一人称の表示。新しい経路で案内を始めたときは一人称から
+  const [firstPersonState, setFirstPersonState] = useState({ routeKey: '', on: true });
+  const firstPerson = firstPersonState.routeKey === routeKey ? firstPersonState.on : true;
+  const setFirstPerson = (on: boolean) => setFirstPersonState({ routeKey, on });
 
   /** 選択中・目的地の地上スポット（地図で最寄り出口までの点線を出す） */
   const linkedPoiIds = useMemo(() => {
@@ -90,7 +112,7 @@ export default function App() {
     <div className="app-map">
       <InteractiveMap
         graph={graph}
-        shops={umedaMap.shops}
+        shops={undergroundShops}
         pois={umedaMap.pois}
         routeNodeIds={route?.nodeIds}
         focusNodeIds={focusNodeIds}
@@ -171,13 +193,21 @@ export default function App() {
           </div>
           <LocateScreen
             graph={graph}
-            shops={umedaMap.shops}
+            shops={undergroundShops}
             pois={umedaMap.pois}
             lost={nav.lost}
             initialGps={gpsHint?.inArea ? gps.position : null}
             onConfirm={nav.confirmLocation}
           />
         </BottomSheet>
+      )}
+
+      {nav.sheet === 'route' && firstPerson && currentStep !== null && sideView !== null && (
+        <FirstPersonView
+          sideView={sideView}
+          step={currentStep.step}
+          onShowMap={() => setFirstPerson(false)}
+        />
       )}
 
       {nav.sheet === 'route' && nav.currentNodeId !== null && nav.destination !== null && (
@@ -195,6 +225,8 @@ export default function App() {
             onClose={nav.closeSheet}
             stepIndex={stepIndex}
             onStepChange={setStepIndex}
+            firstPerson={firstPerson}
+            onToggleFirstPerson={() => setFirstPerson(!firstPerson)}
           />
         </BottomSheet>
       )}

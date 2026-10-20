@@ -1,3 +1,4 @@
+import { isUndergroundShop } from '../domain/shopLabel';
 import type { Shop } from '../domain/types';
 
 /** 比較用に店名を正規化する（空白・中黒・記号を除き小文字に） */
@@ -27,7 +28,7 @@ function sameShop(official: Shop, osm: Shop): boolean {
  * 公式サイト由来の店と OSM 由来の店をまとめる。同じ店が両方にあれば OSM 側
  * （店名・種別・位置）を使い、公式サイト由来の方は捨てる（出典を OSM に一本化する）。
  * OSM にない店だけ公式サイト由来のものを残す。
- * 同じ地下街の店どうしだけを照合するため、areaOf でエリアを渡す。
+ * 同じ地下街の地下の店どうしだけを照合するため、areaOf でエリアを渡す（ビルの地上階の同名の店とは照合しない）。
  */
 export function mergeShops(
   official: Shop[],
@@ -39,7 +40,10 @@ export function mergeShops(
     const area = areaOf(shop.nodeId);
     const match = osm.find(
       (candidate) =>
-        !used.has(candidate.id) && areaOf(candidate.nodeId) === area && sameShop(shop, candidate),
+        !used.has(candidate.id) &&
+        isUndergroundShop(candidate) &&
+        areaOf(candidate.nodeId) === area &&
+        sameShop(shop, candidate),
     );
     if (match === undefined) return true;
     used.add(match.id);

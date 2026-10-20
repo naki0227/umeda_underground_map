@@ -5,8 +5,11 @@
 /** 平面座標の原点。src/domain/geo.ts の PLANE_ORIGIN と同じ値にすること */
 export const ORIGIN = { lat: 34.7025, lng: 135.4959 };
 
-/** 取り込む範囲（メートル）。梅田の地下街と駅の連絡通路が入る大きさ */
-export const REGION = { minX: -320, maxX: 640, minY: -800, maxY: 420 };
+/**
+ * 取り込む範囲（メートル）。fetch.mjs の取得範囲いっぱい。実際に残るのは JR大阪駅 御堂筋口と
+ * 地下でつながる通路網だけなので、OSM に通路が描き足されれば地図も自動で広がる
+ */
+export const REGION = { minX: -1270, maxX: 1470, minY: -1830, maxY: 1280 };
 
 /** OSM の地下街ポリゴン（way の name）→ アプリのエリア */
 export const AREA_POLYGONS = {

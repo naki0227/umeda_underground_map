@@ -76,8 +76,15 @@ export interface Shop {
   id: string;
   name: LocalizedText;
   category: ShopCategory;
-  /** 店舗前にあたるノード */
+  /** 店舗前にあたるノード（駅ビル・商業ビルの店は、そのビルの中の通路の点） */
   nodeId: NodeId;
+  /** 店の位置（分かる店だけ）。案内中に通路の左右どちらにあるかを出すのに使う */
+  lat?: number;
+  lng?: number;
+  /** 駅ビル・商業ビルの中の店なら、そのビルの名前 */
+  building?: LocalizedText;
+  /** ビルの中の店の階（「7F」「B1」）。分からなければ省略 */
+  floor?: string;
 }
 
 /**
