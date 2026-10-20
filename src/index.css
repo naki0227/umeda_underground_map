@@ -1197,6 +1197,11 @@ button.candidate {
   }
 }
 
+/* 「データセーバー」設定のときも止める（src/app/saveData.ts が属性を付ける） */
+:root[data-save-data] .selection-ring ellipse {
+  animation: none;
+}
+
 .map-legend .swatch.route {
   background: var(--route);
   border: 1px solid var(--route);
