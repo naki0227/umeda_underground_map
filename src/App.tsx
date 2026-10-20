@@ -65,6 +65,12 @@ export default function App() {
         </button>
       )}
 
+      {nav.sheet === 'none' && nav.currentNodeId !== null && nav.destination !== null && (
+        <button type="button" className="setup-banner" onClick={nav.openRoute}>
+          {t('mapUi.resumeRoute')}
+        </button>
+      )}
+
       {nav.sheet === 'place' && nav.selectedPlace !== null && (
         <PlaceSheet
           place={nav.selectedPlace}
@@ -91,6 +97,7 @@ export default function App() {
             graph={graph}
             shops={umedaMap.shops}
             pois={umedaMap.pois}
+            lost={nav.lost}
             onConfirm={nav.confirmLocation}
           />
         </div>
@@ -108,6 +115,7 @@ export default function App() {
             onToggleAvoidStairs={() => setAvoidStairs((v) => !v)}
             onLost={nav.markLost}
             onFinish={nav.clearDestination}
+            onClose={nav.closeSheet}
           />
         </div>
       )}

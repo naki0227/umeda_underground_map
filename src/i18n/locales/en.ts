@@ -16,6 +16,7 @@ export const en: Resource = {
     entrancePoiGroup: 'From a building / spot above ground',
     entranceExitGroup: 'If you know the exit number / gate',
     gpsButton: 'Use approximate location',
+    gpsLoading: 'Getting your location…',
     gpsAcquired: 'Location acquired',
     gpsFailed: 'Could not get location (GPS is unreliable underground)',
     shopsLabel: 'Shops you can see nearby (multiple allowed)',
@@ -30,10 +31,10 @@ export const en: Resource = {
     candidatesTitle: 'Other candidates',
     candidateConfidence: 'Confidence {{percent}}%',
     noCandidates: 'Could not estimate. Try selecting one or two more shops.',
-    confirm: "I'm here",
   },
   search: {
     placeholder: 'Enter destination (shops, exits, spots)',
+    results: 'Search results',
     kindPoi: 'Above ground',
     kindShop: 'Shop',
     kindNode: 'Exit / Station',
@@ -44,9 +45,9 @@ export const en: Resource = {
     aboveGroundNote: 'This place is above ground. We guide you to the nearest exit.',
   },
   mapUi: {
-    setLocation: 'Set my location',
     currentField: 'Current location',
     notSet: 'Not set (tap to set)',
+    resumeRoute: 'Show directions',
     setupPrompt: 'Set your location to get directions',
   },
   tabs: {
@@ -66,7 +67,6 @@ export const en: Resource = {
   },
   route: {
     title: 'Directions',
-    total: 'Total approx. {{distance}}m ({{minutes}} min walk)',
     from: 'From: {{name}}',
     to: 'To: {{name}}',
     stepGo: 'Walk about {{distance}}m',
@@ -79,12 +79,13 @@ export const en: Resource = {
     aboveGroundHint:
       '{{name}} is above ground. We guide you to {{exit}} — go up to street level from there.',
     notFound: 'No route found',
-    newSearch: 'Choose another destination',
     eta: 'Arrive in approx. {{minutes}} min / {{distance}}m',
     avoidStairs: 'Avoid stairs',
     finish: 'End',
     floorNow: 'Now: {{floor}}',
     floorNext: 'Next: {{floor}}',
+    usesStairs: 'This route includes stairs (no step-free route was found).',
+    alreadyHere: 'You are already at the destination.',
     estimateNote:
       'Your position is the estimate from when guidance started. Tap "I\'m lost" if it drifts.',
   },

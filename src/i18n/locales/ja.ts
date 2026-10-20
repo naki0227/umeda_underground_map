@@ -12,6 +12,7 @@ export const ja = {
     entrancePoiGroup: '地上の建物・スポットから',
     entranceExitGroup: '出口番号・改札がわかる場合',
     gpsButton: 'おおよその位置情報を使う',
+    gpsLoading: '位置情報を取得中…',
     gpsAcquired: '位置情報を取得しました',
     gpsFailed: '位置情報を取得できませんでした（地下では失敗しやすいです）',
     shopsLabel: '近くに見えるお店（複数選択可）',
@@ -26,10 +27,10 @@ export const ja = {
     candidatesTitle: 'ほかの候補',
     candidateConfidence: '確度 {{percent}}%',
     noCandidates: '推定できませんでした。お店をもう1〜2件選んでみてください。',
-    confirm: 'ここにいる',
   },
   search: {
     placeholder: '目的地を入力（お店・出口・スポット）',
+    results: '検索結果',
     kindPoi: '地上',
     kindShop: '地下のお店',
     kindNode: '出口・駅',
@@ -40,9 +41,9 @@ export const ja = {
     aboveGroundNote: '地上のスポットです。いちばん近い出口まで案内します。',
   },
   mapUi: {
-    setLocation: '現在地を設定する',
     currentField: '現在地',
     notSet: '未設定（タップして設定）',
+    resumeRoute: '道案内を表示する',
     setupPrompt: '現在地を設定すると道案内できます',
   },
   tabs: {
@@ -62,7 +63,6 @@ export const ja = {
   },
   route: {
     title: '道案内',
-    total: '合計 約{{distance}}m（徒歩{{minutes}}分）',
     from: '現在地: {{name}}',
     to: '目的地: {{name}}',
     stepGo: '約{{distance}}m進む',
@@ -75,12 +75,13 @@ export const ja = {
     aboveGroundHint:
       '「{{name}}」は地上です。「{{exit}}」まで案内するので、そこから地上へ上がってください。',
     notFound: '経路が見つかりませんでした',
-    newSearch: '別の目的地を探す',
     eta: '到着まで 約{{minutes}}分・{{distance}}m',
     avoidStairs: '階段を避ける',
     finish: '終了',
     floorNow: '現在:{{floor}}',
     floorNext: '次:{{floor}}',
+    usesStairs: 'この経路には階段があります（階段を通らない経路が見つかりませんでした）',
+    alreadyHere: '目的地は現在地です',
     estimateNote: '現在地は開始時の推定位置です。ずれてきたら「迷った」で再測位してください。',
   },
   lost: {

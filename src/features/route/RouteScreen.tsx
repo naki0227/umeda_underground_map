@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { WALK_SPEED_M_PER_MIN } from '../../app/config';
 import { buildSteps, type RouteStep } from '../../domain/directions';
 import type { Graph } from '../../domain/graph';
-import { findRoute } from '../../domain/route';
+import { findRoute, routeUsesStairs } from '../../domain/route';
 import { nodeFloor, type LocalizedText, type NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
 
@@ -19,6 +19,8 @@ interface Props {
   onToggleAvoidStairs: () => void;
   onLost: () => void;
   onFinish: () => void;
+  /** 経路シートを閉じて地図を見る（案内は継続） */
+  onClose: () => void;
 }
 
 /** ステップの種類をアイコン1文字で表す */
@@ -47,13 +49,14 @@ export function RouteScreen({
   onToggleAvoidStairs,
   onLost,
   onFinish,
+  onClose,
 }: Props) {
   const { t, i18n } = useTranslation();
 
   const result = useMemo(() => {
     const route = findRoute(graph, fromNodeId, toNodeId, { avoidStairs });
     if (route === null) return null;
-    return { route, steps: buildSteps(graph, route) };
+    return { route, steps: buildSteps(graph, route), usesStairs: routeUsesStairs(graph, route) };
   }, [graph, fromNodeId, toNodeId, avoidStairs]);
 
   const nodeName = (nodeId: NodeId) => {
@@ -61,8 +64,15 @@ export function RouteScreen({
     return node ? localized(node.name, i18n.language) : nodeId;
   };
 
+  const destinationName =
+    destinationLabel !== null ? localized(destinationLabel, i18n.language) : nodeName(toNodeId);
+
   const actionText = (step: RouteStep) => {
-    const name = nodeName(step.atNodeId);
+    // 最終到着は目的地の表示名（店名など）で伝える。地上スポットは出口名のまま
+    const name =
+      step.action === 'arrive' && step.atNodeId === toNodeId && !aboveGround
+        ? destinationName
+        : nodeName(step.atNodeId);
     switch (step.action) {
       case 'left':
         return t('route.actionLeft', { name });
@@ -90,9 +100,6 @@ export function RouteScreen({
     return node ? nodeFloor(node) : 'B1';
   })();
 
-  const destinationName =
-    destinationLabel !== null ? localized(destinationLabel, i18n.language) : nodeName(toNodeId);
-
   const next = result !== null && result.steps.length > 0 ? result.steps[0] : null;
 
   return (
@@ -102,9 +109,13 @@ export function RouteScreen({
         <button
           type="button"
           className={avoidStairs ? 'chip active' : 'chip'}
+          aria-pressed={avoidStairs}
           onClick={onToggleAvoidStairs}
         >
           {t('route.avoidStairs')}
+        </button>
+        <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>
+          ×
         </button>
       </div>
       <p className="description">
@@ -126,6 +137,12 @@ export function RouteScreen({
         <p className="hint warn">{t('route.notFound')}</p>
       ) : (
         <>
+          {result.steps.length === 0 && <p className="hint ok">{t('route.alreadyHere')}</p>}
+          {avoidStairs && result.usesStairs && (
+            <p className="hint warn" data-testid="stairs-warning">
+              {t('route.usesStairs')}
+            </p>
+          )}
           {next !== null && (
             <div className="next-step-card" data-testid="next-step">
               <span className="next-icon" aria-hidden>

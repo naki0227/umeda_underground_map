@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { detectLanguage, initI18n, localized } from '../index';
+import { detectLanguage, initI18n, loadStoredLanguage, localized } from '../index';
 import { en } from '../locales/en';
 import { ja } from '../locales/ja';
 
@@ -48,5 +48,32 @@ describe('initI18n', () => {
     const instance = initI18n('en');
     void instance.changeLanguage('ja');
     expect(instance.t('route.stepGo', { distance: 120 })).toBe('約120m進む');
+  });
+});
+
+describe('language persistence', () => {
+  it('updates <html lang> and remembers the chosen language', async () => {
+    const instance = initI18n('ja');
+    await instance.changeLanguage('en');
+    expect(document.documentElement.lang).toBe('en');
+    expect(loadStoredLanguage()).toBe('en');
+    await instance.changeLanguage('ja');
+    expect(document.documentElement.lang).toBe('ja');
+    expect(loadStoredLanguage()).toBe('ja');
+  });
+
+  it('returns null when storage is unavailable', () => {
+    const original = Object.getOwnPropertyDescriptor(globalThis, 'localStorage');
+    Object.defineProperty(globalThis, 'localStorage', {
+      configurable: true,
+      get() {
+        throw new Error('blocked');
+      },
+    });
+    try {
+      expect(loadStoredLanguage()).toBeNull();
+    } finally {
+      if (original) Object.defineProperty(globalThis, 'localStorage', original);
+    }
   });
 });

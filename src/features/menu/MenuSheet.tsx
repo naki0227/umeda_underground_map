@@ -13,7 +13,7 @@ export function MenuSheet({ dataVersion, onClose }: Props) {
   return (
     <div className="sheet" role="dialog" aria-label={t('tabs.menu')}>
       <div className="sheet-header">
-        <h1>{t('app.title')}</h1>
+        <h2>{t('app.title')}</h2>
         <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>
           ×
         </button>
