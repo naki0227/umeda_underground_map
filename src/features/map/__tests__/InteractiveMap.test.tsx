@@ -30,7 +30,7 @@ describe('InteractiveMap', () => {
   });
 
   it('highlights a route and shows markers', () => {
-    const route = findRoute(graph, 'wt-c4', 'wt-exit-h28');
+    const route = findRoute(graph, 'wt-c4', 'ex-M-14');
     render(
       <InteractiveMap
         graph={graph}
@@ -38,7 +38,7 @@ describe('InteractiveMap', () => {
         pois={umedaMap.pois}
         routeNodeIds={route?.nodeIds}
         currentNodeId="wt-c4"
-        destinationNodeId="wt-exit-h28"
+        destinationNodeId="ex-M-14"
         onSelectPlace={() => {}}
       />,
     );
@@ -64,6 +64,9 @@ describe('InteractiveMap', () => {
       expect.objectContaining({ nodeId: 'wt-izumi', aboveGround: false }),
     );
 
+    // 店の点は全体表示では出さないので、拡大してから押す
+    expect(container.querySelector('[data-shop-id="wt-shop-starbucks"]')).toBeNull();
+    for (let i = 0; i < 3; i += 1) await user.click(screen.getByRole('button', { name: '拡大' }));
     await user.click(container.querySelector('[data-shop-id="wt-shop-starbucks"]') as Element);
     expect(onSelectPlace).toHaveBeenLastCalledWith(expect.objectContaining({ nodeId: 'wt-c4' }));
   });
@@ -79,7 +82,7 @@ describe('InteractiveMap', () => {
     );
     expect(container.querySelector('[data-area="whity"]')).not.toBeNull();
     // 出口はバッジ（出口番号入りチップ）で表示される
-    const badge = container.querySelector('.map-exit-badge[data-node-id="wt-exit-h8"]');
+    const badge = container.querySelector('.map-exit-badge[data-node-id="ex-H-8"]');
     expect(badge).not.toBeNull();
     expect(badge).toHaveTextContent('H-8');
     expect(screen.getByTestId('map-legend')).toHaveTextContent('地下街');
@@ -101,7 +104,63 @@ describe('InteractiveMap', () => {
     expect(building).not.toBeNull();
     await user.click(building as Element);
     expect(onSelectPlace).toHaveBeenCalledWith(
-      expect.objectContaining({ nodeId: 'wt-exit-h8', aboveGround: true }),
+      expect.objectContaining({
+        nodeId: umedaMap.pois.find((p) => p.id === 'poi-hepfive')?.nodeId,
+        aboveGround: true,
+      }),
     );
+  });
+
+  it('shows more detail as the map is zoomed in', async () => {
+    const user = userEvent.setup();
+    render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onSelectPlace={() => {}}
+      />,
+    );
+    const map = screen.getByTestId('map-view');
+    expect(map).toHaveAttribute('data-detail', 'overview');
+    expect(screen.queryAllByTestId('map-shop-label')).toHaveLength(0);
+    for (let i = 0; i < 6; i += 1) await user.click(screen.getByRole('button', { name: '拡大' }));
+    expect(map).toHaveAttribute('data-detail', 'detail');
+    // 詳細表示では店名が出る
+    expect(screen.getAllByTestId('map-shop-label').length).toBeGreaterThan(0);
+  });
+
+  it('draws the route with direction arrows, dims the rest and offers a fit-route button', () => {
+    const route = findRoute(graph, 'wt-izumi', 'ex-C-93');
+    render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        routeNodeIds={route?.nodeIds}
+        onSelectPlace={() => {}}
+      />,
+    );
+    expect(screen.getByTestId('map-view')).toHaveClass('has-route');
+    expect(screen.getAllByTestId('map-route-arrow').length).toBeGreaterThan(0);
+    expect(screen.getByRole('button', { name: '経路全体を表示' })).toBeInTheDocument();
+    expect(screen.getByTestId('map-legend')).toHaveTextContent('経路');
+  });
+
+  it('marks the selected place and links a selected spot to its exit', () => {
+    const hep = umedaMap.pois.find((p) => p.id === 'poi-hepfive');
+    render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        selectedNodeId={hep?.nodeId}
+        linkedPoiIds={['poi-hepfive']}
+        onSelectPlace={() => {}}
+      />,
+    );
+    expect(screen.getByTestId('map-selection')).toBeInTheDocument();
+    // 点線は選んだスポットの分だけ
+    expect(screen.getAllByTestId('stair-link')).toHaveLength(1);
   });
 });

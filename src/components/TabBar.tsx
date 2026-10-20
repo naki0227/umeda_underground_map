@@ -5,13 +5,14 @@ interface Props {
   sheet: SheetKind;
   onMap: () => void;
   onSpots: () => void;
+  onFavorites: () => void;
   onMenu: () => void;
 }
 
-/** 画面下部の固定タブバー（地図 / スポット / メニュー） */
-export function TabBar({ sheet, onMap, onSpots, onMenu }: Props) {
+/** 画面下部の固定タブバー（地図 / スポット / お気に入り / メニュー） */
+export function TabBar({ sheet, onMap, onSpots, onFavorites, onMenu }: Props) {
   const { t } = useTranslation();
-  const mapActive = sheet !== 'spots' && sheet !== 'menu';
+  const mapActive = sheet !== 'spots' && sheet !== 'favorites' && sheet !== 'menu';
   return (
     <nav className="tabbar" aria-label={t('tabs.label')}>
       <button
@@ -35,6 +36,17 @@ export function TabBar({ sheet, onMap, onSpots, onMenu }: Props) {
           ✦
         </span>
         {t('tabs.spots')}
+      </button>
+      <button
+        type="button"
+        className={sheet === 'favorites' ? 'active' : ''}
+        aria-current={sheet === 'favorites' ? 'page' : undefined}
+        onClick={onFavorites}
+      >
+        <span className="tab-icon" aria-hidden>
+          ★
+        </span>
+        {t('tabs.favorites')}
       </button>
       <button
         type="button"
