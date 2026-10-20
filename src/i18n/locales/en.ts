@@ -120,6 +120,9 @@ export const en: Resource = {
     station: 'Station corridors',
   },
   map: {
+    gpsHint: 'Approx. location (GPS)',
+    locateGps: 'Show my approximate location',
+    gpsOutOfArea: 'You seem to be outside the Umeda underground map.',
     title: 'Umeda underground map',
     you: 'You are here',
     destination: 'Destination',

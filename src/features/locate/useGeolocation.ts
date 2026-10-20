@@ -1,10 +1,11 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 export type GeolocationStatus = 'idle' | 'loading' | 'success' | 'error';
 
 export interface GeolocationState {
   status: GeolocationStatus;
-  position: { lat: number; lng: number } | null;
+  /** accuracyM は端末が返す誤差半径（メートル） */
+  position: { lat: number; lng: number; accuracyM: number } | null;
   /** 位置情報を1回だけ取得する（常時追跡はしない） */
   acquire: () => void;
 }
@@ -15,7 +16,7 @@ export interface GeolocationState {
  */
 export function useGeolocation(): GeolocationState {
   const [status, setStatus] = useState<GeolocationStatus>('idle');
-  const [position, setPosition] = useState<{ lat: number; lng: number } | null>(null);
+  const [position, setPosition] = useState<GeolocationState['position']>(null);
 
   const acquire = useCallback(() => {
     if (!('geolocation' in navigator)) {
@@ -25,7 +26,11 @@ export function useGeolocation(): GeolocationState {
     setStatus('loading');
     navigator.geolocation.getCurrentPosition(
       (result) => {
-        setPosition({ lat: result.coords.latitude, lng: result.coords.longitude });
+        setPosition({
+          lat: result.coords.latitude,
+          lng: result.coords.longitude,
+          accuracyM: result.coords.accuracy,
+        });
         setStatus('success');
       },
       () => {
@@ -36,4 +41,33 @@ export function useGeolocation(): GeolocationState {
   }, []);
 
   return { status, position, acquire };
+}
+
+/**
+ * 起動時に1回だけ位置情報を取りに行く。すでに拒否されている場合は
+ * 何もしない（毎回の許可ダイアログやエラー表示を避ける）。追跡はしない。
+ */
+export function useInitialGeolocation(): GeolocationState {
+  const state = useGeolocation();
+  const { acquire } = state;
+
+  useEffect(() => {
+    let cancelled = false;
+    const run = async () => {
+      if (!('geolocation' in navigator)) return;
+      try {
+        const permission = await navigator.permissions?.query({ name: 'geolocation' });
+        if (permission?.state === 'denied') return;
+      } catch {
+        // Permissions API がない・失敗するブラウザでは、そのまま取得を試みる
+      }
+      if (!cancelled) acquire();
+    };
+    void run();
+    return () => {
+      cancelled = true;
+    };
+  }, [acquire]);
+
+  return state;
 }

@@ -149,6 +149,10 @@ export function useMapViewport(bounds: Bounds) {
   const isDragging = useCallback(() => dragged.current, []);
   const zoomIn = useCallback(() => zoomBy(0.75), [zoomBy]);
   const zoomOut = useCallback(() => zoomBy(1.33), [zoomBy]);
+  /** 表示倍率はそのままで、指定したスクリーン座標を中心に寄せる */
+  const centerOn = useCallback((point: { px: number; py: number }) => {
+    setViewBox((vb) => ({ ...vb, x: point.px - vb.w / 2, y: point.py - vb.h / 2 }));
+  }, []);
   const reset = useCallback(() => setViewBox(fitViewBox(bounds, pixelSize)), [bounds, pixelSize]);
 
   return {
@@ -162,5 +166,6 @@ export function useMapViewport(bounds: Bounds) {
     zoomIn,
     zoomOut,
     reset,
+    centerOn,
   };
 }

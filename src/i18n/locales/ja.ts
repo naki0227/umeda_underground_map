@@ -115,6 +115,9 @@ export const ja = {
     station: '駅構内・連絡通路',
   },
   map: {
+    gpsHint: 'おおよその現在地（GPS）',
+    locateGps: 'おおよその現在地を表示',
+    gpsOutOfArea: '梅田の地下街の地図の範囲外にいるようです',
     title: '梅田地下マップ',
     you: '現在地',
     destination: '目的地',

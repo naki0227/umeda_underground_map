@@ -12,6 +12,8 @@ interface Props {
   pois: Poi[];
   /** 「迷った」から開いたとき true。再測位の説明を出す */
   lost?: boolean;
+  /** 起動時に取れた GPS 位置。あれば位置推定のヒントに使う */
+  initialGps?: { lat: number; lng: number } | null;
   onConfirm: (nodeId: NodeId) => void;
 }
 
@@ -23,7 +25,14 @@ type EntranceKey = '' | `poi:${string}` | `node:${string}`;
 
 const QUICK_PICK_COUNT = 8;
 
-export function LocateScreen({ graph, shops, pois, lost = false, onConfirm }: Props) {
+export function LocateScreen({
+  graph,
+  shops,
+  pois,
+  lost = false,
+  initialGps = null,
+  onConfirm,
+}: Props) {
   const { t, i18n } = useTranslation();
   const gps = useGeolocation();
   const [entranceKey, setEntranceKey] = useState<EntranceKey>('');
@@ -77,7 +86,7 @@ export function LocateScreen({ graph, shops, pois, lost = false, onConfirm }: Pr
   const runLocate = () => {
     const result = locate(graph, shops, {
       entranceNodeId: entranceNodeId === '' ? undefined : entranceNodeId,
-      gps: gps.position ?? undefined,
+      gps: gps.position ?? initialGps ?? undefined,
       nearbyShopIds: selectedShopIds,
     });
     setCandidates(result);

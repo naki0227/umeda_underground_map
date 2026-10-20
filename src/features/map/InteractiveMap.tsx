@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import { useEffect, useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
 import type { LocalizedText, MapNode, NodeId, Poi, Shop } from '../../domain/types';
@@ -34,8 +34,22 @@ interface Props {
   routeNodeIds?: NodeId[];
   currentNodeId?: NodeId | null;
   destinationNodeId?: NodeId | null;
+  /** GPS による大まかな現在地（マップ平面座標と誤差半径）。表示しないなら null */
+  gpsHint?: { x: number; y: number; accuracyM: number } | null;
+  /** GPS の大まかな現在地をタップしたとき */
+  onSelectGpsHint?: () => void;
+  /** ◎ ボタン: 位置情報をもう一度取得する。未指定ならボタンを出さない */
+  onLocateGps?: () => void;
+  gpsBusy?: boolean;
   onSelectPlace: (place: Place) => void;
 }
+
+/** GPS 誤差円の表示上の最小・最大半径（m） */
+const GPS_RADIUS_MIN_M = 20;
+const GPS_RADIUS_MAX_M = 300;
+/** 地面の円を等角投影したときの楕円の半径係数 */
+const ISO_CIRCLE_RX = Math.SQRT2 * Math.cos(Math.PI / 6);
+const ISO_CIRCLE_RY = Math.SQRT2 * 0.5;
 
 const PADDING = 90;
 
@@ -63,6 +77,10 @@ export function InteractiveMap({
   routeNodeIds,
   currentNodeId,
   destinationNodeId,
+  gpsHint = null,
+  onSelectGpsHint,
+  onLocateGps,
+  gpsBusy = false,
   onSelectPlace,
 }: Props) {
   const { t, i18n } = useTranslation();
@@ -106,6 +124,15 @@ export function InteractiveMap({
   }, [screenOf, buildings]);
 
   const viewport = useMapViewport(bounds);
+  const { centerOn } = viewport;
+
+  // GPS の大まかな位置が取れたら、そこが見えるように寄せる
+  const gpsX = gpsHint?.x;
+  const gpsY = gpsHint?.y;
+  useEffect(() => {
+    if (gpsX === undefined || gpsY === undefined) return;
+    centerOn(project(gpsX, gpsY));
+  }, [gpsX, gpsY, centerOn]);
 
   /** 通路スラブ。奥→手前の順に描く */
   const slabs = useMemo(() => {
@@ -347,6 +374,9 @@ export function InteractiveMap({
           visibleLabelIds={visibleLabels}
           onPick={pick}
         />
+        {gpsHint !== null && (
+          <GpsHint hint={gpsHint} k={k} label={t('map.gpsHint')} onSelect={onSelectGpsHint} />
+        )}
         <MapMarkers
           unitsPerPixel={k}
           current={currentNodeId ? at(currentNodeId) : undefined}
@@ -370,10 +400,55 @@ export function InteractiveMap({
         <button type="button" aria-label={t('map.zoomOut')} onClick={viewport.zoomOut}>
           −
         </button>
+        {onLocateGps !== undefined && (
+          <button
+            type="button"
+            aria-label={t('map.locateGps')}
+            aria-busy={gpsBusy}
+            disabled={gpsBusy}
+            onClick={onLocateGps}
+          >
+            ◎
+          </button>
+        )}
         <button type="button" aria-label={t('map.resetView')} onClick={viewport.reset}>
           ⌂
         </button>
       </div>
     </div>
+  );
+}
+
+/** GPS による大まかな現在地: 誤差円（地面の円を投影した楕円）と中心点 */
+function GpsHint({
+  hint,
+  k,
+  label,
+  onSelect,
+}: {
+  hint: { x: number; y: number; accuracyM: number };
+  k: number;
+  label: string;
+  onSelect?: () => void;
+}) {
+  const center = project(hint.x, hint.y);
+  const r = Math.min(GPS_RADIUS_MAX_M, Math.max(GPS_RADIUS_MIN_M, hint.accuracyM));
+  const press = onSelect !== undefined ? pressable(label, onSelect) : {};
+  return (
+    <g className="gps-hint" data-testid="gps-hint" {...press}>
+      <ellipse
+        className="gps-hint-area"
+        cx={center.px}
+        cy={center.py}
+        rx={r * ISO_CIRCLE_RX}
+        ry={r * ISO_CIRCLE_RY}
+      />
+      <Fixed at={center} k={k}>
+        <circle className="gps-hint-dot" r={6} />
+        <text className="map-label gps-hint-label" x={10} y={4} pointerEvents="none">
+          {label}
+        </text>
+      </Fixed>
+    </g>
   );
 }
