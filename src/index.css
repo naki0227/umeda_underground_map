@@ -1197,6 +1197,11 @@ button.candidate {
   }
 }
 
+/* 「データセーバー」設定のときも止める（src/app/saveData.ts が属性を付ける） */
+:root[data-save-data] .selection-ring ellipse {
+  animation: none;
+}
+
 /* 案内中に切り替わる数字は桁の幅をそろえる（距離・ステップ番号が変わっても文字がずれない） */
 .step-counter,
 .next-distance,
