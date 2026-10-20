@@ -76,7 +76,7 @@ main へのマージで GitHub Pages に自動デプロイされる。手順・�
 ## ライセンス
 
 - マップデータ（`src/data/generated/`）: ODbL 1.0（下記「データの出典とライセンス」）
-- コード: 未設定（オーナーが決める。[docs/COMPLETION.md](docs/COMPLETION.md) §5-3）
+- コード: [MIT License](LICENSE)
 
 ## データの出典とライセンス
 

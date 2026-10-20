@@ -109,7 +109,7 @@ C の実績（OSM 抽出 2026-10-20、`scripts/osm/build.mjs`）:
 
 ### F. 品質ゲート（全 PR 共通）
 
-- [ ] F-1 CI が全 PR で緑（typecheck / format / lint / test / build）
+- [x] F-1 CI が全 PR で緑（typecheck / format / lint / test / build）
 - [x] F-2 新しい domain ロジック・データ規則にはユニットテスト、UI フローには Testing Library のテスト
 - [x] F-3 `docs/TODO.md` と `docs/reports/` を PR ごとに更新
 
@@ -137,6 +137,8 @@ C の実績（OSM 抽出 2026-10-20、`scripts/osm/build.mjs`）:
 ---
 
 ## 5. 確かめてほしいこと
+
+**回答（2026-10-20）**: 1 は採用 OK（#12 のとおり ODbL で公開）、3 は MIT（`LICENSE`）。2・4・5 は回答待ち（現状の実装のまま）。
 
 1. **OpenStreetMap データの採用**: 出口・通路・地下店舗を網羅するには OSM（ODbL）を使うのが、ライセンス上安全に取れる唯一の公開データと判断した。採用すると `src/data/` 以下の派生データベースは ODbL で公開することになり、アプリと README に「© OpenStreetMap contributors」の表示が必要になる。採用してよいか（不可なら C-1/C-2/C-4/C-5 は手入力データの範囲に縮小する）
 2. **中国語・韓国語**: UI 文言は機械的な翻訳になる。ネイティブ確認をするか。地名・店名は英語表記のフォールバックでよいか
