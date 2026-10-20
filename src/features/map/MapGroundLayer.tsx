@@ -3,6 +3,7 @@ import { localized } from '../../i18n';
 import { BUILDING_HALF_WIDTH, BUILDING_HEIGHT, type Building } from './ground';
 import { buildingFaces } from './iso';
 import type { Place } from './InteractiveMap';
+import { pressable } from './pressable';
 
 interface Props {
   buildings: Building[];
@@ -18,6 +19,7 @@ export function MapGroundLayer({ buildings, onPick }: Props) {
         <line
           key={`link-${poi.id}`}
           className="stair-link"
+          pointerEvents="none"
           x1={anchor.px}
           y1={anchor.py}
           x2={base.px}
@@ -31,13 +33,16 @@ export function MapGroundLayer({ buildings, onPick }: Props) {
             key={poi.id}
             className="building"
             data-poi-id={poi.id}
-            onClick={() => onPick({ nodeId: poi.nodeId, name: poi.name, aboveGround: true })}
+            {...pressable(localized(poi.name, i18n.language), () =>
+              onPick({ nodeId: poi.nodeId, name: poi.name, aboveGround: true }),
+            )}
           >
             <polygon className="building-left" points={faces.left} />
             <polygon className="building-right" points={faces.right} />
             <polygon className="building-top" points={faces.top} />
             <text
               className="map-label building-label"
+              pointerEvents="none"
               x={base.px}
               y={base.py - BUILDING_HEIGHT - BUILDING_HALF_WIDTH * 0.5 - 10}
               textAnchor="middle"

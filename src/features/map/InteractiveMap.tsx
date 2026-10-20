@@ -7,6 +7,7 @@ import { project, SLAB_DEPTH, type ScreenPoint } from './iso';
 import { BUILDING_HALF_WIDTH, BUILDING_HEIGHT, buildBuildings } from './ground';
 import { MapGroundLayer } from './MapGroundLayer';
 import { MapMarkers } from './MapMarkers';
+import { pressable } from './pressable';
 import { buildAreaZones } from './zones';
 import { useMapViewport, type Bounds } from './useMapViewport';
 
@@ -165,7 +166,7 @@ export function InteractiveMap({
       <svg
         ref={viewport.containerRef}
         viewBox={viewport.viewBox}
-        role="img"
+        role="group"
         aria-label={t('map.title')}
         data-testid="map-view"
         {...viewport.handlers}
@@ -240,7 +241,9 @@ export function InteractiveMap({
                 cy={p.py + dy}
                 rx={9}
                 ry={5.5}
-                onClick={() => pick({ nodeId, name: shop.name, aboveGround: false })}
+                {...pressable(localized(shop.name, i18n.language), () =>
+                  pick({ nodeId, name: shop.name, aboveGround: false }),
+                )}
               >
                 <title>{localized(shop.name, i18n.language)}</title>
               </ellipse>
@@ -254,10 +257,12 @@ export function InteractiveMap({
               key={node.id}
               className="map-pin"
               data-node-id={node.id}
-              onClick={() => pick({ nodeId: node.id, name: node.name, aboveGround: false })}
+              {...pressable(localized(node.name, i18n.language), () =>
+                pick({ nodeId: node.id, name: node.name, aboveGround: false }),
+              )}
             >
               <ellipse cx={p.px} cy={p.py} rx={12} ry={7} />
-              <text className="map-label" x={p.px + 16} y={p.py - 8}>
+              <text className="map-label" x={p.px + 16} y={p.py - 8} pointerEvents="none">
                 {localized(node.name, i18n.language)}
               </text>
             </g>
@@ -272,7 +277,12 @@ export function InteractiveMap({
               key={node.id}
               className="map-exit-badge"
               data-node-id={node.id}
-              onClick={() => pick({ nodeId: node.id, name: node.name, aboveGround: false })}
+              {...pressable(
+                node.exitNo !== undefined
+                  ? `${node.exitNo} ${localized(node.name, i18n.language)}`
+                  : localized(node.name, i18n.language),
+                () => pick({ nodeId: node.id, name: node.name, aboveGround: false }),
+              )}
             >
               <rect x={p.px - width / 2} y={p.py - 16} width={width} height={32} rx={9} />
               <text x={p.px} y={p.py + 7} textAnchor="middle">

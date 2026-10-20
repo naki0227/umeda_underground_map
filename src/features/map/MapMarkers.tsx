@@ -18,7 +18,7 @@ function StandingMarker({
   testId: string;
 }) {
   return (
-    <g data-testid={testId}>
+    <g data-testid={testId} pointerEvents="none">
       <line
         className={`marker-stem ${kind}`}
         x1={point.px}

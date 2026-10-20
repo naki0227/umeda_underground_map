@@ -895,3 +895,9 @@ button.candidate:hover {
   clip: rect(0 0 0 0);
   white-space: nowrap;
 }
+
+/* 地図上のピン・建物（SVG）のキーボードフォーカス */
+.interactive-map [role='button']:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 2px;
+}
