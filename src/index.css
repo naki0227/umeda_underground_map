@@ -13,6 +13,10 @@
   --accent-soft: #e3f3f8;
   --warn: #e8863c; /* オレンジはアクセントのみ */
   --warn-soft: #fdf1e6;
+  --route: #1d4ed8; /* 経路の青（線・経路上の出口・凡例） */
+  --select: #f59e0b; /* 選択の黄（選んだ場所の目印・いまのステップ・フォーカス） */
+  --select-soft: #fde68a;
+  --select-ring: rgba(245, 158, 11, 0.15);
   --radius: 10px;
   color-scheme: light;
 }
@@ -780,7 +784,7 @@ button.candidate {
 
 .map-route {
   fill: none;
-  stroke: #1d4ed8;
+  stroke: var(--route);
   stroke-width: 6px;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -954,7 +958,7 @@ button.candidate {
 
 /* 地図上のピン・建物（SVG）のキーボードフォーカス */
 .interactive-map [role='button']:focus-visible {
-  outline: 3px solid #f59e0b;
+  outline: 3px solid var(--select);
   outline-offset: 2px;
 }
 
@@ -1043,7 +1047,7 @@ button.candidate {
 
 .map-route-focus {
   fill: none;
-  stroke: #f59e0b;
+  stroke: var(--select);
   stroke-width: 7px;
   stroke-linecap: round;
   stroke-linejoin: round;
@@ -1145,7 +1149,7 @@ button.candidate {
 
 .map-exit-badge.on-route rect,
 .map-exit-badge.on-route circle:not(.hit-area) {
-  fill: #1d4ed8;
+  fill: var(--route);
 }
 
 /* 見た目より広い透明な当たり判定（小さな点や建物を指で押しやすくする） */
@@ -1166,13 +1170,13 @@ button.candidate {
 }
 
 .building.selected .building-top {
-  fill: #fde68a;
+  fill: var(--select-soft);
 }
 
 /* 選んでいる場所の目印 */
 .selection-ring ellipse {
-  fill: rgba(245, 158, 11, 0.15);
-  stroke: #f59e0b;
+  fill: var(--select-ring);
+  stroke: var(--select);
   stroke-width: 3;
   animation: selection-pulse 1.6s ease-in-out infinite;
 }
@@ -1194,8 +1198,8 @@ button.candidate {
 }
 
 .map-legend .swatch.route {
-  background: #1d4ed8;
-  border: 1px solid #1d4ed8;
+  background: var(--route);
+  border: 1px solid var(--route);
 }
 
 /* 全体表示ではエリア名を大きく */
