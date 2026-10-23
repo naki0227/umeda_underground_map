@@ -17,6 +17,11 @@
   --select: #f59e0b; /* 選択の黄（選んだ場所の目印・いまのステップ・フォーカス） */
   --select-soft: #fde68a;
   --select-ring: rgba(245, 158, 11, 0.15);
+  /* 下地（地上）と地下街の色 */
+  --ground: #eef1f4;
+  --ground-building: #d8dee6;
+  --ground-road: #ffffff;
+  --corridor: #8fc3d6;
   --radius: 10px;
   color-scheme: light;
 }
@@ -46,7 +51,7 @@ body {
 }
 
 .interactive-map svg {
-  background: var(--bg-soft);
+  background: var(--ground);
   touch-action: none;
   cursor: grab;
 }
@@ -318,7 +323,6 @@ body {
 
 /* ほかの階の通路・経路は薄く残す（どこにいるか分かるように） */
 .map-edge.off-floor,
-.map-edge-side.off-floor,
 .map-zone.off-floor {
   opacity: 0.18;
 }
@@ -410,7 +414,7 @@ body {
   margin: 12px 0;
 }
 
-.map-pin ellipse {
+.map-pin circle {
   fill: var(--bg);
   stroke: var(--accent-strong);
   stroke-width: 2;
@@ -418,7 +422,7 @@ body {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .map-pin:hover ellipse {
+  .map-pin:hover circle {
     fill: var(--accent-soft);
   }
 }
@@ -765,16 +769,30 @@ button.candidate {
 }
 
 .map-edge {
-  stroke: #c9e2ec;
-  stroke-width: 14;
+  stroke: var(--corridor);
+  stroke-width: 6;
   stroke-linecap: round;
 }
 
-.map-edge-side {
-  fill: #93b7c6;
-  stroke: #93b7c6;
-  stroke-width: 12;
+/* 下地: 地上の建物と道路（地下より控えめに） */
+.basemap-building {
+  fill: var(--ground-building);
+  stroke: none;
+}
+
+.basemap-road {
+  fill: none;
+  stroke: var(--ground-road);
+  stroke-linecap: round;
   stroke-linejoin: round;
+}
+
+.basemap-road.major {
+  stroke-width: 18;
+}
+
+.basemap-road.minor {
+  stroke-width: 8;
 }
 
 .stair-link {
@@ -790,21 +808,13 @@ button.candidate {
 }
 
 .building-top {
-  fill: #f8f1e2;
-  stroke: #d9caa8;
-  stroke-width: 2;
+  fill: #ffffff;
+  stroke: #9aa7b4;
+  stroke-width: 1.5;
 }
 
-.building-right {
-  fill: #e3d5b8;
-  stroke: #d9caa8;
-  stroke-width: 2;
-}
-
-.building-left {
-  fill: #efe4cb;
-  stroke: #d9caa8;
-  stroke-width: 2;
+.building-window {
+  fill: #9aa7b4;
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -843,15 +853,36 @@ button.candidate {
 }
 
 .map-zone {
-  fill: #dde3f9;
-  stroke: #c3cdf0;
-  stroke-width: 3;
-  opacity: 0.75;
+  fill: #cfe3f7;
+  stroke: #9fc2e6;
+  stroke-width: 2;
+  opacity: 0.8;
 }
 
-.map-zone.zone-station {
-  fill: #e7ecf5;
-  stroke: #d3dcea;
+/* 地下街ごとの色（床の形） */
+.map-zone.zone-whity {
+  fill: #cfe0fb;
+  stroke: #8fb1ec;
+}
+
+.map-zone.zone-diamor {
+  fill: #cdeee3;
+  stroke: #84cdb4;
+}
+
+.map-zone.zone-dojima {
+  fill: #fbe5cc;
+  stroke: #eebd86;
+}
+
+.map-zone.zone-ekimo {
+  fill: #e6dcf7;
+  stroke: #b9a3e6;
+}
+
+.map-zone.zone-sanbangai {
+  fill: #f8d9e2;
+  stroke: #e7a2b7;
 }
 
 .map-zone-label {
@@ -935,13 +966,13 @@ button.candidate {
 }
 
 .map-legend .swatch.underground {
-  background: #dde3f9;
-  border: 1px solid #c3cdf0;
+  background: var(--corridor);
+  border: 1px solid #6aa9c0;
 }
 
 .map-legend .swatch.ground {
-  background: #f8f1e2;
-  border: 1px solid #d9caa8;
+  background: var(--ground-building);
+  border: 1px solid #c3cad3;
 }
 
 .map-node.candidate {
@@ -1211,10 +1242,8 @@ button.candidate {
   fill: rgba(22, 35, 44, 0.12);
 }
 
-.building .building-top,
-.building .building-left,
-.building .building-right {
-  stroke-width: 1;
+.building .building-top {
+  stroke-width: 1.5;
 }
 
 .building.selected .building-top {
@@ -1222,7 +1251,7 @@ button.candidate {
 }
 
 /* 選んでいる場所の目印 */
-.selection-ring ellipse {
+.selection-ring circle {
   fill: var(--select-ring);
   stroke: var(--select);
   stroke-width: 3;
@@ -1240,13 +1269,13 @@ button.candidate {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .selection-ring ellipse {
+  .selection-ring circle {
     animation: none;
   }
 }
 
 /* 「データセーバー」設定のときも止める（src/app/saveData.ts が属性を付ける） */
-:root[data-save-data] .selection-ring ellipse {
+:root[data-save-data] .selection-ring circle {
   animation: none;
 }
 

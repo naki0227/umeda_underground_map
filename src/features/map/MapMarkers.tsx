@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next';
-import type { ScreenPoint } from './iso';
+import type { ScreenPoint } from './projection';
 
 interface Props {
   /** 画面 1px あたりのマップ単位（マーカーを一定サイズで描く） */

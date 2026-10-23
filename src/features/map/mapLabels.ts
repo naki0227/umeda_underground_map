@@ -1,7 +1,7 @@
 import type { AreaId, LocalizedText, MapNode, NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
 import { BUILDING_ICON_TOP_PX, type Building } from './ground';
-import type { ScreenPoint } from './iso';
+import type { ScreenPoint } from './projection';
 import { textWidthPx, type LabelBox } from './labelLayout';
 
 /*
@@ -19,6 +19,8 @@ export const SHOP_LABEL_OFFSET_PX = { x: 12, y: 20 };
 const CHIP_PADDING_PX = 6;
 /** 建物ラベルのベースライン（建物の基準点からの画面 px） */
 export const buildingLabelYPx = BUILDING_ICON_TOP_PX - 4;
+/** 建物ラベルを目印の下に置くときの、上に置くときからの差分（画面 px） */
+export const BUILDING_LABEL_BELOW_DY_PX = -BUILDING_ICON_TOP_PX + LABEL_FONT_PX + 10;
 
 export function chipWidthPx(text: string, fontPx: number): number {
   return textWidthPx(text, fontPx) + CHIP_PADDING_PX * 2;
@@ -81,6 +83,8 @@ export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
       width,
       height: LABEL_FONT_PX + 2,
       priority: 2,
+      // 上に置けなければ目印の下に置く（同じ建物の中のスポットどうしなど）
+      alternatives: [{ dx: 0, dy: BUILDING_LABEL_BELOW_DY_PX }],
     });
   }
   // 同じノードの店名は縦に並べる

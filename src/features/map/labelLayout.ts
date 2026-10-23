@@ -13,6 +13,8 @@ export interface LabelBox {
   height: number;
   /** 大きいほど優先して表示する */
   priority: number;
+  /** 置けなかったときに試す代わりの位置（x, y の差分。画面 px） */
+  alternatives?: { dx: number; dy: number }[];
 }
 
 /** 文字列の表示幅（px）の概算。全角 = 1em、半角 = 0.6em */
@@ -27,19 +29,30 @@ function overlaps(a: LabelBox, b: LabelBox): boolean {
 }
 
 /**
- * 重ならないように表示するラベルを選ぶ（優先度の高い順に貪欲に置く）。
- * 同じ優先度なら入力順。戻り値は表示するラベルの id。
+ * 重ならないように表示するラベルと、その位置を選ぶ（優先度の高い順に貪欲に置く）。
+ * 元の位置で重なるときは代わりの位置を順に試す。同じ優先度なら入力順。
+ * 戻り値は表示するラベルの id → 使った位置（0 = 元の位置、1 以降 = alternatives の番号 + 1）。
  */
-export function placeLabels(boxes: LabelBox[]): Set<string> {
+export function placeLabelLayout(boxes: LabelBox[]): Map<string, number> {
   const ordered = boxes
     .map((box, index) => ({ box, index }))
     .sort((a, b) => b.box.priority - a.box.priority || a.index - b.index);
   const placed: LabelBox[] = [];
-  const visible = new Set<string>();
+  const layout = new Map<string, number>();
   for (const { box } of ordered) {
-    if (placed.some((other) => overlaps(box, other))) continue;
-    placed.push(box);
-    visible.add(box.id);
+    const candidates = [
+      box,
+      ...(box.alternatives ?? []).map(({ dx, dy }) => ({ ...box, x: box.x + dx, y: box.y + dy })),
+    ];
+    const position = candidates.findIndex((c) => !placed.some((other) => overlaps(c, other)));
+    if (position < 0) continue;
+    placed.push(candidates[position]);
+    layout.set(box.id, position);
   }
-  return visible;
+  return layout;
+}
+
+/** 重ならないように表示するラベルを選ぶ。戻り値は表示するラベルの id */
+export function placeLabels(boxes: LabelBox[]): Set<string> {
+  return new Set(placeLabelLayout(boxes).keys());
 }

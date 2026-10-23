@@ -1,22 +1,15 @@
 import { projectToPlane } from '../../domain/geo';
 import type { Graph } from '../../domain/graph';
 import type { Poi } from '../../domain/types';
-import { project, type ScreenPoint } from './iso';
+import { project, type ScreenPoint } from './projection';
 
 /*
- * 地上の建物は、拡大しても大きくならない小さな立体アイコンで描く（画面 px）。
- * 地図上の位置は地上スポット自身の位置。
+ * 地上スポット（建物）は、拡大しても大きくならない小さな目印で描く（画面 px）。
+ * 地図上の位置は地上スポット自身の位置。目印は基準点の少し上に描く。
  */
-export const BUILDING_ICON_HALF_WIDTH_PX = 11;
-export const BUILDING_ICON_HEIGHT_PX = 14;
-/** 地面から浮かせる高さ（地上にあることを示す） */
-export const BUILDING_ICON_LIFT_PX = 8;
-/** アイコンの屋根の頂点（基準点からの画面 px。上が負） */
-export const BUILDING_ICON_TOP_PX = -(
-  BUILDING_ICON_LIFT_PX +
-  BUILDING_ICON_HEIGHT_PX +
-  BUILDING_ICON_HALF_WIDTH_PX * 0.5
-);
+export const BUILDING_ICON_SIZE_PX = 14;
+/** 目印の上端（基準点からの画面 px。上が負） */
+export const BUILDING_ICON_TOP_PX = -(BUILDING_ICON_SIZE_PX + 2);
 
 export interface Building {
   poi: Poi;

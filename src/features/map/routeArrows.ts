@@ -1,4 +1,4 @@
-import type { ScreenPoint } from './iso';
+import type { ScreenPoint } from './projection';
 
 /** 経路に沿って一定間隔（画面 px）で置く進行方向の矢印 */
 export function routeArrows(

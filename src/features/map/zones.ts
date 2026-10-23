@@ -1,5 +1,6 @@
 import type { AreaId, MapNode } from '../../domain/types';
-import { project, type ScreenPoint } from './iso';
+import type { Basemap } from '../../data/types';
+import { project, type ScreenPoint } from './projection';
 
 /** エリアの地下ゾーン。スクリーン座標のポリゴンとラベル位置を持つ */
 export interface AreaZone {
@@ -41,12 +42,12 @@ function paddedHull(points: ScreenPoint[], padding: number): ScreenPoint[] {
     expanded.push(
       { px: px + padding, py },
       { px: px - padding, py },
-      { px, py: py + padding * 0.6 },
-      { px, py: py - padding * 0.6 },
-      { px: px + padding * 0.7, py: py + padding * 0.45 },
-      { px: px - padding * 0.7, py: py + padding * 0.45 },
-      { px: px + padding * 0.7, py: py - padding * 0.45 },
-      { px: px - padding * 0.7, py: py - padding * 0.45 },
+      { px, py: py + padding },
+      { px, py: py - padding },
+      { px: px + padding * 0.7, py: py + padding * 0.7 },
+      { px: px - padding * 0.7, py: py + padding * 0.7 },
+      { px: px + padding * 0.7, py: py - padding * 0.7 },
+      { px: px - padding * 0.7, py: py - padding * 0.7 },
     );
   }
   return convexHull(expanded);
@@ -56,7 +57,7 @@ function paddedHull(points: ScreenPoint[], padding: number): ScreenPoint[] {
  * エリアごとの地下ゾーンポリゴンを作る。
  * 地上出口ノードはゾーンの形に含めない（地下街の範囲を示すため）。
  */
-export function buildAreaZones(nodes: MapNode[], padding = 55): AreaZone[] {
+export function buildAreaZones(nodes: MapNode[], padding = 30): AreaZone[] {
   const byArea = new Map<AreaId, ScreenPoint[]>();
   for (const node of nodes) {
     if (node.kind === 'exit') continue;
@@ -81,4 +82,28 @@ export function buildAreaZones(nodes: MapNode[], padding = 55): AreaZone[] {
     });
   }
   return zones;
+}
+
+/**
+ * 地図に描くエリア。地下街の床の形（OSM のポリゴン）があればそれを使い、ない地下街（阪急三番街など）は
+ * 通路の点のまわりを囲む。駅の構内は範囲が広く地図を覆ってしまうため描かない。
+ */
+export function buildMapZones(nodes: MapNode[], basemap: Basemap): AreaZone[] {
+  const malls: AreaZone[] = basemap.malls.map(({ area, points }) => {
+    const pts: ScreenPoint[] = [];
+    for (let i = 0; i < points.length; i += 2) pts.push(project(points[i], points[i + 1]));
+    return {
+      area,
+      points: pts.map((p) => `${p.px},${p.py}`).join(' '),
+      center: {
+        px: pts.reduce((sum, p) => sum + p.px, 0) / pts.length,
+        py: pts.reduce((sum, p) => sum + p.py, 0) / pts.length,
+      },
+    };
+  });
+  const withPolygon = new Set(malls.map((zone) => zone.area));
+  const others = buildAreaZones(nodes).filter(
+    (zone) => zone.area !== 'station' && !withPolygon.has(zone.area),
+  );
+  return [...malls, ...others];
 }
