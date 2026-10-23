@@ -61,6 +61,13 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
     expect(screen.queryByTestId('first-person')).not.toBeInTheDocument();
     await user.click(screen.getByRole('button', { name: '一人称' }));
     expect(screen.getByTestId('first-person')).toBeInTheDocument();
+    // 一人称の表示の左上に小さな地図とステップ番号が出て、押すと全体の地図を開く
+    expect(within(screen.getByTestId('first-person')).getByText(/^1 \/ \d+$/)).toBeInTheDocument();
+    const miniMap = screen.getByTestId('mini-map');
+    expect(miniMap.querySelector('.mini-map-step')).not.toBeNull();
+    await user.click(miniMap);
+    expect(screen.queryByTestId('first-person')).not.toBeInTheDocument();
+    await user.click(screen.getByRole('button', { name: '一人称' }));
 
     // 6. 経路シートを閉じても案内は続き、バナーから再表示できる
     await user.click(

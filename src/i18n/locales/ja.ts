@@ -89,6 +89,7 @@ export const ja = {
     exit: '{{name}} 出口',
     passage: '脇道（{{name}}）',
     showMap: '地図で見る',
+    openMap: '全体の地図を開く',
     showFirstPerson: '一人称',
   },
   route: {

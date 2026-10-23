@@ -67,4 +67,18 @@ describe('FirstPersonView', () => {
     await userEvent.setup().click(screen.getByRole('button', { name: '地図で見る' }));
     expect(onShowMap).toHaveBeenCalled();
   });
+
+  it('shows the step number and the mini map slot next to the next move', () => {
+    render(
+      <FirstPersonView
+        sideView={sideView}
+        step={{ fromNodeId: 'a', atNodeId: 'b', action: 'left', distanceM: 20 }}
+        stepLabel="2 / 5"
+        miniMap={<div data-testid="slot" />}
+        onShowMap={() => {}}
+      />,
+    );
+    expect(screen.getByText('2 / 5')).toBeInTheDocument();
+    expect(screen.getByTestId('slot')).toBeInTheDocument();
+  });
 });

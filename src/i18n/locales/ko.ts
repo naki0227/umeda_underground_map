@@ -95,6 +95,7 @@ export const ko: Resource = {
     exit: '{{name}} 출구',
     passage: '옆길 ({{name}})',
     showMap: '지도 보기',
+    openMap: '전체 지도 열기',
     showFirstPerson: '1인칭',
   },
   route: {

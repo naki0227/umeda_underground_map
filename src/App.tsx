@@ -17,6 +17,7 @@ import { useMapNavigation } from './features/navigation/useMapNavigation';
 import { LocateScreen } from './features/locate/LocateScreen';
 import { useInitialGeolocation } from './features/locate/useGeolocation';
 import { FirstPersonView } from './features/route/FirstPersonView';
+import { MiniMap } from './features/route/MiniMap';
 import { RouteScreen } from './features/route/RouteScreen';
 import { SearchBar } from './features/search/SearchBar';
 import { SpotsSheet } from './features/spots/SpotsSheet';
@@ -75,7 +76,13 @@ export default function App() {
     const nodeIds = stepNodeIds(route, step);
     // 次の区間で進む点（曲がり角の先）は、脇の通路として数えない
     const next = route.nodeIds[route.nodeIds.lastIndexOf(step.atNodeId) + 1];
-    return { step, nodeIds, next: next === undefined ? [] : [next] };
+    return {
+      step,
+      nodeIds,
+      next: next === undefined ? [] : [next],
+      index: Math.min(stepIndex, steps.length - 1),
+      total: steps.length,
+    };
   }, [graph, route, stepIndex, nav.sheet]);
   const focusNodeIds = currentStep?.nodeIds;
   const sideView = useMemo(
@@ -202,16 +209,34 @@ export default function App() {
         </BottomSheet>
       )}
 
-      {nav.sheet === 'route' && firstPerson && currentStep !== null && sideView !== null && (
-        <FirstPersonView
-          sideView={sideView}
-          step={currentStep.step}
-          onShowMap={() => setFirstPerson(false)}
-        />
-      )}
+      {nav.sheet === 'route' &&
+        firstPerson &&
+        currentStep !== null &&
+        sideView !== null &&
+        route !== null &&
+        nav.destination !== null && (
+          <FirstPersonView
+            sideView={sideView}
+            step={currentStep.step}
+            stepLabel={t('route.stepCounter', {
+              current: currentStep.index + 1,
+              total: currentStep.total,
+            })}
+            onShowMap={() => setFirstPerson(false)}
+            miniMap={
+              <MiniMap
+                graph={graph}
+                routeNodeIds={route.nodeIds}
+                stepNodeIds={currentStep.nodeIds}
+                destinationNodeId={nav.destination.nodeId}
+                onOpenMap={() => setFirstPerson(false)}
+              />
+            }
+          />
+        )}
 
       {nav.sheet === 'route' && nav.currentNodeId !== null && nav.destination !== null && (
-        <BottomSheet label={t('route.title')}>
+        <BottomSheet label={t('route.title')} initialSnap={firstPerson ? 'peek' : 'half'}>
           <RouteScreen
             graph={graph}
             fromNodeId={nav.currentNodeId}
