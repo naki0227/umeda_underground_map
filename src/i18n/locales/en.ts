@@ -94,6 +94,7 @@ export const en: Resource = {
     exit: 'Exit {{name}}',
     passage: 'Side passage ({{name}})',
     showMap: 'Show map',
+    openMap: 'Open the full map',
     showFirstPerson: 'First person',
   },
   route: {

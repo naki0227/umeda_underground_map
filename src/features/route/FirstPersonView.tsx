@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { RouteStep } from '../../domain/directions';
 import type { SideItem, SideView } from '../../domain/sideView';
@@ -7,6 +8,10 @@ interface Props {
   sideView: SideView;
   step: RouteStep;
   onShowMap: () => void;
+  /** 左上に出す小さな地図 */
+  miniMap?: ReactNode;
+  /** 「1 / 4」のようなステップの番号 */
+  stepLabel?: string;
 }
 
 /** 正面の消失点（SVG 座標） */
@@ -44,7 +49,7 @@ const depthOf = (distanceM: number, totalM: number) =>
  * 案内中の一人称の表示。進む方向を正面にした通路の絵の左右の壁に、近い順に店・出口・脇の通路を
  * 看板で出し、その下に左右の一覧を並べる（左右を見比べながら進めるように）
  */
-export function FirstPersonView({ sideView, step, onShowMap }: Props) {
+export function FirstPersonView({ sideView, step, onShowMap, miniMap, stepLabel }: Props) {
   const { t, i18n } = useTranslation();
   const label = (item: SideItem) => {
     const name = localized(item.name, i18n.language);
@@ -112,16 +117,22 @@ export function FirstPersonView({ sideView, step, onShowMap }: Props) {
   return (
     <div className="first-person" data-testid="first-person">
       <div className="fpv-header">
-        <span className="fpv-ahead">
-          <span aria-hidden>{ACTION_ICON[step.action]}</span>{' '}
-          {t('fpv.ahead', {
-            distance: Math.round(step.distanceM),
-            action: t(ACTION_KEY[step.action]),
-          })}
-        </span>
-        <button type="button" className="chip" onClick={onShowMap}>
-          {t('fpv.showMap')}
-        </button>
+        {miniMap}
+        <div className="fpv-next">
+          {stepLabel !== undefined && <span className="fpv-step">{stepLabel}</span>}
+          <span className="fpv-ahead">
+            <span className="fpv-ahead-icon" aria-hidden>
+              {ACTION_ICON[step.action]}
+            </span>
+            {t('fpv.ahead', {
+              distance: Math.round(step.distanceM),
+              action: t(ACTION_KEY[step.action]),
+            })}
+          </span>
+          <button type="button" className="chip" onClick={onShowMap}>
+            {t('fpv.showMap')}
+          </button>
+        </div>
       </div>
       <svg className="fpv-scene" viewBox="0 0 360 200" aria-hidden>
         <polygon
