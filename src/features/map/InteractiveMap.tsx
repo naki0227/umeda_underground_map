@@ -66,6 +66,8 @@ const TOP_INSET = 0.16;
 const SELECT_ZOOM_K = 1.0;
 /** 場所を選んで拡大するときに見せる範囲（マップ単位） */
 const SELECT_VIEW_RADIUS = 110;
+/** 中くらいの拡大で、選んだ場所・現在地・目的地のまわりの出口番号を出す範囲（m） */
+const IMPORTANT_EXIT_RADIUS_M = 60;
 /** 経路の進行方向の矢印の間隔（画面 px） */
 const ARROW_SPACING_PX = 70;
 /** GPS 誤差円の表示上の最小・最大半径（m） */
@@ -259,8 +261,19 @@ function InteractiveMapView({
   }, [graph, screenOf]);
 
   /** エスカレーター・エレベーター・階段のあるエッジの中点チップ */
+  /** 経路が通る線（"a|b" の両向き） */
+  const routeEdgeKeys = useMemo(() => {
+    const keys = new Set<string>();
+    const ids = routeNodeIds ?? [];
+    for (let i = 0; i < ids.length - 1; i += 1) {
+      keys.add(`${ids[i]}|${ids[i + 1]}`);
+      keys.add(`${ids[i + 1]}|${ids[i]}`);
+    }
+    return keys;
+  }, [routeNodeIds]);
+
   const facilities = useMemo(() => {
-    const result: { key: string; label: string; mid: ScreenPoint }[] = [];
+    const result: { key: string; label: string; mid: ScreenPoint; onRoute: boolean }[] = [];
     for (const [fromId, edges] of graph.adjacency) {
       for (const edge of edges) {
         if (fromId >= edge.to || !floorView.isEdgeOnFloor(fromId, edge.to, floor)) continue;
@@ -275,11 +288,12 @@ function InteractiveMapView({
           key: `${fromId}--${edge.to}`,
           label: t(`facilityShort.${attr}`),
           mid: { px: (a.px + b.px) / 2, py: (a.py + b.py) / 2 },
+          onRoute: routeEdgeKeys.has(`${fromId}|${edge.to}`),
         });
       }
     }
     return result;
-  }, [graph, screenOf, t, floorView, floor]);
+  }, [graph, screenOf, t, floorView, floor, routeEdgeKeys]);
 
   /** 経路をいまの階に出る区間と出ない区間に分ける（ほかの階の区間は点線で薄く描く） */
   const routeRuns = useMemo(() => {
@@ -356,6 +370,20 @@ function InteractiveMapView({
     [nodes, floorView, floor],
   );
   const routeSet = useMemo(() => new Set(routeNodeIds ?? []), [routeNodeIds]);
+  /** 中くらいの拡大で番号を出す出口: 経路の上と、選んだ場所・現在地・目的地の近く */
+  const importantExitIds = useMemo(() => {
+    const anchors = [selectedNodeId, currentNodeId, destinationNodeId]
+      .map((id) => (id ? graph.nodes.get(id) : undefined))
+      .filter((n): n is MapNode => n !== undefined);
+    const ids = new Set<NodeId>();
+    for (const exit of exits) {
+      const near = anchors.some(
+        (a) => Math.hypot(a.x - exit.x, a.y - exit.y) <= IMPORTANT_EXIT_RADIUS_M,
+      );
+      if (routeSet.has(exit.id) || near) ids.add(exit.id);
+    }
+    return ids;
+  }, [exits, routeSet, selectedNodeId, currentNodeId, destinationNodeId, graph]);
   const language = i18n.language;
   const nameOf = (text: LocalizedText) => localized(text, language);
   const exitLabel = (node: MapNode) => node.exitNo ?? localized(node.name, language);
@@ -375,18 +403,41 @@ function InteractiveMapView({
     const boxes = buildMapLabelBoxes({
       k,
       language,
-      exits: level === 'overview' ? [] : exits,
+      exits:
+        level === 'overview'
+          ? []
+          : level === 'detail'
+            ? exits
+            : exits.filter((n) => importantExitIds.has(n.id)),
       pins,
       screenOf,
       buildings,
-      facilities: level === 'overview' ? [] : facilities,
+      facilities:
+        level === 'detail'
+          ? facilities
+          : level === 'normal'
+            ? facilities.filter((f) => f.onRoute)
+            : [],
       zones,
       areaName: (area) => t(`area.${area}`),
       focusShops: labelShops.focus.map(toLabel),
       otherShops: labelShops.others.map(toLabel),
     });
     return placeLabelLayout(boxes);
-  }, [k, level, exits, pins, screenOf, buildings, facilities, zones, labelShops, language, t]);
+  }, [
+    k,
+    level,
+    exits,
+    importantExitIds,
+    pins,
+    screenOf,
+    buildings,
+    facilities,
+    zones,
+    labelShops,
+    language,
+    t,
+  ]);
 
   const hasRoute = routePoints !== null;
   const selectedPoint = selectedNodeId !== null ? screenOf.get(selectedNodeId) : undefined;
@@ -495,7 +546,7 @@ function InteractiveMapView({
                 </Fixed>
               );
             })}
-        {level !== 'overview' &&
+        {level === 'detail' &&
           [...shopsByNode.entries()].flatMap(([nodeId, group]) => {
             const p = screenOf.get(nodeId);
             if (!p) return [];
