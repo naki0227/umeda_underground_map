@@ -6,7 +6,9 @@
 // 抽出データの取得手順は scripts/osm/README.md を参照。
 // 出力は © OpenStreetMap contributors の ODbL データベースの派生物。
 import { writeFileSync } from 'node:fs';
+import { dirname, join } from 'node:path';
 import { parseOsm } from './parseOsm.mjs';
+import { buildBasemap } from './basemap.mjs';
 import { buildWalkGraph, components, distanceM, simplify } from './network.mjs';
 import { AREA_POLYGONS, BUILDING_ANCHORS, ORIGIN, PLACES, POIS, REGION } from './overlay.mjs';
 
@@ -801,6 +803,30 @@ export const osmData: GeneratedMapData = {
 };
 `,
 );
+// ---- 8. 地図の下地（地上の道路・建物の輪郭、地下街の床の形）。通路網のまわり 150m まで
+const BASEMAP_MARGIN_M = 150;
+const planeOfNodes = nodes.map((n) => toPlane({ lat: n.lat, lon: n.lng }));
+const basemap = buildBasemap(osm, {
+  toPlane,
+  bounds: {
+    minX: Math.min(...planeOfNodes.map((p) => p.x)) - BASEMAP_MARGIN_M,
+    maxX: Math.max(...planeOfNodes.map((p) => p.x)) + BASEMAP_MARGIN_M,
+    minY: Math.min(...planeOfNodes.map((p) => p.y)) - BASEMAP_MARGIN_M,
+    maxY: Math.max(...planeOfNodes.map((p) => p.y)) + BASEMAP_MARGIN_M,
+  },
+  malls: AREA_POLYGONS,
+});
+writeFileSync(
+  join(dirname(output), 'basemap.ts'),
+  `// このファイルは scripts/osm/build.mjs が生成する。手で編集しないこと。
+// データ: © OpenStreetMap contributors（ODbL 1.0, https://www.openstreetmap.org/copyright）
+// 座標は平面メートル（x=東, y=北）の [x, y, x, y, ...]
+import type { Basemap } from '../types';
+
+export const basemap: Basemap = ${JSON.stringify(basemap)};
+`,
+);
+
 console.log(
-  `nodes ${nodes.length} (exits ${nodes.filter((n) => n.kind === 'exit').length}), edges ${edges.length}, shops ${shops.length}, pois ${pois.length}, fragment links ${fragmentLinks}, dead-end links ${deadEndLinks}, building links ${buildingLinks}, building shops ${buildingShopCount}`,
+  `nodes ${nodes.length} (exits ${nodes.filter((n) => n.kind === 'exit').length}), edges ${edges.length}, shops ${shops.length}, pois ${pois.length}, fragment links ${fragmentLinks}, dead-end links ${deadEndLinks}, building links ${buildingLinks}, building shops ${buildingShopCount}, basemap: ${basemap.malls.length} malls, ${basemap.buildings.length} buildings, ${basemap.majorRoads.length + basemap.minorRoads.length} roads`,
 );

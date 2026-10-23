@@ -38,3 +38,14 @@ export interface GeneratedMapData {
   shops: Shop[];
   pois: GeneratedPoi[];
 }
+
+/** 地図の下地。座標は平面メートル（x=東, y=北）を並べた [x, y, x, y, ...] */
+export interface Basemap {
+  /** 地下街の床の形（OSM の地下街ポリゴン） */
+  malls: { area: AreaId; points: number[] }[];
+  /** 地上の建物の輪郭 */
+  buildings: number[][];
+  /** 地上の幹線道路・その他の道路 */
+  majorRoads: number[][];
+  minorRoads: number[][];
+}

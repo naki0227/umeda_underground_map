@@ -3,8 +3,8 @@ import { umedaMap } from '../../../data/map';
 import { projectToPlane } from '../../../domain/geo';
 import { buildGraph } from '../../../domain/graph';
 import { buildBuildings } from '../ground';
-import { project, type ScreenPoint } from '../iso';
-import { placeLabels, type LabelBox } from '../labelLayout';
+import { project, type ScreenPoint } from '../projection';
+import { placeLabelLayout, placeLabels, type LabelBox } from '../labelLayout';
 import { buildMapLabelBoxes } from '../mapLabels';
 import { buildAreaZones } from '../zones';
 
@@ -33,8 +33,15 @@ describe('map labels with real data', () => {
   // k = 画面1pxあたりのマップ単位。大きいほど引いた表示
   it.each([0.5, 1, 2, 4, 6])('never shows overlapping labels at zoom k=%s', (k) => {
     const boxes = boxesAt(k);
-    const visible = placeLabels(boxes);
-    const shown = boxes.filter((b) => visible.has(b.id));
+    const layout = placeLabelLayout(boxes);
+    // 代わりの位置に置いたラベルは、その位置で重なりを調べる
+    const shown = boxes
+      .filter((b) => layout.has(b.id))
+      .map((b) => {
+        const alt =
+          (layout.get(b.id) ?? 0) > 0 ? b.alternatives?.[(layout.get(b.id) ?? 1) - 1] : undefined;
+        return alt ? { ...b, x: b.x + alt.dx, y: b.y + alt.dy } : b;
+      });
     for (let i = 0; i < shown.length; i += 1) {
       for (let j = i + 1; j < shown.length; j += 1) {
         expect(overlap(shown[i], shown[j]), `${shown[i].id} vs ${shown[j].id}`).toBe(false);
@@ -49,7 +56,8 @@ describe('map labels with real data', () => {
     const visible = placeLabels(boxes);
     // 建物名どうしは重ならない（出口番号を優先して隠れることはある）
     const buildings = boxes.filter((b) => b.id.startsWith('building:'));
-    const buildingsOnly = placeLabels(buildings);
+    // 同じ建物の中のスポット（阪急うめだ本店とツインタワーズ・ノースなど）は上下に分けて置く
+    const buildingsOnly = placeLabelLayout(buildings);
     expect(buildings.filter((b) => !buildingsOnly.has(b.id)).map((b) => b.id)).toEqual([]);
     const exits = boxes.filter((b) => b.id.startsWith('exit:'));
     const shown = exits.filter((b) => visible.has(b.id)).length;

@@ -7,8 +7,9 @@ import { detailLevel } from './detail';
 import { buildFloorView, floorForNodes, splitRouteByFloor } from './floorView';
 import { FloorSwitcher } from './FloorSwitcher';
 import { buildBuildings } from './ground';
-import { project, SLAB_DEPTH, type ScreenPoint } from './iso';
-import { placeLabels } from './labelLayout';
+import { MapBasemap } from './MapBasemap';
+import { project, type ScreenPoint } from './projection';
+import { placeLabelLayout } from './labelLayout';
 import { MapGroundLayer } from './MapGroundLayer';
 import {
   buildMapLabelBoxes,
@@ -23,7 +24,8 @@ import { MapMarkers } from './MapMarkers';
 import { pressable } from './pressable';
 import { routeArrows } from './routeArrows';
 import { useMapViewport, type Bounds, type Rect, type ViewInsets } from './useMapViewport';
-import { buildAreaZones } from './zones';
+import { buildMapZones } from './zones';
+import { basemap } from '../../data/generated/basemap';
 
 /** マップ上で選択できる「場所」。POI・店・出口/駅を統一的に扱う */
 export interface Place {
@@ -69,9 +71,6 @@ const ARROW_SPACING_PX = 70;
 /** GPS 誤差円の表示上の最小・最大半径（m） */
 const GPS_RADIUS_MIN_M = 20;
 const GPS_RADIUS_MAX_M = 300;
-/** 地面の円を等角投影したときの楕円の半径係数 */
-const ISO_CIRCLE_RX = Math.SQRT2 * Math.cos(Math.PI / 6);
-const ISO_CIRCLE_RY = Math.SQRT2 * 0.5;
 
 const PADDING = 90;
 
@@ -84,7 +83,7 @@ const PADDING = 90;
 function shopOffset(index: number, count: number): { dx: number; dy: number } {
   if (count === 1) return { dx: 0, dy: 10 };
   const angle = (index / count) * Math.PI * 2;
-  return { dx: Math.cos(angle) * 14, dy: Math.sin(angle) * 8 + 4 };
+  return { dx: Math.cos(angle) * 12, dy: Math.sin(angle) * 12 };
 }
 
 /** 子要素を画面 px 単位で描くグループ（ズームしても見た目の大きさが変わらない） */
@@ -153,11 +152,7 @@ function InteractiveMapView({
   const chooseFloor = (next: FloorId) => setChosenFloor({ floor: next, context: floorContext });
   const isNodeOnFloor = (id: NodeId) => floorView.isNodeOnFloor(id, floor);
 
-  const zones = useMemo(() => {
-    const list = buildAreaZones(nodes);
-    // 駅構内ゾーンは広く重なるので最背面に敷く
-    return list.sort((a, b) => (a.area === 'station' ? -1 : b.area === 'station' ? 1 : 0));
-  }, [nodes]);
+  const zones = useMemo(() => buildMapZones(nodes, basemap), [nodes]);
 
   const bounds = useMemo<Bounds>(() => {
     const xs: number[] = [];
@@ -390,7 +385,7 @@ function InteractiveMapView({
       focusShops: labelShops.focus.map(toLabel),
       otherShops: labelShops.others.map(toLabel),
     });
-    return placeLabels(boxes);
+    return placeLabelLayout(boxes);
   }, [k, level, exits, pins, screenOf, buildings, facilities, zones, labelShops, language, t]);
 
   const hasRoute = routePoints !== null;
@@ -409,7 +404,9 @@ function InteractiveMapView({
         className={hasRoute ? 'has-route' : undefined}
         {...viewport.handlers}
       >
-        {/* エリアの地下ゾーン */}
+        {/* 下地: 地上の建物の輪郭と道路 */}
+        <MapBasemap basemap={basemap} />
+        {/* 地下街の床（地下街ごとの色） */}
         {zones.map((zone) => (
           <polygon
             key={zone.area}
@@ -428,19 +425,8 @@ function InteractiveMapView({
             </Fixed>
           ))}
 
-        {/* 地下フロア: 通路スラブ（側面→上面） */}
+        {/* 地下の通路（実際の幅に近い太さの線） */}
         <g className="map-network">
-          {slabs.map(({ key, from, to, a, b }) => (
-            <polygon
-              key={`side-${key}`}
-              className={
-                floorView.isEdgeOnFloor(from, to, floor)
-                  ? 'map-edge-side'
-                  : 'map-edge-side off-floor'
-              }
-              points={`${a.px},${a.py} ${b.px},${b.py} ${b.px},${b.py + SLAB_DEPTH} ${a.px},${a.py + SLAB_DEPTH}`}
-            />
-          ))}
           {slabs.map(({ key, from, to, a, b }) => (
             <line
               key={`top-${key}`}
@@ -492,7 +478,7 @@ function InteractiveMapView({
             .filter((n) => n.kind === 'junction' && isNodeOnFloor(n.id))
             .map((node) => (
               <Fixed key={node.id} at={at(node.id)} k={k}>
-                <ellipse className="map-node" rx={4} ry={2.5} />
+                <circle className="map-node" r={3} />
               </Fixed>
             ))}
         {level !== 'overview' &&
@@ -517,19 +503,18 @@ function InteractiveMapView({
               const { dx, dy } = shopOffset(index, group.length);
               return (
                 <Fixed key={shop.id} at={p} k={k}>
-                  <ellipse
+                  <circle
                     className="map-shop-pin"
                     data-shop-id={shop.id}
                     cx={dx}
                     cy={dy}
-                    rx={6}
-                    ry={3.5}
+                    r={4.5}
                     {...pressable(nameOf(shop.name), () =>
                       pick({ nodeId, name: shop.name, aboveGround: false }),
                     )}
                   >
                     <title>{nameOf(shop.name)}</title>
-                  </ellipse>
+                  </circle>
                 </Fixed>
               );
             });
@@ -563,7 +548,7 @@ function InteractiveMapView({
                 pick({ nodeId: node.id, name: node.name, aboveGround: false }),
               )}
             >
-              <ellipse rx={7} ry={4} />
+              <circle r={6} />
               {visibleLabels.has(`pin:${node.id}`) && (
                 <text className="map-label" x={10} y={-6} pointerEvents="none">
                   {nameOf(node.name)}
@@ -621,14 +606,14 @@ function InteractiveMapView({
         <MapGroundLayer
           buildings={buildings}
           unitsPerPixel={k}
-          visibleLabelIds={visibleLabels}
+          labelLayout={visibleLabels}
           linkedPoiIds={linked}
           onPick={pick}
         />
         {selectedPoint !== undefined && (
           <Fixed at={selectedPoint} k={k}>
             <g className="selection-ring" data-testid="map-selection" pointerEvents="none">
-              <ellipse rx={20} ry={12} />
+              <circle r={16} />
             </g>
           </Fixed>
         )}
@@ -712,13 +697,7 @@ function GpsHint({
   const press = onSelect !== undefined ? pressable(label, onSelect) : {};
   return (
     <g className="gps-hint" data-testid="gps-hint" {...press}>
-      <ellipse
-        className="gps-hint-area"
-        cx={center.px}
-        cy={center.py}
-        rx={r * ISO_CIRCLE_RX}
-        ry={r * ISO_CIRCLE_RY}
-      />
+      <circle className="gps-hint-area" cx={center.px} cy={center.py} r={r} />
       <Fixed at={center} k={k}>
         <circle className="gps-hint-dot" r={6} />
         <text className="map-label gps-hint-label" x={10} y={4} pointerEvents="none">

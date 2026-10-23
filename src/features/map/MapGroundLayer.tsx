@@ -1,41 +1,31 @@
 import { useTranslation } from 'react-i18next';
 import { localized } from '../../i18n';
-import {
-  BUILDING_ICON_HALF_WIDTH_PX,
-  BUILDING_ICON_HEIGHT_PX,
-  BUILDING_ICON_LIFT_PX,
-  type Building,
-} from './ground';
-import { buildingFaces } from './iso';
+import { BUILDING_ICON_SIZE_PX, BUILDING_ICON_TOP_PX, type Building } from './ground';
 import type { Place } from './InteractiveMap';
-import { buildingLabelYPx } from './mapLabels';
+import { BUILDING_LABEL_BELOW_DY_PX, buildingLabelYPx } from './mapLabels';
 import { pressable } from './pressable';
 
 interface Props {
   buildings: Building[];
   /** 画面 1px あたりのマップ単位（アイコン・ラベルを一定サイズで描く） */
   unitsPerPixel: number;
-  /** 重なり判定で表示が決まったラベルの id（`building:<poiId>`） */
-  visibleLabelIds: Set<string>;
+  /** 重なり判定で表示が決まったラベルの id（`building:<poiId>`）→ 位置（0 = 目印の上、1 = 下） */
+  labelLayout: ReadonlyMap<string, number>;
   /** 最寄り出口までの点線を出す建物（選択中・目的地） */
   linkedPoiIds: Set<string>;
   onPick: (place: Place) => void;
 }
 
-/** 地上レイヤー: 建物アイコンと、選んだ建物から最寄り出口への点線 */
+/** 地上レイヤー: 地上スポットの目印と、選んだスポットから最寄り出口への点線 */
 export function MapGroundLayer({
   buildings,
   unitsPerPixel: k,
-  visibleLabelIds,
+  labelLayout,
   linkedPoiIds,
   onPick,
 }: Props) {
   const { i18n } = useTranslation();
-  const faces = buildingFaces(
-    { px: 0, py: -BUILDING_ICON_LIFT_PX },
-    BUILDING_ICON_HALF_WIDTH_PX,
-    BUILDING_ICON_HEIGHT_PX,
-  );
+  const size = BUILDING_ICON_SIZE_PX;
   return (
     <>
       {buildings
@@ -66,16 +56,38 @@ export function MapGroundLayer({
             )}
           >
             {/* タップしやすいよう、見た目より広い透明な当たり判定 */}
-            <rect className="hit-area" x={-18} y={-34} width={36} height={40} />
-            <ellipse className="building-shadow" rx={9} ry={4.5} />
-            <polygon className="building-left" points={faces.left} />
-            <polygon className="building-right" points={faces.right} />
-            <polygon className="building-top" points={faces.top} />
-            {(selected || visibleLabelIds.has(`building:${poi.id}`)) && (
+            <rect
+              className="hit-area"
+              x={-18}
+              y={BUILDING_ICON_TOP_PX - 6}
+              width={36}
+              height={size + 14}
+            />
+            <circle className="building-shadow" r={3} />
+            <rect
+              className="building-top"
+              x={-size / 2}
+              y={BUILDING_ICON_TOP_PX}
+              width={size}
+              height={size}
+              rx={3}
+            />
+            <rect
+              className="building-window"
+              x={-2.5}
+              y={BUILDING_ICON_TOP_PX + 4}
+              width={5}
+              height={6}
+              rx={1}
+            />
+            {(selected || labelLayout.has(`building:${poi.id}`)) && (
               <text
                 className="map-label building-label"
                 pointerEvents="none"
-                y={buildingLabelYPx}
+                y={
+                  buildingLabelYPx +
+                  (labelLayout.get(`building:${poi.id}`) === 1 ? BUILDING_LABEL_BELOW_DY_PX : 0)
+                }
                 textAnchor="middle"
               >
                 {name}
