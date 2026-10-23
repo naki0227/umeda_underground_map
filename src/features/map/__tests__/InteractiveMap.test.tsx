@@ -65,9 +65,9 @@ describe('InteractiveMap', { timeout: 15_000 }, () => {
       expect.objectContaining({ nodeId: 'wt-izumi', aboveGround: false }),
     );
 
-    // 店の点は全体表示では出さないので、拡大してから押す
+    // 店の点は詳細表示（いちばん拡大したとき）だけ出すので、拡大してから押す
     expect(container.querySelector('[data-shop-id="wt-shop-starbucks"]')).toBeNull();
-    for (let i = 0; i < 3; i += 1) await user.click(screen.getByRole('button', { name: '拡大' }));
+    for (let i = 0; i < 6; i += 1) await user.click(screen.getByRole('button', { name: '拡大' }));
     await user.click(container.querySelector('[data-shop-id="wt-shop-starbucks"]') as Element);
     expect(onSelectPlace).toHaveBeenLastCalledWith(expect.objectContaining({ nodeId: 'wt-c4' }));
   });
@@ -204,5 +204,33 @@ describe('InteractiveMap', { timeout: 15_000 }, () => {
       />,
     );
     expect(screen.getByTestId('map-view')).toHaveAttribute('data-floor', 'B2');
+  });
+
+  it('shows exit numbers only along the route at the middle zoom level', async () => {
+    const user = userEvent.setup();
+    const route = findRoute(graph, 'wt-izumi', 'ex-C-93');
+    const { container } = render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        routeNodeIds={route?.nodeIds}
+        onSelectPlace={() => {}}
+      />,
+    );
+    const map = screen.getByTestId('map-view');
+    for (let i = 0; i < 6 && map.getAttribute('data-detail') !== 'normal'; i += 1) {
+      await user.click(screen.getByRole('button', { name: '拡大' }));
+    }
+    expect(map).toHaveAttribute('data-detail', 'normal');
+    const badges = [...container.querySelectorAll('.map-exit-badge:not(.compact)')];
+    expect(badges.length).toBeGreaterThan(0);
+    const onRoute = new Set(route?.nodeIds);
+    for (const badge of badges) {
+      expect(
+        onRoute.has(badge.getAttribute('data-node-id') ?? ''),
+        badge.getAttribute('data-node-id') ?? '',
+      ).toBe(true);
+    }
   });
 });

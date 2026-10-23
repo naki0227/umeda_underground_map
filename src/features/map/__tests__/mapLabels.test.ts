@@ -64,11 +64,20 @@ describe('map labels with real data', () => {
     expect(shown / exits.length).toBeGreaterThanOrEqual(0.9);
   });
 
-  it('keeps exit numbers ahead of other labels when zoomed out', () => {
-    const boxes = boxesAt(6);
+  it('keeps plazas, gates and mall names ahead of exit numbers and buildings', () => {
+    const boxes = boxesAt(2);
     const visible = placeLabels(boxes);
-    const exitsShown = boxes.filter((b) => b.id.startsWith('exit:') && visible.has(b.id));
-    expect(exitsShown.length).toBeGreaterThan(0);
+    const shown = boxes.filter((b) => visible.has(b.id));
+    // 隠れた広場・改札・地下街の名前は、同じかより優先度の高いラベルに押しのけられたもの
+    // （出口番号や建物名に押しのけられていない）
+    for (const hidden of boxes.filter((b) => /^(pin|zone):/.test(b.id) && !visible.has(b.id))) {
+      const blockers = shown.filter((b) => overlap(b, hidden));
+      expect(blockers.length, hidden.id).toBeGreaterThan(0);
+      expect(
+        blockers.some((b) => b.priority >= hidden.priority),
+        `${hidden.id} blocked by ${blockers.map((b) => b.id).join(',')}`,
+      ).toBe(true);
+    }
   });
 });
 

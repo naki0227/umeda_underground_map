@@ -44,8 +44,8 @@ export interface MapLabelInput {
 }
 
 /**
- * 重なり判定用のラベル矩形を作る。優先度: 出口番号 > 案内中の沿道の店名 > 建物名 > 広場名 > 改札名 >
- * 設備チップ > エリア名。id は `exit:` `shop:` `building:` `pin:` `facility:` `zone:` + 元の id。
+ * 重なり判定用のラベル矩形を作る。優先度: 広場名 > 改札名 > 地下街の名前 > 案内中の沿道の店名 >
+ * 出口番号 > 建物名 > 店名（詳細表示）> 設備チップ。いつも見たい目印を先に置き、細かいものは空いた所に出す。id は `exit:` `shop:` `building:` `pin:` `facility:` `zone:` + 元の id。
  */
 export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
   const { k, language, exits, pins, screenOf, buildings, facilities, zones, areaName } = input;
@@ -70,7 +70,7 @@ export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
       y: y - EXIT_BADGE_HEIGHT_PX / 2,
       width,
       height: EXIT_BADGE_HEIGHT_PX,
-      priority: 3,
+      priority: 2,
     });
   }
   for (const { poi, base } of buildings) {
@@ -82,7 +82,7 @@ export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
       y: y + buildingLabelYPx - LABEL_FONT_PX,
       width,
       height: LABEL_FONT_PX + 2,
-      priority: 2,
+      priority: 1.5,
       // 上に置けなければ目印の下に置く（同じ建物の中のスポットどうしなど）
       alternatives: [{ dx: 0, dy: BUILDING_LABEL_BELOW_DY_PX }],
     });
@@ -111,7 +111,7 @@ export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
       y: y - 6 - LABEL_FONT_PX,
       width: textWidthPx(nameOf(node.name), LABEL_FONT_PX),
       height: LABEL_FONT_PX + 2,
-      priority: node.kind === 'landmark' ? 1.5 : 1,
+      priority: node.kind === 'landmark' ? 4 : 3.5,
     });
   }
   for (const { key, label, mid } of facilities) {
@@ -136,7 +136,7 @@ export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
       y: y - ZONE_FONT_PX,
       width,
       height: ZONE_FONT_PX + 2,
-      priority: 0,
+      priority: 3,
     });
   }
   return boxes;
