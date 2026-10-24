@@ -92,3 +92,35 @@ describe('mixColor', () => {
     expect(mixColor('#ff0000', '#0000ff', 0)).toBe('#ff0000');
   });
 });
+
+describe('buildScene floors and frontage', () => {
+  it('draws the stairs as steps going up and shows the floor sign', () => {
+    const scene = buildScene({
+      path: [
+        { x: 0, y: 0, z: 0 },
+        { x: 0, y: 12, z: 0 },
+        { x: 0, y: 20, z: 4.5 },
+        { x: 0, y: 40, z: 4.5 },
+      ],
+      items: [],
+      floorChange: { distanceM: 12, icon: '⬆', text: '階段でB1へ' },
+    });
+    // 段の縞（0.45m ごと）が床に並ぶ
+    expect(scene.polygons.filter((p) => p.key.startsWith('floor-')).length).toBeGreaterThan(20);
+    expect(scene.labels.find((l) => l.key === 'floor')?.text).toBe('階段でB1へ');
+  });
+
+  it('narrows crowded storefronts before pushing them back', () => {
+    // 3m おきに4店：間口を縮めれば、元の位置から大きくずらさずに並ぶ
+    const items = [0, 3, 6, 9].map((d, i) => shop(`s${i}`, 'left', 6 + d));
+    const scene = buildScene({ path, items });
+    const depths = items
+      .map((item) => scene.labels.find((l) => l.key === item.key)?.depthM ?? NaN)
+      .filter((d) => !Number.isNaN(d));
+    expect(depths.length).toBe(4);
+    // 間口を 3m に縮めるので、隣との差は約 3.6m（5m のままだと 5.6m ずつ奥へ押し出される）
+    for (let i = 1; i < depths.length - 1; i += 1) {
+      expect(depths[i] - depths[i - 1]).toBeLessThan(4.2);
+    }
+  });
+});

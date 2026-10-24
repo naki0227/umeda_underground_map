@@ -1,8 +1,13 @@
 import type { PlanePoint } from './perspective';
 
+/** 経路の点。z は床の高さ（m、階の移動で変わる） */
+export type PathPoint = PlanePoint & { z?: number };
+
 /** 通路の中心線（折れ線）と、起点からの距離 */
 export interface Corridor {
   points: PlanePoint[];
+  /** 各点の床の高さ（m） */
+  zs: number[];
   /** 各点までの距離（m） */
   cum: number[];
   length: number;
@@ -14,7 +19,7 @@ export interface Corridor {
 const MITER_LIMIT = 2.5;
 
 /** 折れ線を間引く（Douglas–Peucker）。OSM の細かい折れで壁ががたつかないように */
-export function simplifyPath(points: PlanePoint[], toleranceM: number): PlanePoint[] {
+function simplifyFlat<T extends PlanePoint>(points: T[], toleranceM: number): T[] {
   if (points.length <= 2) return points;
   const a = points[0];
   const b = points[points.length - 1];
@@ -34,9 +39,23 @@ export function simplifyPath(points: PlanePoint[], toleranceM: number): PlanePoi
   }
   if (farthest <= toleranceM) return [a, b];
   return [
-    ...simplifyPath(points.slice(0, index + 1), toleranceM).slice(0, -1),
-    ...simplifyPath(points.slice(index), toleranceM),
+    ...simplifyFlat(points.slice(0, index + 1), toleranceM).slice(0, -1),
+    ...simplifyFlat(points.slice(index), toleranceM),
   ];
+}
+
+/** 折れ線を間引く。床の高さが変わる点（階段・エスカレーターの上下）は必ず残す */
+export function simplifyPath<T extends PathPoint>(points: T[], toleranceM: number): T[] {
+  const z = (i: number) => points[i]?.z ?? 0;
+  const anchors = points
+    .map((_, i) => i)
+    .filter((i) => i === 0 || i === points.length - 1 || z(i) !== z(i - 1) || z(i) !== z(i + 1));
+  const out: T[] = [];
+  anchors.slice(1).forEach((end, k) => {
+    const part = simplifyFlat(points.slice(anchors[k], end + 1), toleranceM);
+    out.push(...(k === 0 ? part : part.slice(1)));
+  });
+  return out.length > 0 ? out : points.slice(0, 1);
 }
 
 const leftNormal = (a: PlanePoint, b: PlanePoint): PlanePoint => {
@@ -44,10 +63,25 @@ const leftNormal = (a: PlanePoint, b: PlanePoint): PlanePoint => {
   return { x: -(b.y - a.y) / length, y: (b.x - a.x) / length };
 };
 
-export function buildCorridor(input: PlanePoint[]): Corridor {
-  const points = input.filter(
-    (p, i) => i === 0 || Math.hypot(p.x - input[i - 1].x, p.y - input[i - 1].y) > 0.05,
-  );
+export function buildCorridor(input: PathPoint[]): Corridor {
+  // 重なった点は除く（ただし高さが変わる点＝エレベーターなどは残し、少しだけ前へずらす）
+  const points: PlanePoint[] = [];
+  const zs: number[] = [];
+  input.forEach((p, i) => {
+    const prev = input[i - 1];
+    const z = p.z ?? 0;
+    if (i > 0 && Math.hypot(p.x - prev.x, p.y - prev.y) <= 0.05) {
+      if (z === zs[zs.length - 1]) return;
+      const last = points[points.length - 1];
+      const before = points[points.length - 2];
+      const dir = before ? leftNormal(before, last) : { x: 0, y: 0 };
+      points.push({ x: last.x + dir.y * 0.5, y: last.y - dir.x * 0.5 });
+      zs.push(z);
+      return;
+    }
+    points.push({ x: p.x, y: p.y });
+    zs.push(z);
+  });
   const cum = [0];
   for (let i = 1; i < points.length; i += 1) {
     cum.push(cum[i - 1] + Math.hypot(points[i].x - points[i - 1].x, points[i].y - points[i - 1].y));
@@ -66,7 +100,7 @@ export function buildCorridor(input: PlanePoint[]): Corridor {
     const scale = Math.min(MITER_LIMIT, 1 / Math.max(unit.x * after.x + unit.y * after.y, 1e-6));
     return { x: unit.x * scale, y: unit.y * scale };
   });
-  return { points, cum, length: cum[cum.length - 1] ?? 0, miters };
+  return { points, zs, cum, length: cum[cum.length - 1] ?? 0, miters };
 }
 
 /**
@@ -98,6 +132,20 @@ export function offsetAt(corridor: Corridor, s: number, offsetM: number): PlaneP
     (b.x - a.x) * ux + (b.y - a.y) * uy,
   );
   return { x: a.x + ux * along, y: a.y + uy * along };
+}
+
+/** 起点から s m の位置の床の高さ（m） */
+export function heightAt(corridor: Corridor, s: number): number {
+  const { cum, zs } = corridor;
+  if (zs.length === 0) return 0;
+  if (s <= 0) return zs[0];
+  for (let i = 1; i < cum.length; i += 1) {
+    if (s <= cum[i]) {
+      const span = cum[i] - cum[i - 1] || 1;
+      return zs[i - 1] + ((zs[i] - zs[i - 1]) * (s - cum[i - 1])) / span;
+    }
+  }
+  return zs[zs.length - 1];
 }
 
 /** 区切りの距離（from〜to の間の、step ごとの点と折れ目）を小さい順に返す */

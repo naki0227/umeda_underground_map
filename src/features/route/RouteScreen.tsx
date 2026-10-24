@@ -4,15 +4,15 @@ import {
   ABOVE_GROUND_MIN_STRAIGHT_M,
   ABOVE_GROUND_SUGGEST_RATIO,
   LATE_NIGHT,
-  TIMED_PASSAGES,
   WALK_SPEED_M_PER_MIN,
 } from '../../app/config';
 import { googleMapsWalkingUrl, shouldSuggestAboveGround } from '../../domain/aboveGround';
 import { buildSteps, type RouteStep } from '../../domain/directions';
 import { fitGeoTransform, type LatLng } from '../../domain/geo';
 import type { Graph } from '../../domain/graph';
-import { closedEdgePredicate, isWithin, minuteOfDayInTokyo } from '../../domain/hours';
-import { findRoute, routeUsesStairs } from '../../domain/route';
+import { isWithin, minuteOfDayInTokyo } from '../../domain/hours';
+import { planRoute } from './planRoute';
+import { routeUsesStairs } from '../../domain/route';
 import { nodeFloor, type LocalizedText, type NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
 import { useSpeech } from './useSpeech';
@@ -84,12 +84,9 @@ export function RouteScreen({
   const lateNight = isWithin(minute, LATE_NIGHT);
 
   const result = useMemo(() => {
-    // いま閉まっている通路・設備は使わない。それで経路がなければ、閉まっている所も通る経路を出して注意する
-    const isClosed = closedEdgePredicate(graph, TIMED_PASSAGES, minute);
-    let route = findRoute(graph, fromNodeId, toNodeId, { avoidStairs, isClosed });
-    const throughClosed = route === null;
-    if (route === null) route = findRoute(graph, fromNodeId, toNodeId, { avoidStairs });
-    if (route === null) return null;
+    const planned = planRoute(graph, fromNodeId, toNodeId, { avoidStairs, minute });
+    if (planned === null) return null;
+    const { route, throughClosed } = planned;
     return {
       route,
       steps: buildSteps(graph, route),
@@ -240,7 +237,7 @@ export function RouteScreen({
       </p>
 
       {aboveGround && destinationLabel !== null && (
-        <p className="hint above-ground">
+        <p className={compact ? 'hint above-ground visually-hidden' : 'hint above-ground'}>
           {t('route.aboveGroundHint', {
             name: destinationName,
             exit: nodeName(toNodeId),
@@ -318,7 +315,10 @@ export function RouteScreen({
           )}
 
           {aboveGroundSuggestion !== null && (
-            <div className="above-ground-suggest" data-testid="above-ground-suggest">
+            <div
+              className={compact ? 'above-ground-suggest visually-hidden' : 'above-ground-suggest'}
+              data-testid="above-ground-suggest"
+            >
               <p>
                 {t('route.aboveGroundSuggest', {
                   underground: aboveGroundSuggestion.undergroundM,

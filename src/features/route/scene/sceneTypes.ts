@@ -1,4 +1,4 @@
-import type { PlanePoint } from './perspective';
+import type { PathPoint } from './corridorPath';
 
 /** 通路の壁に並べる店・出口・脇道 */
 export interface SceneItem {
@@ -21,7 +21,7 @@ export interface ScenePolygon {
 
 export interface SceneLabel {
   key: string;
-  kind: SceneItem['kind'] | 'turn' | 'goal';
+  kind: SceneItem['kind'] | 'turn' | 'goal' | 'floor';
   /** 吹き出しの下端の中央（SVG 座標） */
   x: number;
   y: number;
@@ -41,11 +41,13 @@ export interface Scene {
 }
 
 export interface SceneInput {
-  /** 経路の折れ線（起点 = いまいる所） */
-  path: PlanePoint[];
+  /** 経路の折れ線（起点 = いまいる所）。z は床の高さ（m） */
+  path: PathPoint[];
   items: SceneItem[];
   /** 曲がる所（起点からの距離 m）と、そのアイコン */
   turn?: { distanceM: number; icon: string };
+  /** 階を移動する所（起点からの距離 m）と、そのアイコン・ひと言（「エスカレーターで B1 へ」） */
+  floorChange?: { distanceM: number; icon: string; text: string };
   /** 折れ線の終点が目的地なら、そのアイコンと名前 */
   goal?: { icon: string; text: string };
 }

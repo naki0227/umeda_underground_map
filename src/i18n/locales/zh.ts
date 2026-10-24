@@ -95,6 +95,7 @@ export const zh: Resource = {
     showMap: '查看地图',
     distance: '{{distance}}米',
     goal: '目的地',
+    floorSign: '乘{{via}}到{{floor}}',
     openMap: '打开完整地图',
     showFirstPerson: '第一人称',
   },

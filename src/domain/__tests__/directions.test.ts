@@ -89,3 +89,59 @@ describe('stepNodeIds', () => {
     ).toEqual(['j2']);
   });
 });
+
+describe('buildSteps with small bends in the passage line', () => {
+  const node = (id: string, x: number, y: number) => ({
+    id,
+    kind: 'junction' as const,
+    name: { ja: id, en: id },
+    area: 'whity' as const,
+    x,
+    y,
+  });
+  const line = (points: [string, number, number][]) => {
+    const nodes = points.map(([id, x, y]) => node(id, x, y));
+    const edges = nodes.slice(1).map((n, i) => ({
+      from: nodes[i].id,
+      to: n.id,
+      distanceM: Math.hypot(n.x - nodes[i].x, n.y - nodes[i].y),
+    }));
+    const g = buildGraph({ nodes, edges });
+    const route = findRoute(g, nodes[0].id, nodes[nodes.length - 1].id);
+    return buildSteps(g, route as NonNullable<typeof route>);
+  };
+
+  it('ignores a small jog that goes back to the same direction', () => {
+    // 北へ 30m、右へ 2m ずれて、また北へ 30m：曲がりの案内は出さない
+    const steps = line([
+      ['a', 0, 0],
+      ['b', 0, 30],
+      ['c', 2, 30],
+      ['d', 2, 60],
+    ]);
+    expect(steps.map((s) => s.action)).toEqual(['arrive']);
+    expect(steps[0].distanceM).toBe(62);
+  });
+
+  it('joins two quick turns the same way into one turn', () => {
+    // 北へ 30m、右へ 45° を2回（3m おき）で東へ：「30m 先で右」1つにまとめる
+    const steps = line([
+      ['a', 0, 0],
+      ['b', 0, 30],
+      ['c', 2.1, 32.1],
+      ['d', 5.1, 32.1],
+      ['e', 35, 32.1],
+    ]);
+    expect(steps.map((s) => s.action)).toEqual(['right', 'arrive']);
+    expect(steps[0].atNodeId).toBe('c');
+  });
+
+  it('does not tell a turn right at the start, before the walker has a direction', () => {
+    const steps = line([
+      ['a', 0, 0],
+      ['b', 1, 0],
+      ['c', 1, 40],
+    ]);
+    expect(steps.map((s) => s.action)).toEqual(['arrive']);
+  });
+});

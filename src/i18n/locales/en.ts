@@ -95,6 +95,7 @@ export const en: Resource = {
     showMap: 'Show map',
     distance: '{{distance}} m',
     goal: 'Destination',
+    floorSign: '{{via}} to {{floor}}',
     openMap: 'Open the full map',
     showFirstPerson: 'First person',
   },

@@ -3,7 +3,7 @@ import { umedaMap } from '../../../../data/map';
 import { buildSteps } from '../../../../domain/directions';
 import { buildGraph } from '../../../../domain/graph';
 import { findRoute } from '../../../../domain/route';
-import { buildSceneInput, SCENE_AHEAD_M } from '../sceneInput';
+import { buildSceneInput, projectOntoPath, SCENE_AHEAD_M } from '../sceneInput';
 
 const graph = buildGraph(umedaMap);
 
@@ -25,7 +25,7 @@ describe('buildSceneInput', () => {
         '目的地',
       );
       const start = graph.nodes.get(step.fromNodeId);
-      expect(scene.path[0]).toEqual({ x: start?.x, y: start?.y });
+      expect(scene.path[0]).toMatchObject({ x: start?.x, y: start?.y });
       for (const item of scene.items) {
         expect(item.distanceM).toBeGreaterThanOrEqual(0);
         expect(item.distanceM).toBeLessThan(SCENE_AHEAD_M + 200);
@@ -54,5 +54,19 @@ describe('buildSceneInput', () => {
     const [step] = buildSteps(graph, route);
     const { scene } = buildSceneInput(graph, umedaMap.shops, route, step, (t) => t.ja, '目的地');
     expect(scene.goal?.text).toBe('目的地');
+  });
+});
+
+describe('projectOntoPath', () => {
+  it('finds how far along the path a shop is and on which side', () => {
+    const path = [
+      { x: 0, y: 0 },
+      { x: 0, y: 20 },
+      { x: 20, y: 20 },
+    ];
+    expect(projectOntoPath(path, { x: -3, y: 8 })).toEqual({ s: 8, offset: 3, distance: 3 });
+    const right = projectOntoPath(path, { x: 10, y: 17 });
+    expect(right.s).toBeCloseTo(30);
+    expect(right.offset).toBeCloseTo(-3);
   });
 });
