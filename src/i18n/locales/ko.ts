@@ -37,6 +37,7 @@ export const ko: Resource = {
   search: {
     placeholder: '목적지 입력 (가게·출구·장소)',
     results: '검색 결과',
+    kindStation: '역',
     kindPoi: '지상',
     kindShop: '지하 가게',
     kindBuildingShop: '빌딩 안 가게',

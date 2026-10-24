@@ -36,6 +36,7 @@ export const zh: Resource = {
   search: {
     placeholder: '输入目的地（店铺、出口、景点）',
     results: '搜索结果',
+    kindStation: '车站',
     kindPoi: '地面',
     kindShop: '地下店铺',
     kindBuildingShop: '大楼内店铺',

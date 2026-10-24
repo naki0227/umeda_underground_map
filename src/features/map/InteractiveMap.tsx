@@ -39,6 +39,8 @@ export interface Place {
   name: LocalizedText;
   /** 地上スポット（POI）由来なら true。到着時に地上ヒントを出す */
   aboveGround: boolean;
+  /** 行き先の候補（駅の改札など）。あれば、いまいる所から一番近いものへ案内する（nodeId はその1つ） */
+  nodeIds?: NodeId[];
 }
 
 interface Props {
