@@ -39,10 +39,10 @@ PR をマージすると main に push され、数分で公開 URL が更新さ
    - サブドメイン（例: `navi.example.com`）: `CNAME` レコードを `naki0227.github.io` に向ける
    - Apex ドメイン（例: `example.com`）: GitHub のドキュメントにある Pages 用の `A` / `AAAA` レコードを登録する
 3. **Settings → Pages → Custom domain** にドメインを入力して保存し、**Enforce HTTPS** を有効にする
-4. **Settings → Secrets and variables → Actions → Variables** でリポジトリ変数 `BASE_PATH` を作り、値を `/` にする（ドメイン直下で配信するため）
+4. **Settings → Secrets and variables → Actions → Variables** でリポジトリ変数 `BASE_PATH` を作り、値を `/` にする（ドメイン直下で配信するため）。あわせて `SITE_ORIGIN` を `https://<ドメイン>` にする（共有カードの画像の URL に使う）
 5. Actions の「Deploy to GitHub Pages」を手動実行し、新しいドメインで表示を確かめる
 
-独自ドメインをやめるときは、Custom domain を空にし、変数 `BASE_PATH` を削除してから再デプロイする。
+独自ドメインをやめるときは、Custom domain を空にし、変数 `BASE_PATH`・`SITE_ORIGIN` を削除してから再デプロイする。
 
 ### 4. 誤り報告フォームの管理
 
