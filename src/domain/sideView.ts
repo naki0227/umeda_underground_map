@@ -1,6 +1,6 @@
 import { projectToPlane } from './geo';
 import type { Graph } from './graph';
-import type { LocalizedText, NodeId, Shop } from './types';
+import type { LocalizedText, NodeId, Shop, ShopCategory } from './types';
 
 /** 進む方向から見た位置。along は左右が分からない（通路の真上・位置が不明） */
 export type Side = 'left' | 'right' | 'along';
@@ -12,6 +12,10 @@ export interface SideItem {
   side: Side;
   /** 区間の起点からの距離（m） */
   distanceM: number;
+  /** nodeIds の中で、この店・出口・脇道がある点の番号 */
+  index: number;
+  /** 店の種類（店だけ） */
+  category?: ShopCategory;
 }
 
 export interface SideView {
@@ -82,7 +86,15 @@ export function buildSideView(
               return sideOf(p.x, p.y);
             })()
           : 'along';
-      push({ key: `shop:${shop.id}`, kind: 'shop', name: shop.name, side, distanceM });
+      push({
+        key: `shop:${shop.id}`,
+        kind: 'shop',
+        name: shop.name,
+        side,
+        distanceM,
+        index,
+        category: shop.category,
+      });
     }
     const pushExit = (exitId: NodeId, x: number, y: number) => {
       const exit = point(exitId);
@@ -95,6 +107,7 @@ export function buildSideView(
         name: exit.exitNo !== undefined ? { ja: no, en: no } : exit.name,
         side: sideOf(x, y),
         distanceM,
+        index,
       });
     };
     for (const edge of graph.adjacency.get(id) ?? []) {
@@ -115,7 +128,14 @@ export function buildSideView(
       const key = `passage:${other.id}`;
       if (seen.has(key)) continue;
       seen.add(key);
-      push({ key, kind: 'passage', name: other.name, side: sideOf(other.x, other.y), distanceM });
+      push({
+        key,
+        kind: 'passage',
+        name: other.name,
+        side: sideOf(other.x, other.y),
+        distanceM,
+        index,
+      });
     }
   });
   return view;

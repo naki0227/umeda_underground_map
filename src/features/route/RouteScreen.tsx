@@ -39,6 +39,8 @@ interface Props {
   now?: Date;
   /** 一人称の表示を出しているか。未指定なら切り替えボタンを出さない */
   firstPerson?: boolean;
+  /** 一人称の画面の下に出すとき。次の動きは一人称の画面が出すので、操作だけにする */
+  compact?: boolean;
   onToggleFirstPerson?: () => void;
 }
 
@@ -73,6 +75,7 @@ export function RouteScreen({
   onStepChange,
   now,
   firstPerson,
+  compact = false,
   onToggleFirstPerson,
 }: Props) {
   const { t, i18n } = useTranslation();
@@ -230,7 +233,7 @@ export function RouteScreen({
           ×
         </button>
       </div>
-      <p className="description">
+      <p className={compact ? 'description visually-hidden' : 'description'}>
         {t('route.from', { name: nodeName(fromNodeId) })}
         <br />
         {t('route.to', { name: destinationName })}
@@ -266,7 +269,11 @@ export function RouteScreen({
             </p>
           )}
           {next !== null && (
-            <div className="next-step-card" data-testid="next-step" aria-live="polite">
+            <div
+              className={compact ? 'next-step-card visually-hidden' : 'next-step-card'}
+              data-testid="next-step"
+              aria-live="polite"
+            >
               <span className="step-counter">
                 {t('route.stepCounter', { current: currentIndex + 1, total: lastIndex + 1 })}
               </span>

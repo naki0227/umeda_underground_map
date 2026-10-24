@@ -34,8 +34,15 @@ describe('MiniMap', () => {
     );
     const button = screen.getByRole('button', { name: '全体の地図を開く' });
     expect(button.querySelector('.mini-map-corridor')?.getAttribute('d')).toMatch(/^M/);
-    // 区間の起点は中心（66, 66）に来る
-    expect(button.querySelector('.mini-map-step')?.getAttribute('points')).toMatch(/^66,66 /);
+    // 全体の地図と同じ下地（建物・道路）と地下街の形を、回して描く
+    expect(button.querySelector('.basemap-building')).not.toBeNull();
+    expect(button.querySelectorAll('.map-zone').length).toBeGreaterThan(0);
+    expect(button.querySelector('g')?.getAttribute('transform')).toMatch(/^matrix\(/);
+    // 区間の起点（地図の座標 x, -y）から始まる
+    const start = graph.nodes.get(nodeIds[0]);
+    expect(button.querySelector('.mini-map-step')?.getAttribute('points')).toMatch(
+      new RegExp(`^${start?.x},${-(start?.y ?? 0)} `),
+    );
     expect(button.querySelector('.mini-map-you')).not.toBeNull();
     await userEvent.setup().click(button);
     expect(onOpenMap).toHaveBeenCalled();

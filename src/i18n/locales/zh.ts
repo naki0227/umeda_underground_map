@@ -93,6 +93,8 @@ export const zh: Resource = {
     exit: '{{name}} 出口',
     passage: '岔路（{{name}}）',
     showMap: '查看地图',
+    distance: '{{distance}}米',
+    goal: '目的地',
     openMap: '打开完整地图',
     showFirstPerson: '第一人称',
   },

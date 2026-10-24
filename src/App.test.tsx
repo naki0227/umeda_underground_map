@@ -54,20 +54,19 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
     expect(screen.getByTestId('next-step')).toBeInTheDocument();
     expect(screen.getAllByTestId('map-route').length).toBeGreaterThan(0);
 
-    // 5b. 案内が始まると一人称の表示（左右の一覧）が出て、地図に切り替えられる
-    expect(screen.getByTestId('first-person')).toBeInTheDocument();
+    // 5b. 案内が始まると一人称の画面に切り替わる（地図は隠れ、通路の絵と左上の小さな地図）
+    const fpv = screen.getByTestId('first-person');
+    expect(fpv.querySelectorAll('.fpv-scene polygon').length).toBeGreaterThan(20);
     expect(screen.getByRole('region', { name: '左' })).toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: '地図で見る' }));
-    expect(screen.queryByTestId('first-person')).not.toBeInTheDocument();
-    await user.click(screen.getByRole('button', { name: '一人称' }));
-    expect(screen.getByTestId('first-person')).toBeInTheDocument();
-    // 一人称の表示の左上に小さな地図とステップ番号が出て、押すと全体の地図を開く
-    expect(within(screen.getByTestId('first-person')).getByText(/^1 \/ \d+$/)).toBeInTheDocument();
+    expect(document.querySelector('.app-map')).toHaveClass('fpv-on');
     const miniMap = screen.getByTestId('mini-map');
     expect(miniMap.querySelector('.mini-map-step')).not.toBeNull();
+    // 小さな地図を押すと全体の地図に戻り、「一人称」で一人称の画面に戻る
     await user.click(miniMap);
     expect(screen.queryByTestId('first-person')).not.toBeInTheDocument();
+    expect(document.querySelector('.app-map')).not.toHaveClass('fpv-on');
     await user.click(screen.getByRole('button', { name: '一人称' }));
+    expect(screen.getByTestId('first-person')).toBeInTheDocument();
 
     // 6. 経路シートを閉じても案内は続き、バナーから再表示できる
     await user.click(

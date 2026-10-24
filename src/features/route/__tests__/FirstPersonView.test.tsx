@@ -1,9 +1,9 @@
 import { render, screen, within } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { beforeAll, describe, expect, it, vi } from 'vitest';
+import { beforeAll, describe, expect, it } from 'vitest';
 import type { SideView } from '../../../domain/sideView';
 import { initI18n } from '../../../i18n';
 import { FirstPersonView } from '../FirstPersonView';
+import type { SceneInput } from '../scene/corridorScene';
 
 beforeAll(() => {
   const i18n = initI18n('ja');
@@ -18,67 +18,75 @@ const sideView: SideView = {
       name: { ja: 'カフェA', en: 'Cafe A' },
       side: 'left',
       distanceM: 12,
+      index: 1,
     },
-    { key: 'exit:x', kind: 'exit', name: { ja: 'H-8', en: 'H-8' }, side: 'left', distanceM: 40 },
   ],
-  right: [
+  right: [],
+  along: [],
+};
+
+// 北へ 40m 進んで東へ曲がる通路。左に店、右に出口
+const scene: SceneInput = {
+  path: [
+    { x: 0, y: 0 },
+    { x: 0, y: 40 },
+    { x: 30, y: 40 },
+  ],
+  items: [
     {
-      key: 'passage:p',
-      kind: 'passage',
-      name: { ja: '泉の広場', en: 'Izumi' },
+      key: 'shop:a',
+      kind: 'shop',
+      side: 'left',
+      distanceM: 12,
+      name: 'カフェA',
+      icon: '☕',
+      color: '#a0612b',
+    },
+    {
+      key: 'exit:x',
+      kind: 'exit',
       side: 'right',
-      distanceM: 25,
+      distanceM: 20,
+      name: 'H-8',
+      icon: '⬆',
+      color: '#facc15',
     },
   ],
-  along: [
-    { key: 'shop:b', kind: 'shop', name: { ja: '店B', en: 'Shop B' }, side: 'along', distanceM: 5 },
-  ],
+  turn: { distanceM: 40, icon: '↱' },
 };
 
 describe('FirstPersonView', () => {
-  it('lists what is on the left and right with the distance ahead', () => {
-    render(
+  it('draws the corridor with shop and exit signs and the next move', () => {
+    const { container } = render(
       <FirstPersonView
+        scene={scene}
         sideView={sideView}
-        step={{ fromNodeId: 'a', atNodeId: 'b', action: 'right', distanceM: 53 }}
-        onShowMap={() => {}}
-      />,
-    );
-    expect(screen.getByText(/約53m先で右へ/)).toBeInTheDocument();
-    const left = screen.getByRole('region', { name: '左' });
-    expect(within(left).getByText('カフェA')).toBeInTheDocument();
-    expect(within(left).getByText('H-8 出口')).toBeInTheDocument();
-    expect(within(left).getByText('12m先')).toBeInTheDocument();
-    const right = screen.getByRole('region', { name: '右' });
-    expect(within(right).getByText('脇道（泉の広場）')).toBeInTheDocument();
-    expect(screen.getByText(/道沿い: 店B/)).toBeInTheDocument();
-  });
-
-  it('says so when nothing is on a side and switches back to the map', async () => {
-    const onShowMap = vi.fn();
-    render(
-      <FirstPersonView
-        sideView={{ left: [], right: [], along: [] }}
-        step={{ fromNodeId: 'a', atNodeId: 'b', action: 'arrive', distanceM: 10 }}
-        onShowMap={onShowMap}
-      />,
-    );
-    expect(screen.getAllByText('なし')).toHaveLength(2);
-    await userEvent.setup().click(screen.getByRole('button', { name: '地図で見る' }));
-    expect(onShowMap).toHaveBeenCalled();
-  });
-
-  it('shows the step number and the mini map slot next to the next move', () => {
-    render(
-      <FirstPersonView
-        sideView={sideView}
-        step={{ fromNodeId: 'a', atNodeId: 'b', action: 'left', distanceM: 20 }}
-        stepLabel="2 / 5"
+        step={{ fromNodeId: 'a', atNodeId: 'b', action: 'right', distanceM: 40 }}
         miniMap={<div data-testid="slot" />}
-        onShowMap={() => {}}
       />,
     );
-    expect(screen.getByText('2 / 5')).toBeInTheDocument();
+    expect(screen.getByText('40m')).toBeInTheDocument();
+    expect(screen.getByText('右へ')).toBeInTheDocument();
+    expect(screen.getByLabelText('約40m先で右へ')).toBeInTheDocument();
     expect(screen.getByTestId('slot')).toBeInTheDocument();
+    expect(container.querySelectorAll('.fpv-scene polygon').length).toBeGreaterThan(20);
+    expect(container.querySelector('.fpv-pill.shop text')?.textContent).toBe('☕ カフェA');
+    expect(container.querySelector('.fpv-pill.exit text')?.textContent).toBe('⬆ H-8');
+    expect(container.querySelector('.fpv-pill.turn text')?.textContent).toBe('↱');
+  });
+
+  it('keeps the left and right lists for screen readers', () => {
+    render(
+      <FirstPersonView
+        scene={scene}
+        sideView={sideView}
+        step={{ fromNodeId: 'a', atNodeId: 'b', action: 'arrive', distanceM: 10 }}
+      />,
+    );
+    const left = screen.getByRole('region', { name: '左' });
+    expect(within(left).getByText(/カフェA/)).toBeInTheDocument();
+    expect(
+      within(screen.getByRole('region', { name: '右' })).getByText('なし'),
+    ).toBeInTheDocument();
   });
 });
