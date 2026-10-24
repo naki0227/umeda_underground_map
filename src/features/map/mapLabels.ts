@@ -1,5 +1,7 @@
 import type { AreaId, LocalizedText, MapNode, NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
+import { detailLevel } from './detail';
+import { pinShortName } from './mapIcons';
 import { BUILDING_ICON_TOP_PX, type Building } from './ground';
 import type { ScreenPoint } from './projection';
 import { textWidthPx, type LabelBox } from './labelLayout';
@@ -21,6 +23,21 @@ const CHIP_PADDING_PX = 6;
 export const buildingLabelYPx = BUILDING_ICON_TOP_PX - 4;
 /** 建物ラベルを目印の下に置くときの、上に置くときからの差分（画面 px） */
 export const BUILDING_LABEL_BELOW_DY_PX = -BUILDING_ICON_TOP_PX + LABEL_FONT_PX + 10;
+
+/** 目印（広場・改札）のアイコンの半径と、名前の札の位置・高さ（画面 px） */
+export const PIN_ICON_RADIUS_PX = 10;
+export const PIN_LABEL_X_PX = PIN_ICON_RADIUS_PX + 3;
+export const PIN_LABEL_HEIGHT_PX = 18;
+
+/**
+ * 目印の名前。拡大したとき（詳細表示）はフルの名前、それ以外は短い名前（改札は路線名）。
+ * null ならアイコンだけ
+ */
+export function pinLabelText(node: MapNode, k: number, language: string): string | null {
+  if (detailLevel(k) === 'detail') return localized(node.name, language);
+  const short = pinShortName(node);
+  return short === null ? null : localized(short, language);
+}
 
 export function chipWidthPx(text: string, fontPx: number): number {
   return textWidthPx(text, fontPx) + CHIP_PADDING_PX * 2;
@@ -44,7 +61,7 @@ export interface MapLabelInput {
 }
 
 /**
- * 重なり判定用のラベル矩形を作る。優先度: 広場名 > 改札名 > 地下街の名前 > 案内中の沿道の店名 >
+ * 重なり判定用のラベル矩形を作る。建物の名前は詳細表示のときだけ（ふだんはアイコン）。優先度: 広場名 > 改札名 > 地下街の名前 > 案内中の沿道の店名 >
  * 出口番号 > 建物名 > 店名（詳細表示）> 設備チップ。いつも見たい目印を先に置き、細かいものは空いた所に出す。id は `exit:` `shop:` `building:` `pin:` `facility:` `zone:` + 元の id。
  */
 export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
@@ -73,7 +90,8 @@ export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
       priority: 2,
     });
   }
-  for (const { poi, base } of buildings) {
+  // 建物はアイコンだけ。名前は拡大したとき（詳細表示）に出す
+  for (const { poi, base } of detailLevel(k) === 'detail' ? buildings : []) {
     const { x, y } = toPx(base);
     const width = textWidthPx(nameOf(poi.name), LABEL_FONT_PX);
     boxes.push({
@@ -104,13 +122,15 @@ export function buildMapLabelBoxes(input: MapLabelInput): LabelBox[] {
     });
   }
   for (const node of pins) {
+    const text = pinLabelText(node, k, language);
+    if (text === null) continue;
     const { x, y } = toPx(at(node.id));
     boxes.push({
       id: `pin:${node.id}`,
-      x: x + 10,
-      y: y - 6 - LABEL_FONT_PX,
-      width: textWidthPx(nameOf(node.name), LABEL_FONT_PX),
-      height: LABEL_FONT_PX + 2,
+      x: x + PIN_LABEL_X_PX,
+      y: y - PIN_LABEL_HEIGHT_PX / 2,
+      width: chipWidthPx(text, LABEL_FONT_PX),
+      height: PIN_LABEL_HEIGHT_PX,
       priority: node.kind === 'landmark' ? 4 : 3.5,
     });
   }

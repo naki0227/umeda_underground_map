@@ -17,9 +17,15 @@ import {
   EXIT_BADGE_HEIGHT_PX,
   EXIT_FONT_PX,
   FACILITY_FONT_PX,
+  LABEL_FONT_PX,
+  PIN_ICON_RADIUS_PX,
+  PIN_LABEL_HEIGHT_PX,
+  PIN_LABEL_X_PX,
+  pinLabelText,
   SHOP_LABEL_FONT_PX,
   SHOP_LABEL_OFFSET_PX,
 } from './mapLabels';
+import { DEFAULT_RAILWAY_COLOR, gateRailway, pinIcon } from './mapIcons';
 import { MapMarkers } from './MapMarkers';
 import { pressable } from './pressable';
 import { routeArrows } from './routeArrows';
@@ -590,24 +596,57 @@ function InteractiveMapView({
             </Fixed>
           );
         })}
-        {pins.map((node) => (
-          <Fixed key={node.id} at={at(node.id)} k={k}>
-            <g
-              className="map-pin"
-              data-node-id={node.id}
-              {...pressable(nameOf(node.name), () =>
-                pick({ nodeId: node.id, name: node.name, aboveGround: false }),
-              )}
-            >
-              <circle r={6} />
-              {visibleLabels.has(`pin:${node.id}`) && (
-                <text className="map-label" x={10} y={-6} pointerEvents="none">
-                  {nameOf(node.name)}
+        {pins.map((node) => {
+          const label = visibleLabels.has(`pin:${node.id}`)
+            ? pinLabelText(node, k, language)
+            : null;
+          const railway = node.kind === 'gate' ? gateRailway(node) : null;
+          return (
+            <Fixed key={node.id} at={at(node.id)} k={k}>
+              <g
+                className={`map-pin ${node.kind}`}
+                data-node-id={node.id}
+                {...pressable(nameOf(node.name), () =>
+                  pick({ nodeId: node.id, name: node.name, aboveGround: false }),
+                )}
+              >
+                <circle r={PIN_ICON_RADIUS_PX} />
+                <text
+                  className="map-pin-icon"
+                  textAnchor="middle"
+                  dominantBaseline="central"
+                  aria-hidden
+                >
+                  {pinIcon(node)}
                 </text>
-              )}
-            </g>
-          </Fixed>
-        ))}
+                {label !== null && (
+                  <g className="map-pin-label" pointerEvents="none">
+                    <rect
+                      x={PIN_LABEL_X_PX}
+                      y={-PIN_LABEL_HEIGHT_PX / 2}
+                      width={chipWidthPx(label, LABEL_FONT_PX)}
+                      height={PIN_LABEL_HEIGHT_PX}
+                      rx={PIN_LABEL_HEIGHT_PX / 2}
+                      style={
+                        node.kind === 'gate'
+                          ? { fill: railway?.color ?? DEFAULT_RAILWAY_COLOR }
+                          : undefined
+                      }
+                    />
+                    <text
+                      className="map-label"
+                      x={PIN_LABEL_X_PX + chipWidthPx(label, LABEL_FONT_PX) / 2}
+                      textAnchor="middle"
+                      dominantBaseline="central"
+                    >
+                      {label}
+                    </text>
+                  </g>
+                )}
+              </g>
+            </Fixed>
+          );
+        })}
         {exits.map((node) => {
           const label = exitLabel(node);
           const width = chipWidthPx(label, EXIT_FONT_PX);
@@ -645,7 +684,7 @@ function InteractiveMapView({
                   <>
                     {/* 小さな点でも押せるよう、透明な当たり判定を広めに取る */}
                     <circle className="hit-area" r={11} />
-                    <circle r={level === 'overview' ? 3.5 : 5} />
+                    <circle r={level === 'overview' ? 2.5 : 3.5} />
                   </>
                 )}
                 <title>{nameOf(node.name)}</title>
