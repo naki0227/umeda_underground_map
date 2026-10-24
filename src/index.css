@@ -189,6 +189,7 @@ body {
 }
 
 .spot-cards {
+  /* 目的地のカードは名前の長さによらず同じ大きさ（長い名前は2行で切る） */
   list-style: none;
   margin: 10px 0 0;
   padding: 0 0 6px;
@@ -197,21 +198,33 @@ body {
   overflow-x: auto;
 }
 
+.spot-cards > li {
+  flex: none;
+}
+
 .spot-card {
   display: flex;
   flex-direction: column;
   gap: 6px;
-  min-width: 180px;
   text-align: left;
   background: var(--bg);
   border-radius: var(--radius-card);
   color: var(--text-strong);
   box-shadow: var(--shadow-card);
+  height: 112px;
+  justify-content: space-between;
+  box-sizing: border-box;
+  width: 200px;
 }
 
 .spot-name {
   font-weight: 700;
   font-size: var(--fs-m);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .spot-meta {
@@ -721,6 +734,7 @@ button.candidate {
 }
 
 .next-step-card {
+  /* 高さは手順の文の長さによらず一定（文は2行で切る） */
   position: relative;
   display: flex;
   align-items: center;
@@ -731,6 +745,8 @@ button.candidate {
   color: var(--text-strong);
   border-radius: var(--radius-card);
   box-shadow: var(--shadow-card);
+  height: 116px;
+  box-sizing: border-box;
 }
 
 .next-icon {
@@ -750,6 +766,7 @@ button.candidate {
   display: flex;
   flex-direction: column;
   flex: 1;
+  min-width: 0;
 }
 
 .next-distance {
@@ -762,6 +779,11 @@ button.candidate {
   font-weight: 700;
   font-size: var(--fs-m);
   color: var(--text-strong);
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .next-floors {
