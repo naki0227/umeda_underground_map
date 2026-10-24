@@ -3,11 +3,15 @@
  * タッチ端末ではタップ後にホバーの色が残るため。
  */
 :root {
-  --text: #3a4750;
-  --text-strong: #16232c;
-  --bg: #ffffff;
-  --bg-soft: #f2f9fb;
-  --border: #d8e8ee;
+  /* 紙の色と茶系の文字（lp-anatomy：温かい飲食の型。背景を白にしない、文字・影も茶系） */
+  --text: #5e4b3c;
+  --text-strong: #3b2a1e;
+  --bg: #fffaf3;
+  --bg-soft: #f6ecdc;
+  --border: #eadbc4;
+  --shadow-warm: 0 8px 24px rgba(73, 35, 29, 0.16);
+  --radius-card: 20px;
+  --radius-sheet: 28px;
   --accent: #4fb3d1; /* 水色 */
   --accent-strong: #2f8fae;
   --accent-soft: #e3f3f8;
@@ -77,7 +81,7 @@ body {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(22, 35, 44, 0.12);
+  box-shadow: 0 4px 16px rgba(73, 35, 29, 0.12);
   z-index: 10;
 }
 
@@ -132,7 +136,7 @@ body {
   color: var(--warn);
   font-weight: 600;
   border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(22, 35, 44, 0.12);
+  box-shadow: 0 4px 16px rgba(73, 35, 29, 0.12);
   white-space: nowrap;
   z-index: 15;
 }
@@ -190,6 +194,7 @@ body {
   text-align: left;
   background: var(--bg-soft);
   border: 1px solid var(--border);
+  border-radius: var(--radius-card);
   color: var(--text-strong);
 }
 
@@ -228,7 +233,7 @@ body {
   border-radius: var(--radius);
   font-size: var(--fs-m);
   background: var(--bg);
-  box-shadow: 0 2px 8px rgba(22, 35, 44, 0.08);
+  box-shadow: 0 2px 8px rgba(73, 35, 29, 0.08);
 }
 
 .search-results {
@@ -238,7 +243,7 @@ body {
   background: var(--bg);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 4px 16px rgba(22, 35, 44, 0.12);
+  box-shadow: 0 4px 16px rgba(73, 35, 29, 0.12);
   max-height: 50vh;
   overflow-y: auto;
   display: grid;
@@ -291,7 +296,7 @@ body {
   background: var(--bg);
   border: 1px solid var(--border);
   color: var(--text-strong);
-  box-shadow: 0 2px 8px rgba(22, 35, 44, 0.08);
+  box-shadow: 0 2px 8px rgba(73, 35, 29, 0.08);
 }
 
 /* 表示する階の切り替え（左側、ズームボタンと同じ高さ） */
@@ -305,7 +310,7 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(22, 35, 44, 0.08);
+  box-shadow: 0 2px 8px rgba(73, 35, 29, 0.08);
 }
 
 .floor-switcher button {
@@ -355,9 +360,9 @@ body {
   overflow-y: auto;
   background: var(--bg);
   border: 1px solid var(--border);
-  border-radius: 14px;
+  border-radius: var(--radius-sheet);
   padding: 0 20px 16px;
-  box-shadow: 0 6px 24px rgba(22, 35, 44, 0.16);
+  box-shadow: var(--shadow-warm);
   z-index: 20;
 }
 
@@ -493,13 +498,13 @@ input[type='search'] {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   font-size: var(--fs-m);
-  background: var(--bg);
+  background: #ffffff;
   color: var(--text);
 }
 
 button {
   font-size: var(--fs-m);
-  border-radius: var(--radius);
+  border-radius: 999px;
   border: 1px solid transparent;
   padding: 10px 16px;
   cursor: pointer;
@@ -519,8 +524,8 @@ button.primary {
 }
 
 button.secondary {
-  background: var(--accent-soft);
-  color: var(--accent-strong);
+  background: var(--bg-soft);
+  color: var(--text-strong);
   border-color: var(--border);
 }
 
@@ -556,7 +561,7 @@ button.chip.active {
   margin-top: 16px;
   padding: 14px 16px;
   border: 1px solid var(--accent);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--accent-soft);
 }
 
@@ -649,22 +654,27 @@ button.candidate {
 
 .steps {
   margin: 12px 0;
-  padding-left: 24px;
+  padding: 6px;
+  list-style: none;
   display: grid;
-  gap: 10px;
+  gap: 2px;
+  background: var(--bg-soft);
+  border-radius: var(--radius-card);
 }
 
 .steps li {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 6px 8px;
-  border-radius: var(--radius);
+  padding: 10px 12px;
+  border-radius: 14px;
 }
 
 .steps li.current {
-  background: var(--accent-soft);
-  border: 1px solid var(--accent);
+  background: var(--bg);
+  box-shadow:
+    inset 4px 0 0 var(--route),
+    0 2px 8px rgba(73, 35, 29, 0.1);
 }
 
 .step-icon {
@@ -708,11 +718,13 @@ button.candidate {
   align-items: center;
   gap: 12px;
   margin: 12px 0 8px;
-  padding: 14px 16px;
-  background: var(--accent-strong);
+  padding: 22px 18px 16px;
+  background: var(--route);
   color: #ffffff;
-  border-radius: 14px;
-  box-shadow: 0 4px 14px rgba(47, 143, 174, 0.35);
+  /* 上辺をゆるいアーチに（メニューカードの型） */
+  border-radius: 50% 50% var(--radius-card) var(--radius-card) / 14px 14px var(--radius-card)
+    var(--radius-card);
+  box-shadow: 0 8px 20px rgba(29, 78, 216, 0.28);
 }
 
 .next-icon {
@@ -776,17 +788,18 @@ button.candidate {
 }
 
 .hint.above-ground {
-  color: var(--accent-strong);
-  background: var(--accent-soft);
-  padding: 8px 12px;
-  border-radius: var(--radius);
+  color: var(--text-strong);
+  background: var(--bg-soft);
+  padding: 10px 14px;
+  border-radius: 16px;
+  box-shadow: inset 4px 0 0 var(--accent);
 }
 
 .hint.warn {
-  color: var(--warn);
+  color: #b4531a;
   background: var(--warn-soft);
-  padding: 6px 10px;
-  border-radius: var(--radius);
+  padding: 10px 14px;
+  border-radius: 16px;
 }
 
 .map-view {
@@ -1147,10 +1160,37 @@ button.candidate {
   flex: 1;
 }
 
+/* 案内の操作は経路と同じ青に */
+.step-nav button.primary {
+  background: var(--route);
+}
+
+/* カードはマウスを乗せると少し揺れる（温かい飲食の型の遊び。1回だけ、動きを減らす設定・データセーバーでは揺れない） */
+@media (hover: hover) and (pointer: fine) {
+  @media (prefers-reduced-motion: no-preference) {
+    :root:not([data-save-data]) .spot-card:hover {
+      animation: card-sway 0.75s ease-in-out;
+    }
+  }
+}
+
+@keyframes card-sway {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  30% {
+    transform: rotate(-3deg);
+  }
+  65% {
+    transform: rotate(2deg);
+  }
+}
+
 .step-counter {
   position: absolute;
-  top: 6px;
-  right: 10px;
+  top: 12px;
+  right: 18px;
   font-size: var(--fs-xs);
   color: rgba(255, 255, 255, 0.85);
 }
@@ -1274,7 +1314,7 @@ button.candidate {
 }
 
 .building-shadow {
-  fill: rgba(22, 35, 44, 0.12);
+  fill: rgba(73, 35, 29, 0.12);
 }
 
 .building .building-top {
