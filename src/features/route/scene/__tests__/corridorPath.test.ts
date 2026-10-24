@@ -1,5 +1,12 @@
 import { describe, expect, it } from 'vitest';
-import { breakpoints, buildCorridor, offsetAt, simplifyPath, truncatePath } from '../corridorPath';
+import {
+  breakpoints,
+  buildCorridor,
+  heightAt,
+  offsetAt,
+  simplifyPath,
+  truncatePath,
+} from '../corridorPath';
 
 describe('corridorPath', () => {
   it('drops small wiggles but keeps real corners', () => {
@@ -54,5 +61,35 @@ describe('corridorPath', () => {
       { x: 0, y: 10 },
       { x: 5, y: 10 },
     ]);
+  });
+});
+
+describe('floor heights along the path', () => {
+  it('keeps the points where the floor height changes and interpolates between them', () => {
+    const points = [
+      { x: 0, y: 0, z: 0 },
+      { x: 0, y: 10, z: 0 },
+      { x: 0.3, y: 15, z: 0 },
+      { x: 0, y: 20, z: 4.5 },
+      { x: 0, y: 30, z: 4.5 },
+    ];
+    // 高さが変わる点（y=15 の階段の下、y=20 の上）は残り、直線上の y=10 は間引かれる
+    const kept = simplifyPath(points, 1.5).map((p) => p.y);
+    expect(kept).toEqual([0, 15, 20, 30]);
+    const corridor = buildCorridor(simplifyPath(points, 1.5));
+    expect(heightAt(corridor, 5)).toBe(0);
+    expect(heightAt(corridor, 17.5)).toBeCloseTo(2.25, 1);
+    expect(heightAt(corridor, 25)).toBe(4.5);
+  });
+
+  it('keeps an elevator (same place, another floor) as a short rise', () => {
+    const corridor = buildCorridor([
+      { x: 0, y: 0, z: 0 },
+      { x: 0, y: 10, z: 0 },
+      { x: 0, y: 10, z: 4.5 },
+    ]);
+    expect(corridor.points).toHaveLength(3);
+    expect(corridor.length).toBeCloseTo(10.5);
+    expect(heightAt(corridor, corridor.length)).toBe(4.5);
   });
 });

@@ -39,8 +39,9 @@ const PAD_PX = 6;
 const TAIL_PX = 6;
 
 const pillText = (label: SceneLabel) => {
-  const text =
-    label.text.length > NAME_MAX_CHARS ? `${label.text.slice(0, NAME_MAX_CHARS - 1)}…` : label.text;
+  // 階の移動の札は短い決まり文句なので切らない
+  const max = label.kind === 'floor' ? 16 : NAME_MAX_CHARS;
+  const text = label.text.length > max ? `${label.text.slice(0, max - 1)}…` : label.text;
   return text === '' ? label.icon : `${label.icon} ${text}`;
 };
 
@@ -49,7 +50,7 @@ const pillBox = (label: SceneLabel): LabelBox => {
   const font = label.kind === 'turn' ? 30 : label.fontPx;
   const width = textWidthPx(pillText(label), font) + PAD_PX * 2;
   const height = font + PAD_PX * 1.4;
-  const priority = (label.kind === 'goal' ? 200 : 100) - label.depthM;
+  const priority = (label.kind === 'goal' || label.kind === 'floor' ? 200 : 100) - label.depthM;
   return {
     id: label.key,
     x: label.x - width / 2,

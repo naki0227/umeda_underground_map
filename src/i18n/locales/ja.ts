@@ -91,6 +91,7 @@ export const ja = {
     showMap: '地図で見る',
     distance: '{{distance}}m',
     goal: '目的地',
+    floorSign: '{{via}}で{{floor}}へ',
     openMap: '全体の地図を開く',
     showFirstPerson: '一人称',
   },

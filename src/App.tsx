@@ -7,7 +7,7 @@ import { isUndergroundShop } from './domain/shopLabel';
 import { fitGeoTransform, nearestNode } from './domain/geo';
 import { buildSteps, stepNodeIds } from './domain/directions';
 import { buildGraph } from './domain/graph';
-import { findRoute } from './domain/route';
+import { minuteOfDayInTokyo } from './domain/hours';
 import { localized } from './i18n';
 import { InteractiveMap } from './features/map/InteractiveMap';
 import { PlaceSheet } from './features/map/PlaceSheet';
@@ -17,6 +17,7 @@ import { LocateScreen } from './features/locate/LocateScreen';
 import { useInitialGeolocation } from './features/locate/useGeolocation';
 import { FirstPersonView } from './features/route/FirstPersonView';
 import { MiniMap } from './features/route/MiniMap';
+import { planRoute } from './features/route/planRoute';
 import { RouteScreen } from './features/route/RouteScreen';
 import { buildSceneInput } from './features/route/scene/sceneInput';
 import { SearchBar } from './features/search/SearchBar';
@@ -58,10 +59,22 @@ export default function App() {
     return { ...point, accuracyM: gps.position.accuracyM, inArea };
   }, [gps.position, geo, graph]);
 
+  // 経路を決めた時刻（夜に閉まる通路を避ける）。出発地・目的地が変わるたびに今の時刻にし直し、
+  // 道案内のシートにも同じ時刻を渡して、地図・一人称・シートを同じ経路にする
+  const routeRequest = `${nav.currentNodeId ?? ''}>${nav.destination?.nodeId ?? ''}`;
+  const [routeClock, setRouteClock] = useState(() => ({ request: routeRequest, time: new Date() }));
+  if (routeClock.request !== routeRequest)
+    setRouteClock({ request: routeRequest, time: new Date() });
+  const routeTime = routeClock.time;
   const route = useMemo(() => {
     if (nav.currentNodeId === null || nav.destination === null) return null;
-    return findRoute(graph, nav.currentNodeId, nav.destination.nodeId, { avoidStairs });
-  }, [graph, nav.currentNodeId, nav.destination, avoidStairs]);
+    return (
+      planRoute(graph, nav.currentNodeId, nav.destination.nodeId, {
+        avoidStairs,
+        minute: minuteOfDayInTokyo(routeTime),
+      })?.route ?? null
+    );
+  }, [graph, nav.currentNodeId, nav.destination, avoidStairs, routeTime]);
 
   // 案内中に表示しているステップ。経路が変わったら先頭に戻す
   const routeKey = route?.nodeIds.join('>') ?? '';
@@ -89,6 +102,7 @@ export default function App() {
             currentStep.step,
             (text) => localized(text, i18n.language),
             t('fpv.goal'),
+            (via, floor) => t('fpv.floorSign', { via: t(`facility.${via}`), floor }),
           ),
     [graph, route, currentStep, i18n.language, t],
   );
@@ -247,6 +261,7 @@ export default function App() {
             onClose={nav.closeSheet}
             stepIndex={stepIndex}
             onStepChange={setStepIndex}
+            now={routeTime}
             firstPerson={firstPerson}
             compact={fpvOn}
             onToggleFirstPerson={() => setFirstPerson(!firstPerson)}
