@@ -61,15 +61,14 @@ export const en: Resource = {
   },
   favorites: {
     title: 'Favorites',
-    empty:
-      'Nothing yet. Pick a place and tap "Save to favorites" to get directions from here quickly.',
+    empty: 'Nothing yet. Add places with "Save to favorites".',
     add: 'Save to favorites',
     removeNamed: 'Remove {{name}} from favorites',
     storageNote: 'Favorites are stored only on this device.',
   },
   spots: {
     title: 'Recommended spots',
-    description: 'Landmarks above ground. Tap one to get guided to the nearest exit.',
+    description: 'Tap to get directions to the nearest exit.',
     aboveGround: 'Above ground',
     walk: '{{minutes}} min walk / approx. {{distance}}m',
   },
@@ -110,8 +109,7 @@ export const en: Resource = {
     actionArrive: 'Arrive at {{name}}',
     actionFloorUp: 'Take the {{via}} at {{name}} up to {{floor}}',
     actionFloorDown: 'Take the {{via}} at {{name}} down to {{floor}}',
-    aboveGroundHint:
-      '{{name}} is above ground. We guide you to {{exit}} — go up to street level from there.',
+    aboveGroundHint: '{{name}} is above ground. Go up at {{exit}}.',
     notFound: 'No route found',
     eta: 'Arrive in approx. {{minutes}} min / {{distance}}m',
     avoidStairs: 'Avoid stairs',
@@ -127,14 +125,13 @@ export const en: Resource = {
     stepCounter: '{{current}} of {{total}}',
     voice: 'Voice',
     spokenStep: '{{go}}. {{action}}',
-    usesStairs: 'This route includes stairs (no step-free route was found).',
+    usesStairs: 'No step-free route, so this one uses stairs.',
     lateNight:
       'Late at night and early in the morning, some underground passages may be closed and escalators stopped. Only the hours we know are reflected in the route.',
     throughClosed:
       'Only a route through passages or facilities that are closed at this hour was found. Please follow the signs on site.',
     alreadyHere: 'You are already at the destination.',
-    estimateNote:
-      'Your position is the estimate from when guidance started. Tap "I\'m lost" if it drifts.',
+    estimateNote: 'If it drifts, tap "I\'m lost" to find your position again.',
   },
   lost: {
     button: "I'm lost",

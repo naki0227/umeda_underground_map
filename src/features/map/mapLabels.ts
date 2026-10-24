@@ -8,14 +8,15 @@ import { textWidthPx, type LabelBox } from './labelLayout';
 
 /*
  * 地図ラベルの寸法（すべて画面 px）。ラベル類はズームに関係なくこの大きさで描く。
+ * 文字の大きさは index.css の --fs-xs（12）/ --fs-s（14）と合わせる
  */
 export const EXIT_FONT_PX = 12;
 export const EXIT_BADGE_HEIGHT_PX = 20;
 export const LABEL_FONT_PX = 12;
 export const ZONE_FONT_PX = 14;
-export const FACILITY_FONT_PX = 11;
+export const FACILITY_FONT_PX = 12;
 /** 案内中に出す沿道の店名（目印なので少し大きめ） */
-export const SHOP_LABEL_FONT_PX = 13;
+export const SHOP_LABEL_FONT_PX = 14;
 /** 店名ラベルの位置（ノードからの画面 px。左下が基準） */
 export const SHOP_LABEL_OFFSET_PX = { x: 12, y: 20 };
 const CHIP_PADDING_PX = 6;

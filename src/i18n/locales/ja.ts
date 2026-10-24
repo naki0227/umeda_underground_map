@@ -57,14 +57,14 @@ export const ja = {
   },
   favorites: {
     title: 'お気に入り',
-    empty: 'まだありません。場所を選んで「お気に入りに登録」を押すと、ここからすぐ案内できます。',
+    empty: 'まだありません。場所の「お気に入りに登録」で追加できます。',
     add: 'お気に入りに登録',
     removeNamed: '{{name}} をお気に入りから外す',
     storageNote: 'お気に入りはこの端末の中にだけ保存されます。',
   },
   spots: {
     title: 'おすすめスポット',
-    description: '地上の目印になるスポットです。タップすると最寄り出口まで案内します。',
+    description: 'タップすると最寄り出口まで案内します。',
     aboveGround: '地上',
     walk: '徒歩{{minutes}}分・約{{distance}}m',
   },
@@ -105,8 +105,7 @@ export const ja = {
     actionArrive: '「{{name}}」に到着',
     actionFloorUp: '「{{name}}」の{{via}}で{{floor}}へ上がる',
     actionFloorDown: '「{{name}}」の{{via}}で{{floor}}へ下りる',
-    aboveGroundHint:
-      '「{{name}}」は地上です。「{{exit}}」まで案内するので、そこから地上へ上がってください。',
+    aboveGroundHint: '「{{name}}」は地上です。「{{exit}}」から上がってください。',
     notFound: '経路が見つかりませんでした',
     eta: '到着まで 約{{minutes}}分・{{distance}}m',
     avoidStairs: '階段を避ける',
@@ -122,13 +121,13 @@ export const ja = {
     stepCounter: '{{current}} / {{total}}',
     voice: '音声案内',
     spokenStep: '{{go}}。{{action}}',
-    usesStairs: 'この経路には階段があります（階段を通らない経路が見つかりませんでした）',
+    usesStairs: '階段を通らない経路がないため、階段を通ります。',
     lateNight:
       '夜遅く・早朝は、閉まっている地下街の通路や止まっているエスカレーターがあります。開放時間が分かっている所だけ経路に反映しています。',
     throughClosed:
       'いまの時間に閉まっている通路・設備を通る経路しか見つかりませんでした。現地の案内に従ってください。',
     alreadyHere: '目的地は現在地です',
-    estimateNote: '現在地は開始時の推定位置です。ずれてきたら「迷った」で再測位してください。',
+    estimateNote: 'ずれたら「迷った」で現在地を測り直せます。',
   },
   lost: {
     button: '迷った',

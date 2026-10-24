@@ -62,15 +62,14 @@ export const ko: Resource = {
   },
   favorites: {
     title: '즐겨찾기',
-    empty:
-      '아직 없습니다. 장소를 고르고 "즐겨찾기에 추가"를 누르면 여기서 바로 안내받을 수 있습니다.',
+    empty: '아직 없습니다. 장소에서 "즐겨찾기에 추가"로 추가하세요.',
     add: '즐겨찾기에 추가',
     removeNamed: '{{name}}을(를) 즐겨찾기에서 삭제',
     storageNote: '즐겨찾기는 이 기기에만 저장됩니다.',
   },
   spots: {
     title: '추천 장소',
-    description: '지상의 랜드마크입니다. 탭하면 가장 가까운 출구까지 안내합니다.',
+    description: '탭하면 가장 가까운 출구까지 안내합니다.',
     aboveGround: '지상',
     walk: '도보 {{minutes}}분·약 {{distance}}m',
   },
@@ -111,8 +110,7 @@ export const ko: Resource = {
     actionArrive: '"{{name}}" 도착',
     actionFloorUp: '"{{name}}"의 {{via}}(으)로 {{floor}}까지 올라가기',
     actionFloorDown: '"{{name}}"의 {{via}}(으)로 {{floor}}까지 내려가기',
-    aboveGroundHint:
-      '"{{name}}"은(는) 지상에 있습니다. "{{exit}}"까지 안내하니 그곳에서 지상으로 올라가세요.',
+    aboveGroundHint: '"{{name}}"은(는) 지상입니다. "{{exit}}"에서 올라가세요.',
     notFound: '경로를 찾지 못했습니다',
     eta: '도착까지 약 {{minutes}}분·{{distance}}m',
     avoidStairs: '계단 피하기',
@@ -128,14 +126,13 @@ export const ko: Resource = {
     stepCounter: '{{current}} / {{total}}',
     voice: '음성 안내',
     spokenStep: '{{go}}. {{action}}',
-    usesStairs: '이 경로에는 계단이 있습니다 (계단 없는 경로를 찾지 못했습니다).',
+    usesStairs: '계단 없는 경로가 없어 계단을 지납니다.',
     lateNight:
       '늦은 밤과 이른 아침에는 일부 지하상가 통로가 닫히거나 에스컬레이터가 멈춰 있을 수 있습니다. 운영 시간을 아는 곳만 경로에 반영했습니다.',
     throughClosed:
       '지금 시간에 닫혀 있는 통로나 설비를 지나는 경로만 찾았습니다. 현장 안내에 따라 주세요.',
     alreadyHere: '이미 목적지에 있습니다.',
-    estimateNote:
-      '현재 위치는 안내 시작 시의 추정 위치입니다. 어긋나면 "길을 잃었어요"로 다시 측정하세요.',
+    estimateNote: '어긋나면 "길을 잃었어요"로 다시 측정하세요.',
   },
   lost: {
     button: '길을 잃었어요',
