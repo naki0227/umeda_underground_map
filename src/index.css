@@ -3,15 +3,27 @@
  * タッチ端末ではタップ後にホバーの色が残るため。
  */
 :root {
-  /* 紙の色と茶系の文字（lp-anatomy：温かい飲食の型。背景を白にしない、文字・影も茶系） */
-  --text: #5e4b3c;
-  --text-strong: #3b2a1e;
-  --bg: #fffaf3;
-  --bg-soft: #f6ecdc;
-  --border: #eadbc4;
-  --shadow-warm: 0 8px 24px rgba(73, 35, 29, 0.16);
-  --radius-card: 20px;
-  --radius-sheet: 28px;
+  /*
+   * 色・枠・影は「温かい飲食」の型（lp-anatomy の解剖ノート 2026-10-17・びっくりドンキー）に合わせる。
+   * 背景は紙色2色、白はカードとヘッダーだけ。文字は焦げ茶3段。カードに枠線は引かず、締まった茶の影で浮かせる
+   */
+  --paper: #efebea; /* 薄い紙色：シート・画面の地 */
+  --bg-soft: #e7dacb; /* クラフト紙色：入力欄・チップ・注意の札 */
+  --bg: #ffffff; /* カードとヘッダーだけ */
+  --text-strong: #3b201b; /* 本文・見出し：焦げ茶 */
+  --text: #60352c; /* ボタンの文字・補足 */
+  --text-sub: #937872; /* 番号・距離・ラベル */
+  --border: rgba(96, 53, 44, 0.18); /* 罫線（区切りだけに使う） */
+  --shadow-card: 1px 1px 2px rgba(73, 35, 29, 0.25);
+  --shadow-float: 1px 2px 6px rgba(73, 35, 29, 0.28); /* 地図の上に浮かぶもの */
+  --radius-card: 28px 28px 14px 14px; /* 上を大きく丸めたカード */
+  --radius-s: 14px;
+  /* 数字・ラベルは丸い字（Webフォントは読まず、端末にある丸ゴシック） */
+  --font-round:
+    'Hiragino Maru Gothic ProN', 'Hiragino Maru Gothic Pro', 'Arial Rounded MT Bold',
+    'Hiragino Sans', system-ui, sans-serif;
+  --action: #1d4ed8; /* 押す所と案内（経路の青と同じ） */
+  --action-dark: #1e3a9e;
   --accent: #4fb3d1; /* 水色 */
   --accent-strong: #2f8fae;
   --accent-soft: #e3f3f8;
@@ -45,9 +57,10 @@
 body {
   margin: 0;
   font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', system-ui, sans-serif;
-  color: var(--text);
-  background: var(--bg-soft);
-  line-height: 1.6;
+  color: var(--text-strong);
+  background: var(--paper);
+  line-height: 1.7;
+  letter-spacing: 0.02em;
 }
 
 .app-map {
@@ -79,9 +92,8 @@ body {
   gap: 8px;
   padding: 10px;
   background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(73, 35, 29, 0.12);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-float);
   z-index: 10;
 }
 
@@ -92,9 +104,9 @@ body {
   width: 100%;
   padding: 10px 12px;
   background: var(--bg-soft);
-  border: 1px solid var(--border);
   text-align: left;
   color: var(--text-strong);
+  border-radius: var(--radius-s);
 }
 
 .current-dot {
@@ -131,12 +143,11 @@ body {
   transform: translateX(-50%);
   bottom: 128px;
   padding: 10px 18px;
-  background: var(--warn-soft);
-  border: 1px solid var(--warn);
+  background: var(--bg);
   color: var(--warn);
   font-weight: 600;
   border-radius: 999px;
-  box-shadow: 0 4px 16px rgba(73, 35, 29, 0.12);
+  box-shadow: var(--shadow-float);
   white-space: nowrap;
   z-index: 15;
 }
@@ -192,10 +203,10 @@ body {
   gap: 6px;
   min-width: 180px;
   text-align: left;
-  background: var(--bg-soft);
-  border: 1px solid var(--border);
+  background: var(--bg);
   border-radius: var(--radius-card);
   color: var(--text-strong);
+  box-shadow: var(--shadow-card);
 }
 
 .spot-name {
@@ -208,13 +219,14 @@ body {
   align-items: center;
   gap: 6px;
   font-size: var(--fs-xs);
-  color: var(--text);
+  color: var(--text-sub);
+  font-family: var(--font-round);
 }
 
 .spot-tag {
-  background: #f8f1e2;
-  border: 1px solid #d9caa8;
-  color: #8a713f;
+  background: var(--bg-soft);
+  border: none;
+  color: var(--text);
   border-radius: 999px;
   padding: 1px 8px;
   font-size: var(--fs-xs);
@@ -229,11 +241,11 @@ body {
 .search-bar input {
   width: 100%;
   padding: 12px 14px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-s);
   font-size: var(--fs-m);
-  background: var(--bg);
-  box-shadow: 0 2px 8px rgba(73, 35, 29, 0.08);
+  background: var(--bg-soft);
+  box-shadow: none;
+  border: none;
 }
 
 .search-results {
@@ -241,9 +253,8 @@ body {
   margin: 6px 0 0;
   padding: 6px;
   background: var(--bg);
-  border: 1px solid var(--border);
   border-radius: var(--radius);
-  box-shadow: 0 4px 16px rgba(73, 35, 29, 0.12);
+  box-shadow: var(--shadow-float);
   max-height: 50vh;
   overflow-y: auto;
   display: grid;
@@ -294,9 +305,8 @@ body {
   padding: 0;
   font-size: var(--fs-xl);
   background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--text-strong);
-  box-shadow: 0 2px 8px rgba(73, 35, 29, 0.08);
+  color: var(--text);
+  box-shadow: var(--shadow-float);
 }
 
 /* 表示する階の切り替え（左側、ズームボタンと同じ高さ） */
@@ -307,10 +317,9 @@ body {
   display: grid;
   gap: 0;
   z-index: 5;
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   overflow: hidden;
-  box-shadow: 0 2px 8px rgba(73, 35, 29, 0.08);
+  box-shadow: var(--shadow-float);
 }
 
 .floor-switcher button {
@@ -358,11 +367,10 @@ body {
   flex-direction: column;
   transition: max-height 0.18s ease-out;
   overflow-y: auto;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sheet);
+  background: var(--paper);
+  border-radius: var(--radius-card);
   padding: 0 20px 16px;
-  box-shadow: var(--shadow-warm);
+  box-shadow: var(--shadow-float);
   z-index: 20;
 }
 
@@ -377,21 +385,20 @@ body {
   justify-content: center;
   padding: 10px 0 8px;
   margin: 0 -20px;
-  background: transparent;
   border: none;
   cursor: grab;
   touch-action: none;
   position: sticky;
   top: 0;
   z-index: 1;
-  background: var(--bg);
+  background: var(--paper);
 }
 
 .sheet-handle span {
   width: 44px;
   height: 5px;
   border-radius: 999px;
-  background: var(--border);
+  background: var(--text-sub);
 }
 
 .sheet h1 {
@@ -495,11 +502,11 @@ select,
 input[type='search'] {
   width: 100%;
   padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-s);
   font-size: var(--fs-m);
-  background: #ffffff;
+  background: var(--bg-soft);
   color: var(--text);
+  border: none;
 }
 
 button {
@@ -512,7 +519,7 @@ button {
 
 button.primary {
   width: 100%;
-  background: var(--accent);
+  background: var(--action);
   color: #fff;
   font-weight: 600;
 }
@@ -525,8 +532,8 @@ button.primary {
 
 button.secondary {
   background: var(--bg-soft);
-  color: var(--text-strong);
-  border-color: var(--border);
+  color: var(--text);
+  border-color: transparent;
 }
 
 button.warn {
@@ -544,15 +551,14 @@ button.warn {
 button.chip {
   padding: 8px 14px;
   border-radius: 999px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  color: var(--text-strong);
+  background: var(--bg-soft);
+  color: var(--text);
   font-size: var(--fs-s);
 }
 
 button.chip.active {
-  background: var(--accent);
-  border-color: var(--accent-strong);
+  background: var(--text);
+  border-color: transparent;
   color: #ffffff;
   font-weight: 600;
 }
@@ -560,9 +566,10 @@ button.chip.active {
 .estimate-card {
   margin-top: 16px;
   padding: 14px 16px;
-  border: 1px solid var(--accent);
+  border: none;
   border-radius: var(--radius-card);
-  background: var(--accent-soft);
+  background: var(--bg);
+  box-shadow: var(--shadow-card);
 }
 
 .estimate-title {
@@ -594,6 +601,7 @@ button.chip.active {
   color: #ffffff;
   font-size: var(--fs-xs);
   font-weight: 700;
+  font-family: var(--font-round);
 }
 
 .choice-list {
@@ -611,9 +619,9 @@ button.chip.active {
   align-items: center;
   gap: 8px;
   padding: 8px 10px;
-  border: 1px solid var(--border);
   border-radius: var(--radius);
   background: var(--bg);
+  box-shadow: var(--shadow-card);
 }
 
 button.candidate {
@@ -624,8 +632,9 @@ button.candidate {
   gap: 8px;
   text-align: left;
   background: var(--bg);
-  border: 1px solid var(--border);
   color: var(--text-strong);
+  box-shadow: var(--shadow-card);
+  border-radius: var(--radius-card);
 }
 
 @media (hover: hover) and (pointer: fine) {
@@ -654,32 +663,29 @@ button.candidate {
 
 .steps {
   margin: 12px 0;
-  padding: 6px;
+  padding: 0;
   list-style: none;
   display: grid;
-  gap: 2px;
-  background: var(--bg-soft);
-  border-radius: var(--radius-card);
 }
 
 .steps li {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 12px;
-  border-radius: 14px;
+  gap: 12px;
+  padding: 12px 14px;
+  border-bottom: 1px dashed var(--border);
 }
 
 .steps li.current {
   background: var(--bg);
-  box-shadow:
-    inset 4px 0 0 var(--route),
-    0 2px 8px rgba(73, 35, 29, 0.1);
+  border-bottom-color: transparent;
+  border-radius: var(--radius-s);
+  box-shadow: var(--shadow-card);
 }
 
 .step-icon {
   font-size: var(--fs-l);
-  color: var(--accent-strong);
+  color: var(--action);
   flex-shrink: 0;
   width: 1.4em;
   text-align: center;
@@ -693,6 +699,8 @@ button.candidate {
 
 .step-distance {
   font-size: var(--fs-s);
+  font-family: var(--font-round);
+  color: var(--text-sub);
 }
 
 .step-action {
@@ -717,20 +725,25 @@ button.candidate {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin: 12px 0 8px;
-  padding: 22px 18px 16px;
-  background: var(--route);
-  color: #ffffff;
-  /* 上辺をゆるいアーチに（メニューカードの型） */
-  border-radius: 50% 50% var(--radius-card) var(--radius-card) / 14px 14px var(--radius-card)
-    var(--radius-card);
-  box-shadow: 0 8px 20px rgba(29, 78, 216, 0.28);
+  margin: 12px 0 10px;
+  padding: 20px 18px 16px;
+  background: var(--bg);
+  color: var(--text-strong);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
 }
 
 .next-icon {
-  font-size: var(--fs-2xl);
+  font-size: var(--fs-xl);
   line-height: 1;
   flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: var(--action);
+  color: #ffffff;
 }
 
 .next-body {
@@ -741,12 +754,14 @@ button.candidate {
 
 .next-distance {
   font-size: var(--fs-s);
-  opacity: 0.9;
+  font-family: var(--font-round);
+  color: var(--text-sub);
 }
 
 .next-action {
   font-weight: 700;
   font-size: var(--fs-m);
+  color: var(--text-strong);
 }
 
 .next-floors {
@@ -757,15 +772,18 @@ button.candidate {
 }
 
 .next-step-card .floor-badge {
-  background: rgba(255, 255, 255, 0.22);
+  background: var(--bg-soft);
+  color: var(--text);
 }
 
 .next-step-card .floor-badge.to {
   background: var(--warn);
+  color: #ffffff;
 }
 
 .total.eta {
   font-size: var(--fs-m);
+  font-family: var(--font-round);
 }
 
 .route-actions {
@@ -791,8 +809,7 @@ button.candidate {
   color: var(--text-strong);
   background: var(--bg-soft);
   padding: 10px 14px;
-  border-radius: 16px;
-  box-shadow: inset 4px 0 0 var(--accent);
+  border-radius: var(--radius-s);
 }
 
 .hint.warn {
@@ -994,11 +1011,11 @@ button.candidate {
   gap: 12px;
   padding: 8px 12px;
   background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--border);
   border-radius: 999px;
   font-size: var(--fs-xs);
   color: var(--text-strong);
   z-index: 5;
+  box-shadow: var(--shadow-float);
 }
 
 .map-legend span {
@@ -1125,11 +1142,11 @@ button.candidate {
   padding: 8px 12px;
   border-radius: var(--radius);
   background: rgba(255, 255, 255, 0.95);
-  border: 1px solid var(--border);
   color: var(--text-strong);
   font-size: var(--fs-s);
   text-align: left;
   z-index: 6;
+  box-shadow: var(--shadow-float);
 }
 
 .above-ground-suggest {
@@ -1162,7 +1179,7 @@ button.candidate {
 
 /* 案内の操作は経路と同じ青に */
 .step-nav button.primary {
-  background: var(--route);
+  background: var(--action);
 }
 
 /* カードはマウスを乗せると少し揺れる（温かい飲食の型の遊び。1回だけ、動きを減らす設定・データセーバーでは揺れない） */
@@ -1189,10 +1206,11 @@ button.candidate {
 
 .step-counter {
   position: absolute;
-  top: 12px;
+  top: 10px;
   right: 18px;
   font-size: var(--fs-xs);
-  color: rgba(255, 255, 255, 0.85);
+  color: var(--text-sub);
+  font-family: var(--font-round);
 }
 
 .steps li.done {
@@ -1220,8 +1238,7 @@ button.candidate {
   margin-left: auto;
   padding: 4px 10px;
   border-radius: 999px;
-  border: 1px solid var(--border);
-  background: var(--bg);
+  background: var(--bg-soft);
   color: var(--text-strong);
   font-size: var(--fs-s);
 }
@@ -1252,18 +1269,17 @@ button.candidate {
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
+  border-radius: var(--radius-card);
   background: var(--bg);
   text-align: left;
   color: var(--text-strong);
+  box-shadow: var(--shadow-card);
 }
 
 .favorite-remove {
   padding: 0 12px;
-  border: 1px solid var(--border);
   border-radius: var(--radius);
-  background: var(--bg);
+  background: var(--bg-soft);
   color: #f59e0b;
   font-size: var(--fs-l);
 }
@@ -1435,17 +1451,24 @@ button.candidate {
   min-width: 0;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 10px 14px;
-  border-radius: 16px;
-  background: var(--route);
-  color: #ffffff;
-  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.3);
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: var(--radius-card);
+  background: var(--bg);
+  color: var(--text-strong);
+  box-shadow: var(--shadow-float);
 }
 
 .fpv-ahead-icon {
   flex: none;
-  font-size: var(--fs-2xl);
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: var(--action);
+  color: #ffffff;
+  font-size: var(--fs-xl);
   line-height: 1;
   font-weight: 700;
 }
@@ -1460,12 +1483,13 @@ button.candidate {
 .fpv-ahead-distance {
   font-size: var(--fs-2xl);
   font-weight: 800;
+  font-family: var(--font-round);
 }
 
 .fpv-ahead-action {
   font-size: var(--fs-m);
   font-weight: 700;
-  opacity: 0.92;
+  color: var(--text);
 }
 
 .mini-map {
@@ -1474,10 +1498,10 @@ button.candidate {
   height: 132px;
   padding: 0;
   overflow: hidden;
-  border: 3px solid #ffffff;
-  border-radius: 18px;
+  border: 3px solid var(--bg);
+  border-radius: var(--radius-card);
   background: var(--ground);
-  box-shadow: 0 6px 18px rgba(60, 40, 20, 0.22);
+  box-shadow: var(--shadow-float);
   cursor: pointer;
 }
 
