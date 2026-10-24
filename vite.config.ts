@@ -15,6 +15,8 @@ export default defineConfig({
       registerType: 'autoUpdate',
       includeAssets: pwaIncludeAssets,
       manifest: pwaManifest,
+      // 数字の丸い字（woff2）もオフラインで使えるよう先に保存する
+      workbox: { globPatterns: ['**/*.{js,css,html,woff2}'] },
     }),
   ],
   test: {

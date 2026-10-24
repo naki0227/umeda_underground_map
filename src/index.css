@@ -2,6 +2,18 @@
  * :hover はマウス端末だけに当てる（@media (hover: hover) and (pointer: fine)）。
  * タッチ端末ではタップ後にホバーの色が残るため。
  */
+/*
+ * 数字・英字の丸い字。Fredoka（SIL OFL 1.1、src/assets/fonts/OFL-Fredoka.txt）を、太さ600・英数字だけ・
+ * 数字の幅をそろえた形に作り直したもの（7.7KB）。日本語は端末の字のまま
+ */
+@font-face {
+  font-family: 'Umeda Round';
+  src: url('./assets/fonts/round-600.woff2') format('woff2');
+  font-weight: 400 800;
+  font-display: swap;
+  unicode-range: U+0020-007E;
+}
+
 :root {
   /*
    * 色・枠・影は「温かい飲食」の型（lp-anatomy の解剖ノート 2026-10-17・びっくりドンキー）に合わせる。
@@ -18,10 +30,10 @@
   --shadow-float: 1px 2px 6px rgba(73, 35, 29, 0.28); /* 地図の上に浮かぶもの */
   --radius-card: 28px 28px 14px 14px; /* 上を大きく丸めたカード */
   --radius-s: 14px;
-  /* 数字・ラベルは丸い字（Webフォントは読まず、端末にある丸ゴシック） */
+  /* 数字・ラベルは丸い字（英数字は Umeda Round、日本語は端末の字） */
   --font-round:
-    'Hiragino Maru Gothic ProN', 'Hiragino Maru Gothic Pro', 'Arial Rounded MT Bold',
-    'Hiragino Sans', system-ui, sans-serif;
+    'Umeda Round', 'Hiragino Maru Gothic ProN', 'Hiragino Sans', 'Noto Sans JP', system-ui,
+    sans-serif;
   --action: #1d4ed8; /* 押す所と案内（経路の青と同じ） */
   --action-dark: #1e3a9e;
   --accent: #4fb3d1; /* 水色 */
@@ -992,6 +1004,7 @@ button.candidate {
   font-weight: 700;
   fill: #ffffff;
   cursor: pointer;
+  font-family: var(--font-round);
 }
 
 .map-exit-badge.compact circle:not(.hit-area) {
