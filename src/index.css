@@ -422,6 +422,36 @@ body {
   cursor: pointer;
 }
 
+/* 目印はアイコン。名前は札（改札は路線の色の札に路線名） */
+.map-pin-icon,
+.building-icon {
+  font-size: 11px;
+  pointer-events: none;
+}
+
+.building-icon {
+  font-size: 12px;
+}
+
+.map-pin-label rect {
+  fill: var(--bg);
+  stroke: rgba(60, 40, 20, 0.15);
+  stroke-width: 1;
+}
+
+.map-pin-label .map-label {
+  fill: var(--text-strong);
+  font-weight: 700;
+}
+
+.map-pin.gate .map-pin-label rect {
+  stroke: none;
+}
+
+.map-pin.gate .map-pin-label .map-label {
+  fill: #ffffff;
+}
+
 @media (hover: hover) and (pointer: fine) {
   .map-pin:hover circle {
     fill: var(--accent-soft);
@@ -910,8 +940,8 @@ button.candidate {
 }
 
 .map-exit-badge.compact circle:not(.hit-area) {
-  fill: var(--accent-strong);
-  stroke: #ffffff;
+  fill: #ffffff;
+  stroke: var(--accent-strong);
   stroke-width: 1.5;
   cursor: pointer;
 }
@@ -1245,7 +1275,10 @@ button.candidate {
 }
 
 .building .building-top {
+  fill: #ffffff;
+  stroke: #c9b79c;
   stroke-width: 1.5;
+  filter: drop-shadow(0 1px 1.5px rgba(60, 40, 20, 0.25));
 }
 
 .building.selected .building-top {

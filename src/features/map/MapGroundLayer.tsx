@@ -2,6 +2,7 @@ import { useTranslation } from 'react-i18next';
 import { localized } from '../../i18n';
 import { BUILDING_ICON_SIZE_PX, BUILDING_ICON_TOP_PX, type Building } from './ground';
 import type { Place } from './InteractiveMap';
+import { poiIcon } from './mapIcons';
 import { BUILDING_LABEL_BELOW_DY_PX, buildingLabelYPx } from './mapLabels';
 import { pressable } from './pressable';
 
@@ -16,7 +17,7 @@ interface Props {
   onPick: (place: Place) => void;
 }
 
-/** 地上レイヤー: 地上スポットの目印と、選んだスポットから最寄り出口への点線 */
+/** 地上レイヤー: 地上スポットのアイコン（名前は拡大時・選択時）と、選んだスポットから最寄り出口への点線 */
 export function MapGroundLayer({
   buildings,
   unitsPerPixel: k,
@@ -64,22 +65,17 @@ export function MapGroundLayer({
               height={size + 14}
             />
             <circle className="building-shadow" r={3} />
-            <rect
-              className="building-top"
-              x={-size / 2}
-              y={BUILDING_ICON_TOP_PX}
-              width={size}
-              height={size}
-              rx={3}
-            />
-            <rect
-              className="building-window"
-              x={-2.5}
-              y={BUILDING_ICON_TOP_PX + 4}
-              width={5}
-              height={6}
-              rx={1}
-            />
+            <circle className="building-top" cy={BUILDING_ICON_TOP_PX + size / 2} r={size / 2} />
+            <text
+              className="building-icon"
+              y={BUILDING_ICON_TOP_PX + size / 2}
+              textAnchor="middle"
+              dominantBaseline="central"
+              pointerEvents="none"
+              aria-hidden
+            >
+              {poiIcon(poi)}
+            </text>
             {(selected || labelLayout.has(`building:${poi.id}`)) && (
               <text
                 className="map-label building-label"

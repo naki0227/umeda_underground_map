@@ -94,3 +94,10 @@ describe('buildBuildings', () => {
     }
   });
 });
+
+describe('map labels show icons instead of names unless zoomed in', () => {
+  it('has no building names at the normal zoom, and has them when zoomed in', () => {
+    expect(boxesAt(1).filter((b) => b.id.startsWith('building:'))).toEqual([]);
+    expect(boxesAt(0.5).filter((b) => b.id.startsWith('building:')).length).toBe(buildings.length);
+  });
+});

@@ -4,10 +4,10 @@ import type { Poi } from '../../domain/types';
 import { project, type ScreenPoint } from './projection';
 
 /*
- * 地上スポット（建物）は、拡大しても大きくならない小さな目印で描く（画面 px）。
+ * 地上スポット（建物）は、拡大しても大きくならない丸いアイコンで描く（画面 px）。
  * 地図上の位置は地上スポット自身の位置。目印は基準点の少し上に描く。
  */
-export const BUILDING_ICON_SIZE_PX = 14;
+export const BUILDING_ICON_SIZE_PX = 20;
 /** 目印の上端（基準点からの画面 px。上が負） */
 export const BUILDING_ICON_TOP_PX = -(BUILDING_ICON_SIZE_PX + 2);
 
