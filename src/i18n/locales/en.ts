@@ -36,6 +36,7 @@ export const en: Resource = {
   search: {
     placeholder: 'Enter destination (shops, exits, spots)',
     results: 'Search results',
+    kindStation: 'Station',
     kindPoi: 'Above ground',
     kindShop: 'Shop',
     kindBuildingShop: 'Shop in a building',

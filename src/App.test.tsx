@@ -168,6 +168,30 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
     expect(stepItems[1]).toHaveAttribute('aria-current', 'step');
   });
 
+  it.each([
+    ['桜橋口', 'JR大阪駅 桜橋口'],
+    ['御堂筋口', 'JR大阪駅 御堂筋口'],
+  ])('choosing 大阪駅 guides to its nearest gate (from %s)', async (from, gate) => {
+    const user = userEvent.setup();
+    render(<App />);
+    const search = screen.getByRole('searchbox', { name: '目的地を入力（お店・出口・スポット）' });
+    const results = () => within(screen.getByRole('list', { name: '検索結果' }));
+
+    // 現在地をその改札に
+    await user.type(search, from);
+    await user.click(results().getByRole('button', { name: new RegExp(from) }));
+    await user.click(screen.getByRole('button', { name: 'いまここにいる' }));
+
+    // 「大阪駅」で駅が先頭に出て、選ぶと近い方の改札へ案内する
+    await user.type(search, '大阪駅');
+    const first = results().getAllByRole('button')[0];
+    expect(first).toHaveTextContent('JR大阪駅');
+    expect(first).toHaveTextContent('駅');
+    await user.click(first);
+    await user.click(screen.getByRole('button', { name: 'ここへ行く' }));
+    expect(screen.getByText(new RegExp(`目的地: ${gate}`))).toBeInTheDocument();
+  });
+
   it('adds a place to favorites and starts directions from the favorites tab', async () => {
     localStorage.clear();
     const tabs = () => screen.getByRole('navigation', { name: 'メインメニュー' });

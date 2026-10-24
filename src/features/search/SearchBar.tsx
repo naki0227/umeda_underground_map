@@ -2,6 +2,7 @@ import { useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
 import { shopPlaceName } from '../../domain/shopLabel';
+import { matchStations, stationGates } from '../../domain/stations';
 import type { Poi, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
 import type { Place } from '../map/InteractiveMap';
@@ -32,6 +33,18 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
     const matches = (ja: string, en: string) =>
       ja.toLowerCase().includes(q) || en.toLowerCase().includes(q);
 
+    // 駅（改札がいくつもある）は先頭に。選ぶと、いまいる所から一番近い改札へ案内する
+    const stationResults: Result[] = matchStations(q).flatMap((station) => {
+      const gates = stationGates(station, graph.nodes.values());
+      if (gates.length === 0) return [];
+      return [
+        {
+          key: `station:${station.id}`,
+          place: { nodeId: gates[0], nodeIds: gates, name: station.name, aboveGround: false },
+          kindLabel: t('search.kindStation'),
+        },
+      ];
+    });
     const poiResults: Result[] = pois
       .filter((p) => matches(p.name.ja, p.name.en))
       .map((p) => ({
@@ -58,7 +71,7 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
         kindLabel: t('search.kindNode'),
       }));
 
-    return [...poiResults, ...shopResults, ...nodeResults].slice(0, MAX_RESULTS);
+    return [...stationResults, ...poiResults, ...shopResults, ...nodeResults].slice(0, MAX_RESULTS);
   }, [query, pois, shops, graph, t]);
 
   const pick = (result: Result) => {

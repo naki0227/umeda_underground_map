@@ -18,6 +18,7 @@ import { useInitialGeolocation } from './features/locate/useGeolocation';
 import { FirstPersonView } from './features/route/FirstPersonView';
 import { MiniMap } from './features/route/MiniMap';
 import { planRoute } from './features/route/planRoute';
+import { useRouteTarget } from './features/route/useRouteTarget';
 import { RouteScreen } from './features/route/RouteScreen';
 import { buildSceneInput } from './features/route/scene/sceneInput';
 import { SearchBar } from './features/search/SearchBar';
@@ -66,15 +67,19 @@ export default function App() {
   if (routeClock.request !== routeRequest)
     setRouteClock({ request: routeRequest, time: new Date() });
   const routeTime = routeClock.time;
+  const { targetNodeId, targetLabel } = useRouteTarget(graph, nav.currentNodeId, nav.destination, {
+    avoidStairs,
+    time: routeTime,
+  });
   const route = useMemo(() => {
-    if (nav.currentNodeId === null || nav.destination === null) return null;
+    if (nav.currentNodeId === null || targetNodeId === null) return null;
     return (
-      planRoute(graph, nav.currentNodeId, nav.destination.nodeId, {
+      planRoute(graph, nav.currentNodeId, targetNodeId, {
         avoidStairs,
         minute: minuteOfDayInTokyo(routeTime),
       })?.route ?? null
     );
-  }, [graph, nav.currentNodeId, nav.destination, avoidStairs, routeTime]);
+  }, [graph, nav.currentNodeId, targetNodeId, avoidStairs, routeTime]);
 
   // 案内中に表示しているステップ。経路が変わったら先頭に戻す
   const routeKey = route?.nodeIds.join('>') ?? '';
@@ -140,7 +145,7 @@ export default function App() {
         routeNodeIds={route?.nodeIds}
         focusNodeIds={focusNodeIds}
         currentNodeId={nav.currentNodeId}
-        destinationNodeId={nav.destination?.nodeId ?? null}
+        destinationNodeId={targetNodeId}
         selectedNodeId={nav.sheet === 'place' ? (nav.selectedPlace?.nodeId ?? null) : null}
         linkedPoiIds={linkedPoiIds}
         bottomInset={SHEET_INSET[nav.sheet] ?? DEFAULT_SHEET_INSET}
@@ -239,7 +244,7 @@ export default function App() {
                 graph={graph}
                 routeNodeIds={route.nodeIds}
                 stepNodeIds={currentStep.nodeIds}
-                destinationNodeId={nav.destination.nodeId}
+                destinationNodeId={targetNodeId ?? nav.destination.nodeId}
                 onOpenMap={() => setFirstPerson(false)}
               />
             }
@@ -251,8 +256,8 @@ export default function App() {
           <RouteScreen
             graph={graph}
             fromNodeId={nav.currentNodeId}
-            toNodeId={nav.destination.nodeId}
-            destinationLabel={nav.destination.name}
+            toNodeId={targetNodeId ?? nav.destination.nodeId}
+            destinationLabel={targetLabel ?? nav.destination.name}
             aboveGround={nav.destination.aboveGround}
             avoidStairs={avoidStairs}
             onToggleAvoidStairs={() => setAvoidStairs((v) => !v)}

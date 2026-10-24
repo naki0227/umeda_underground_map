@@ -32,6 +32,7 @@ export const ja = {
   search: {
     placeholder: '目的地を入力（お店・出口・スポット）',
     results: '検索結果',
+    kindStation: '駅',
     kindPoi: '地上',
     kindShop: '地下のお店',
     kindBuildingShop: 'ビルのお店',

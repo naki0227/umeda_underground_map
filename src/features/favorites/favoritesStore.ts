@@ -40,6 +40,10 @@ export function loadFavorites(): Place[] {
         nodeId: p.nodeId,
         name: { ja: p.name.ja, en: p.name.en },
         aboveGround: p.aboveGround,
+        // 駅など、行き先の候補が複数あるもの
+        ...(Array.isArray(p.nodeIds) && p.nodeIds.every((id) => typeof id === 'string')
+          ? { nodeIds: p.nodeIds }
+          : {}),
       }))
       .slice(0, MAX_FAVORITES);
   } catch {
