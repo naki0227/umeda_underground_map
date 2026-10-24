@@ -26,3 +26,21 @@ export function headingUpProjector(
     return { px: size / 2 + x * scale, py: size / 2 - y * scale };
   };
 }
+
+/**
+ * headingUpProjector と同じ変換を、地図の画面座標（x, -y）で描いた要素にかける SVG の transform にする。
+ * 大きな地図の下地や地下街の形をそのまま回して使える
+ */
+export function headingUpTransform(
+  center: PlanePoint,
+  heading: PlanePoint,
+  scale: number,
+  size: number,
+): string {
+  const bearing = Math.atan2(heading.x, heading.y);
+  const c = Math.cos(bearing) * scale;
+  const s = Math.sin(bearing) * scale;
+  const e = size / 2 - c * center.x + s * center.y;
+  const f = size / 2 + s * center.x + c * center.y;
+  return `matrix(${c} ${-s} ${s} ${c} ${e} ${f})`;
+}

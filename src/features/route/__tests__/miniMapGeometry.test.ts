@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { headingUpProjector } from '../miniMapGeometry';
+import { headingUpProjector, headingUpTransform } from '../miniMapGeometry';
 
 const near = (a: { px: number; py: number }, b: { px: number; py: number }) => {
   expect(a.px).toBeCloseTo(b.px);
@@ -26,5 +26,22 @@ describe('headingUpProjector', () => {
     const p = headingUpProjector(center, { x: -1, y: -1 }, 1, 100);
     const ahead = p({ x: 100 - 10 / Math.SQRT2, y: 200 - 10 / Math.SQRT2 });
     near(ahead, { px: 50, py: 40 });
+  });
+});
+
+describe('headingUpTransform', () => {
+  it('matches the projector for points drawn in map screen coordinates (x, -y)', () => {
+    const center = { x: 100, y: 200 };
+    const heading = { x: 0.6, y: -0.8 };
+    const [a, b, c, d, e, f] = headingUpTransform(center, heading, 1.5, 132)
+      .slice(7, -1)
+      .split(' ')
+      .map(Number);
+    const project = headingUpProjector(center, heading, 1.5, 132);
+    for (const p of [center, { x: 130, y: 180 }, { x: 40, y: 260 }]) {
+      const u = p.x;
+      const v = -p.y;
+      near({ px: a * u + c * v + e, py: b * u + d * v + f }, project(p));
+    }
   });
 });

@@ -18,10 +18,11 @@
   --select-soft: #fde68a;
   --select-ring: rgba(245, 158, 11, 0.15);
   /* 下地（地上）と地下街の色 */
-  --ground: #eef1f4;
-  --ground-building: #d8dee6;
+  --ground: #f5efe4;
+  --ground-building: #e6dccb;
   --ground-road: #ffffff;
-  --corridor: #8fc3d6;
+  --ground-road-major: #fde7a8;
+  --corridor: #3fb0c9;
   --radius: 10px;
   color-scheme: light;
 }
@@ -788,6 +789,7 @@ button.candidate {
 }
 
 .basemap-road.major {
+  stroke: var(--ground-road-major);
   stroke-width: 18;
 }
 
@@ -849,46 +851,46 @@ button.candidate {
 }
 
 .map-node {
-  fill: #8fb6c6;
+  fill: var(--corridor);
 }
 
 .map-zone {
   fill: #cfe3f7;
   stroke: #9fc2e6;
   stroke-width: 2;
-  opacity: 0.8;
+  opacity: 0.92;
 }
 
 /* 地下街ごとの色（床の形） */
 .map-zone.zone-whity {
-  fill: #cfe0fb;
-  stroke: #8fb1ec;
+  fill: #ffd7b0;
+  stroke: #f4a45c;
 }
 
 .map-zone.zone-diamor {
-  fill: #cdeee3;
-  stroke: #84cdb4;
+  fill: #c4efd9;
+  stroke: #52c48d;
 }
 
 .map-zone.zone-dojima {
-  fill: #fbe5cc;
-  stroke: #eebd86;
+  fill: #fff0a8;
+  stroke: #e8c53a;
 }
 
 .map-zone.zone-ekimo {
-  fill: #e6dcf7;
-  stroke: #b9a3e6;
+  fill: #e3d4ff;
+  stroke: #a07ef0;
 }
 
 .map-zone.zone-sanbangai {
-  fill: #f8d9e2;
-  stroke: #e7a2b7;
+  fill: #ffd1df;
+  stroke: #f2789f;
 }
 
 .map-zone-label {
   font-size: 14px;
-  font-weight: 700;
-  fill: #7a86b8;
+  font-weight: 800;
+  fill: #6b4f3a;
   opacity: 0.9;
   pointer-events: none;
 }
@@ -967,12 +969,12 @@ button.candidate {
 
 .map-legend .swatch.underground {
   background: var(--corridor);
-  border: 1px solid #6aa9c0;
+  border: 1px solid #2b8ea5;
 }
 
 .map-legend .swatch.ground {
   background: var(--ground-building);
-  border: 1px solid #c3cad3;
+  border: 1px solid #cdbfa8;
 }
 
 .map-node.candidate {
@@ -1297,71 +1299,97 @@ button.candidate {
   font-size: 16px;
 }
 
-/* 案内中の一人称の表示。案内の主役として、上端から下のシート（peek）の上までを使う */
-.first-person {
-  position: absolute;
-  top: 12px;
-  left: 12px;
-  right: 12px;
-  /* シートは peek で画面の 30%、下端から 74px の位置 */
-  bottom: calc(30vh + 74px + 8px);
-  max-width: 560px;
-  margin: 0 auto;
-  display: flex;
-  flex-direction: column;
-  overflow-y: auto;
-  padding: 10px 12px 12px;
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 14px;
-  box-shadow: 0 4px 16px rgba(22, 35, 44, 0.12);
-  z-index: 15;
+/* 案内中の一人称の画面。地図から切り替わり、画面いっぱいに通路の絵を出す（下に操作のシート） */
+.fpv-on .interactive-map,
+.fpv-on .map-topbar,
+.fpv-on .setup-banner,
+.fpv-on .gps-note {
+  visibility: hidden;
 }
 
-/* 左上に小さな地図、右に次の動き */
+.first-person {
+  position: absolute;
+  inset: 0;
+  background: #fbf3e6;
+  overflow: hidden;
+  z-index: 18;
+}
+
+.fpv-scene {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.fpv-sky {
+  fill: #fbf3e6;
+}
+
+.fpv-pill text {
+  fill: #ffffff;
+  font-weight: 700;
+}
+
+.fpv-pill rect,
+.fpv-pill path {
+  stroke: none;
+  filter: drop-shadow(0 1px 2px rgba(60, 40, 20, 0.25));
+}
+
+.fpv-pill.exit text,
+.fpv-pill.goal text {
+  fill: #1f2937;
+}
+
+/* 左上に小さな地図、その右に次の動き */
 .fpv-header {
+  position: absolute;
+  top: calc(12px + env(safe-area-inset-top));
+  left: 12px;
+  right: 12px;
   display: flex;
   align-items: flex-start;
   gap: 10px;
-  margin-bottom: 8px;
 }
 
 .fpv-next {
   flex: 1;
   min-width: 0;
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
-}
-
-.fpv-step {
-  font-size: 0.8rem;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-
-.fpv-ahead {
-  display: flex;
   align-items: center;
-  gap: 6px;
-  font-size: 1.05rem;
-  font-weight: 700;
-  line-height: 1.35;
-  color: var(--text-strong);
-  font-variant-numeric: tabular-nums;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 16px;
+  background: var(--route);
+  color: #ffffff;
+  box-shadow: 0 6px 18px rgba(29, 78, 216, 0.3);
 }
 
 .fpv-ahead-icon {
   flex: none;
-  display: inline-grid;
-  place-items: center;
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-  background: var(--route);
-  color: #ffffff;
-  font-size: 1.1rem;
+  font-size: 2.2rem;
+  line-height: 1;
+  font-weight: 700;
+}
+
+.fpv-ahead {
+  display: flex;
+  flex-direction: column;
+  line-height: 1.15;
+  font-variant-numeric: tabular-nums;
+}
+
+.fpv-ahead-distance {
+  font-size: 1.6rem;
+  font-weight: 800;
+}
+
+.fpv-ahead-action {
+  font-size: 1rem;
+  font-weight: 700;
+  opacity: 0.92;
 }
 
 .mini-map {
@@ -1370,9 +1398,10 @@ button.candidate {
   height: 132px;
   padding: 0;
   overflow: hidden;
-  border: 1px solid var(--border);
-  border-radius: 12px;
+  border: 3px solid #ffffff;
+  border-radius: 18px;
   background: var(--ground);
+  box-shadow: 0 6px 18px rgba(60, 40, 20, 0.22);
   cursor: pointer;
 }
 
@@ -1380,6 +1409,7 @@ button.candidate {
   display: block;
 }
 
+/* 小さな地図は地図の座標（m）で描いて回すので、線の太さも m */
 .mini-map-corridor {
   fill: none;
   stroke: var(--corridor);
@@ -1390,134 +1420,29 @@ button.candidate {
 .mini-map-route,
 .mini-map-step {
   fill: none;
+  stroke: var(--route);
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .mini-map-route {
-  stroke: var(--route);
-  stroke-width: 3;
-  opacity: 0.45;
+  stroke-width: 7;
+  opacity: 0.55;
 }
 
 .mini-map-step {
-  stroke: var(--route);
-  stroke-width: 5;
+  stroke-width: 10;
 }
 
 .mini-map-destination {
   fill: var(--select);
-  stroke: var(--text-strong);
-  stroke-width: 1.5;
+  stroke: #ffffff;
+  stroke-width: 3;
 }
 
 .mini-map-you {
-  fill: var(--text-strong);
+  fill: var(--route);
   stroke: #ffffff;
   stroke-width: 2;
   stroke-linejoin: round;
-}
-
-.fpv-scene {
-  display: block;
-  flex: 1 1 0;
-  min-height: 120px;
-  width: 100%;
-  border-radius: var(--radius);
-  background: var(--bg-soft);
-}
-
-.fpv-ceiling {
-  fill: #e7ecf5;
-}
-
-.fpv-wall {
-  fill: var(--accent-soft);
-  stroke: var(--border);
-}
-
-.fpv-floor {
-  fill: #c9e2ec;
-}
-
-.fpv-end {
-  fill: var(--route);
-  font-size: 18px;
-  font-weight: 700;
-}
-
-.fpv-sign rect {
-  fill: var(--bg);
-  stroke: var(--accent-strong);
-  stroke-width: 1;
-}
-
-.fpv-sign text {
-  fill: var(--text-strong);
-  font-weight: 700;
-}
-
-.fpv-sign.exit rect {
-  fill: var(--accent-strong);
-}
-
-.fpv-sign.exit text {
-  fill: #ffffff;
-}
-
-.fpv-sign.passage rect {
-  fill: var(--bg-soft);
-  stroke-dasharray: 3 2;
-}
-
-.fpv-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 10px;
-  margin-top: 8px;
-}
-
-.fpv-column h3 {
-  margin: 0 0 4px;
-  font-size: 0.8rem;
-  color: var(--text);
-}
-
-.fpv-column ul {
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  display: grid;
-  gap: 4px;
-}
-
-.fpv-column li {
-  display: flex;
-  justify-content: space-between;
-  gap: 6px;
-  font-size: 0.85rem;
-}
-
-.fpv-column li.exit .fpv-name {
-  font-weight: 700;
-  color: var(--accent-strong);
-}
-
-.fpv-name {
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-.fpv-distance {
-  flex: none;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
-}
-
-.fpv-none,
-.fpv-along {
-  margin: 4px 0 0;
-  font-size: 0.8rem;
-  color: var(--text);
 }

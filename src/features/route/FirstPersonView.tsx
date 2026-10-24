@@ -1,27 +1,19 @@
-import type { ReactNode } from 'react';
+import { useMemo, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { RouteStep } from '../../domain/directions';
 import type { SideItem, SideView } from '../../domain/sideView';
 import { localized } from '../../i18n';
+import { placeLabels, textWidthPx, type LabelBox } from '../map/labelLayout';
+import { buildScene, type SceneInput, type SceneLabel } from './scene/corridorScene';
 
 interface Props {
+  scene: SceneInput;
+  /** いまの区間の左右の一覧（画面には絵で出し、読み上げ用に文字でも持つ） */
   sideView: SideView;
   step: RouteStep;
-  onShowMap: () => void;
   /** 左上に出す小さな地図 */
   miniMap?: ReactNode;
-  /** 「1 / 4」のようなステップの番号 */
-  stepLabel?: string;
 }
-
-/** 正面の消失点（SVG 座標） */
-const VP = { x: 180, y: 64 };
-/** 壁に看板として出す数（左右それぞれ） */
-const SIGNS_PER_SIDE = 3;
-/** 一覧に出す数（左右それぞれ） */
-const LIST_PER_SIDE = 6;
-/** これより近いものは「すぐ」と出す（m） */
-const HERE_M = 5;
 
 const ACTION_ICON: Record<RouteStep['action'], string> = {
   straight: '↑',
@@ -41,131 +33,137 @@ const ACTION_KEY: Record<RouteStep['action'], string> = {
   'floor-change': 'fpv.actionFloorChange',
 };
 
-/** 区間の中の位置（0 = 手前、1 = 曲がり角）を遠近の奥行きにする */
-const depthOf = (distanceM: number, totalM: number) =>
-  1 + (Math.min(distanceM, totalM) / Math.max(totalM, 1)) * 5;
+/** 吹き出しに出す名前の長さ */
+const NAME_MAX_CHARS = 8;
+const PAD_PX = 6;
+const TAIL_PX = 6;
+
+const pillText = (label: SceneLabel) => {
+  const text =
+    label.text.length > NAME_MAX_CHARS ? `${label.text.slice(0, NAME_MAX_CHARS - 1)}…` : label.text;
+  return text === '' ? label.icon : `${label.icon} ${text}`;
+};
+
+/** 吹き出しの大きさ（SVG 座標）。曲がる所の矢印は大きく */
+const pillBox = (label: SceneLabel): LabelBox => {
+  const font = label.kind === 'turn' ? 30 : label.fontPx;
+  const width = textWidthPx(pillText(label), font) + PAD_PX * 2;
+  const height = font + PAD_PX * 1.4;
+  const priority = (label.kind === 'goal' ? 200 : 100) - label.depthM;
+  return {
+    id: label.key,
+    x: label.x - width / 2,
+    y: label.y - TAIL_PX - height,
+    width,
+    height,
+    priority,
+  };
+};
 
 /**
- * 案内中の一人称の表示。進む方向を正面にした通路の絵の左右の壁に、近い順に店・出口・脇の通路を
- * 看板で出し、その下に左右の一覧を並べる（左右を見比べながら進めるように）
+ * 案内中の一人称の画面。経路に沿った通路（曲がり角の先も）を描き、壁には店ごとの店先を
+ * 種類の色で並べ、店名はアイコンつきの吹き出しで出す。左上に小さな地図、その右に次の動き
  */
-export function FirstPersonView({ sideView, step, onShowMap, miniMap, stepLabel }: Props) {
+export function FirstPersonView({ scene, sideView, step, miniMap }: Props) {
   const { t, i18n } = useTranslation();
-  const label = (item: SideItem) => {
+  const drawing = useMemo(() => buildScene(scene), [scene]);
+  const pills = useMemo(() => {
+    // 曲がる所の矢印は店名を押しのけないよう、重なりの判定に入れず一番下に描く
+    const boxes = drawing.labels.map(pillBox);
+    const shown = placeLabels(boxes.filter((box) => box.id !== 'turn'));
+    return drawing.labels
+      .map((label, i) => ({ label, box: boxes[i] }))
+      .filter(({ label }) => label.kind === 'turn' || shown.has(label.key))
+      .sort(
+        (a, b) =>
+          Number(b.label.kind === 'turn') - Number(a.label.kind === 'turn') ||
+          b.label.depthM - a.label.depthM,
+      );
+  }, [drawing]);
+
+  const itemText = (item: SideItem) => {
     const name = localized(item.name, i18n.language);
     if (item.kind === 'exit') return t('fpv.exit', { name });
     if (item.kind === 'passage') return t('fpv.passage', { name });
     return name;
   };
-
-  const signs = (items: SideItem[], side: 'left' | 'right') =>
-    items.slice(0, SIGNS_PER_SIDE).map((item, index) => {
-      const z = depthOf(item.distanceM, step.distanceM);
-      const x = VP.x + (side === 'left' ? -1 : 1) * (150 / z);
-      // 同じ側の看板は重ならないよう、近いものほど下にずらす
-      const y = VP.y + 46 / z + index * 18;
-      const font = Math.max(8, 13 / z);
-      // 看板は壁の範囲（通路の中央の手前まで）に収め、入りきらない名前は切る
-      const room = (Math.abs(VP.x - x) - 10) * 0.6;
-      const maxChars = Math.max(2, Math.floor((room - 10) / font));
-      const full = label(item);
-      const text = full.length > maxChars ? `${full.slice(0, maxChars - 1)}…` : full;
-      const width = Math.min(room, text.length * font + 10);
-      return (
-        <g key={item.key} className={`fpv-sign ${item.kind}`}>
-          <rect
-            x={side === 'left' ? x : x - width}
-            y={y - font - 4}
-            width={width}
-            height={font + 8}
-            rx={3}
-          />
-          <text
-            x={side === 'left' ? x + 5 : x - 5}
-            y={y}
-            fontSize={font}
-            textAnchor={side === 'left' ? 'start' : 'end'}
-          >
-            {text}
-          </text>
-        </g>
-      );
-    });
-
   const list = (items: SideItem[], heading: string) => (
-    <section className="fpv-column" aria-label={heading}>
+    <section aria-label={heading}>
       <h3>{heading}</h3>
-      {items.length === 0 ? (
-        <p className="fpv-none">{t('fpv.nothing')}</p>
-      ) : (
-        <ul>
-          {items.slice(0, LIST_PER_SIDE).map((item) => (
-            <li key={item.key} className={item.kind}>
-              <span className="fpv-name">{label(item)}</span>
-              <span className="fpv-distance">
-                {item.distanceM < HERE_M
-                  ? t('fpv.here')
-                  : t('fpv.itemAhead', { distance: Math.round(item.distanceM) })}
-              </span>
-            </li>
-          ))}
-        </ul>
-      )}
+      <ul>
+        {items.map((item) => (
+          <li key={item.key}>
+            {itemText(item)} {t('fpv.itemAhead', { distance: Math.round(item.distanceM) })}
+          </li>
+        ))}
+        {items.length === 0 && <li>{t('fpv.nothing')}</li>}
+      </ul>
     </section>
   );
 
   return (
     <div className="first-person" data-testid="first-person">
+      <svg
+        className="fpv-scene"
+        viewBox={`0 0 ${drawing.width} ${drawing.height}`}
+        preserveAspectRatio="xMidYMid slice"
+        aria-hidden
+      >
+        <rect className="fpv-sky" width={drawing.width} height={drawing.height} />
+        {drawing.polygons.map((polygon) => (
+          <polygon key={polygon.key} points={polygon.points} fill={polygon.fill} />
+        ))}
+        {pills.map(({ label, box }) => (
+          <g key={label.key} className={`fpv-pill ${label.kind}`}>
+            <rect
+              x={box.x}
+              y={box.y}
+              width={box.width}
+              height={box.height}
+              rx={box.height / 2}
+              fill={label.color}
+            />
+            <path
+              d={`M${label.x - 5} ${box.y + box.height - 0.5}L${label.x} ${label.y}L${label.x + 5} ${box.y + box.height - 0.5}Z`}
+              fill={label.color}
+            />
+            <text
+              x={box.x + box.width / 2}
+              y={box.y + box.height / 2}
+              fontSize={label.kind === 'turn' ? 30 : label.fontPx}
+              textAnchor="middle"
+              dominantBaseline="central"
+            >
+              {pillText(label)}
+            </text>
+          </g>
+        ))}
+      </svg>
       <div className="fpv-header">
         {miniMap}
         <div className="fpv-next">
-          {stepLabel !== undefined && <span className="fpv-step">{stepLabel}</span>}
-          <span className="fpv-ahead">
-            <span className="fpv-ahead-icon" aria-hidden>
-              {ACTION_ICON[step.action]}
-            </span>
-            {t('fpv.ahead', {
+          <span className="fpv-ahead-icon" aria-hidden>
+            {ACTION_ICON[step.action]}
+          </span>
+          <span
+            className="fpv-ahead"
+            aria-label={t('fpv.ahead', {
               distance: Math.round(step.distanceM),
               action: t(ACTION_KEY[step.action]),
             })}
+          >
+            <span className="fpv-ahead-distance">
+              {t('fpv.distance', { distance: Math.round(step.distanceM) })}
+            </span>
+            <span className="fpv-ahead-action">{t(ACTION_KEY[step.action])}</span>
           </span>
-          <button type="button" className="chip" onClick={onShowMap}>
-            {t('fpv.showMap')}
-          </button>
         </div>
       </div>
-      <svg className="fpv-scene" viewBox="0 0 360 200" aria-hidden>
-        <polygon
-          className="fpv-ceiling"
-          points={`0,0 360,0 ${VP.x + 20},${VP.y - 8} ${VP.x - 20},${VP.y - 8}`}
-        />
-        <polygon
-          className="fpv-wall"
-          points={`0,0 ${VP.x - 20},${VP.y - 8} ${VP.x - 20},${VP.y + 6} 0,200`}
-        />
-        <polygon
-          className="fpv-wall"
-          points={`360,0 ${VP.x + 20},${VP.y - 8} ${VP.x + 20},${VP.y + 6} 360,200`}
-        />
-        <polygon
-          className="fpv-floor"
-          points={`0,200 360,200 ${VP.x + 20},${VP.y + 6} ${VP.x - 20},${VP.y + 6}`}
-        />
-        <text className="fpv-end" x={VP.x} y={VP.y + 4} textAnchor="middle">
-          {ACTION_ICON[step.action]}
-        </text>
-        {signs(sideView.left, 'left')}
-        {signs(sideView.right, 'right')}
-      </svg>
-      <div className="fpv-columns">
+      <div className="visually-hidden">
         {list(sideView.left, t('fpv.left'))}
         {list(sideView.right, t('fpv.right'))}
+        {sideView.along.length > 0 && list(sideView.along, t('fpv.along'))}
       </div>
-      {sideView.along.length > 0 && (
-        <p className="fpv-along">
-          {t('fpv.along')}: {sideView.along.slice(0, LIST_PER_SIDE).map(label).join('・')}
-        </p>
-      )}
     </div>
   );
 }

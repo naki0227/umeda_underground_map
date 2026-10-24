@@ -8,7 +8,6 @@ import { fitGeoTransform, nearestNode } from './domain/geo';
 import { buildSteps, stepNodeIds } from './domain/directions';
 import { buildGraph } from './domain/graph';
 import { findRoute } from './domain/route';
-import { buildSideView } from './domain/sideView';
 import { localized } from './i18n';
 import { InteractiveMap } from './features/map/InteractiveMap';
 import { PlaceSheet } from './features/map/PlaceSheet';
@@ -19,6 +18,7 @@ import { useInitialGeolocation } from './features/locate/useGeolocation';
 import { FirstPersonView } from './features/route/FirstPersonView';
 import { MiniMap } from './features/route/MiniMap';
 import { RouteScreen } from './features/route/RouteScreen';
+import { buildSceneInput } from './features/route/scene/sceneInput';
 import { SearchBar } from './features/search/SearchBar';
 import { SpotsSheet } from './features/spots/SpotsSheet';
 import { FavoritesSheet } from './features/favorites/FavoritesSheet';
@@ -74,28 +74,30 @@ export default function App() {
     const step = steps[Math.min(stepIndex, steps.length - 1)];
     if (!step) return null;
     const nodeIds = stepNodeIds(route, step);
-    // 次の区間で進む点（曲がり角の先）は、脇の通路として数えない
-    const next = route.nodeIds[route.nodeIds.lastIndexOf(step.atNodeId) + 1];
-    return {
-      step,
-      nodeIds,
-      next: next === undefined ? [] : [next],
-      index: Math.min(stepIndex, steps.length - 1),
-      total: steps.length,
-    };
+    return { step, nodeIds };
   }, [graph, route, stepIndex, nav.sheet]);
   const focusNodeIds = currentStep?.nodeIds;
-  const sideView = useMemo(
+  // 一人称の絵の材料（いまの区間の起点から経路に沿って先まで）
+  const fpv = useMemo(
     () =>
-      currentStep === null
+      currentStep === null || route === null
         ? null
-        : buildSideView(graph, undergroundShops, currentStep.nodeIds, currentStep.next),
-    [graph, currentStep],
+        : buildSceneInput(
+            graph,
+            undergroundShops,
+            route,
+            currentStep.step,
+            (text) => localized(text, i18n.language),
+            t('fpv.goal'),
+          ),
+    [graph, route, currentStep, i18n.language, t],
   );
   // 一人称の表示。新しい経路で案内を始めたときは一人称から
   const [firstPersonState, setFirstPersonState] = useState({ routeKey: '', on: true });
   const firstPerson = firstPersonState.routeKey === routeKey ? firstPersonState.on : true;
   const setFirstPerson = (on: boolean) => setFirstPersonState({ routeKey, on });
+  /** 一人称の画面に切り替わっている（地図と検索欄は隠す） */
+  const fpvOn = nav.sheet === 'route' && firstPerson && fpv !== null && nav.destination !== null;
 
   /** 選択中・目的地の地上スポット（地図で最寄り出口までの点線を出す） */
   const linkedPoiIds = useMemo(() => {
@@ -116,7 +118,7 @@ export default function App() {
   }, [graph, nav.currentNodeId, i18n.language]);
 
   return (
-    <div className="app-map">
+    <div className={fpvOn ? 'app-map fpv-on' : 'app-map'}>
       <InteractiveMap
         graph={graph}
         shops={undergroundShops}
@@ -209,20 +211,15 @@ export default function App() {
         </BottomSheet>
       )}
 
-      {nav.sheet === 'route' &&
-        firstPerson &&
+      {fpvOn &&
+        fpv !== null &&
         currentStep !== null &&
-        sideView !== null &&
         route !== null &&
         nav.destination !== null && (
           <FirstPersonView
-            sideView={sideView}
+            scene={fpv.scene}
+            sideView={fpv.sideView}
             step={currentStep.step}
-            stepLabel={t('route.stepCounter', {
-              current: currentStep.index + 1,
-              total: currentStep.total,
-            })}
-            onShowMap={() => setFirstPerson(false)}
             miniMap={
               <MiniMap
                 graph={graph}
@@ -251,6 +248,7 @@ export default function App() {
             stepIndex={stepIndex}
             onStepChange={setStepIndex}
             firstPerson={firstPerson}
+            compact={fpvOn}
             onToggleFirstPerson={() => setFirstPerson(!firstPerson)}
           />
         </BottomSheet>
