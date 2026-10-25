@@ -32,6 +32,7 @@ export const ja = {
   search: {
     placeholder: '目的地を入力（お店・出口・スポット）',
     results: '検索結果',
+    count: '{{count}}件見つかりました',
     kindStation: '駅',
     kindPoi: '地上',
     kindShop: '地下のお店',
@@ -161,6 +162,7 @@ export const ja = {
     station: '駅構内・連絡通路',
   },
   map: {
+    keyboardHint: '矢印キーで地図の上の場所を移動し、Enter で選びます',
     legendRoute: '経路',
     fitRoute: '経路全体を表示',
     gpsHint: 'おおよその現在地（GPS）',

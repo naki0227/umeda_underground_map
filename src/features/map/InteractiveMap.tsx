@@ -28,6 +28,7 @@ import {
 import { DEFAULT_RAILWAY_COLOR, gateRailway, pinIcon } from './mapIcons';
 import { MapMarkers } from './MapMarkers';
 import { pressable } from './pressable';
+import { useRovingFocus } from './rovingFocus';
 import { routeArrows } from './routeArrows';
 import { useMapViewport } from './useMapViewport';
 import type { Bounds, Rect, ViewInsets } from './viewBoxFit';
@@ -187,6 +188,7 @@ function InteractiveMapView({
   }, [screenOf, buildings]);
 
   const viewport = useMapViewport(bounds);
+  const onMapKeyDown = useRovingFocus(viewport.containerRef);
   const { centerOn, fitRect } = viewport;
   const k = viewport.unitsPerPixel;
   const level = detailLevel(k);
@@ -464,6 +466,8 @@ function InteractiveMapView({
           viewBox={viewport.viewBox}
           role="group"
           aria-label={t('map.title')}
+          aria-describedby="map-keyboard-hint"
+          onKeyDown={onMapKeyDown}
           data-testid="map-view"
           data-detail={level}
           data-floor={floor}
@@ -722,6 +726,9 @@ function InteractiveMapView({
           />
         </svg>
       </div>
+      <p id="map-keyboard-hint" className="visually-hidden">
+        {t('map.keyboardHint')}
+      </p>
       <div className="map-legend" data-testid="map-legend">
         <span>
           <i className="swatch underground" />

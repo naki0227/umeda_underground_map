@@ -37,6 +37,7 @@ export const ko: Resource = {
   search: {
     placeholder: '목적지 입력 (가게·출구·장소)',
     results: '검색 결과',
+    count: '{{count}}개 찾았습니다',
     kindStation: '역',
     kindPoi: '지상',
     kindShop: '지하 가게',
@@ -166,6 +167,7 @@ export const ko: Resource = {
     station: '역 연결 통로',
   },
   map: {
+    keyboardHint: '화살표 키로 지도 위의 장소를 옮겨 다니고 Enter로 선택합니다',
     legendRoute: '경로',
     fitRoute: '경로 전체 보기',
     gpsHint: '대략적인 위치 (GPS)',

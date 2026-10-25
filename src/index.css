@@ -1474,7 +1474,11 @@ button.candidate {
 }
 
 /* 案内中の一人称の画面。地図から切り替わり、画面いっぱいに通路の絵を出す（下に操作のシート） */
-.fpv-on .interactive-map,
+/* 一人称の間は地図を描かない（隠すだけだと、ステップを送るたびに見えない地図の文字を並べ直して重い） */
+.fpv-on .interactive-map {
+  display: none;
+}
+
 .fpv-on .map-topbar,
 .fpv-on .setup-banner,
 .fpv-on .gps-note {

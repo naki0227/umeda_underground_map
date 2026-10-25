@@ -51,6 +51,20 @@ describe('InteractiveMap', { timeout: 15_000 }, () => {
     await waitFor(() => expect(width(svg.getAttribute('viewBox'))).toBeLessThan(width(before)));
   });
 
+  it('puts only one place on the map in the Tab order', () => {
+    const { container } = render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onSelectPlace={() => {}}
+      />,
+    );
+    const places = container.querySelectorAll('svg [role="button"]');
+    expect(places.length).toBeGreaterThan(10);
+    expect(container.querySelectorAll('svg [role="button"][tabindex="0"]')).toHaveLength(1);
+  });
+
   it('highlights a route and shows markers', () => {
     const route = findRoute(graph, 'wt-c4', 'ex-M-14');
     render(

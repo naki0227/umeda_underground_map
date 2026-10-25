@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState, type KeyboardEvent } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
 import { shopPlaceName } from '../../domain/shopLabel';
@@ -74,6 +74,27 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
     return [...stationResults, ...poiResults, ...shopResults, ...nodeResults].slice(0, MAX_RESULTS);
   }, [query, pois, shops, graph, t]);
 
+  const inputRef = useRef<HTMLInputElement>(null);
+  const listRef = useRef<HTMLUListElement>(null);
+  /** 結果のボタンを ↑↓ で行き来する。先頭で ↑ なら入力欄へ戻る */
+  const moveFocus = (from: number, step: number) => {
+    const buttons = listRef.current?.querySelectorAll('button');
+    if (!buttons || buttons.length === 0) return;
+    const next = from + step;
+    if (next < 0) inputRef.current?.focus();
+    else buttons[Math.min(next, buttons.length - 1)].focus();
+  };
+  const onResultKey = (index: number) => (e: KeyboardEvent<HTMLButtonElement>) => {
+    if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
+      e.preventDefault();
+      moveFocus(index, e.key === 'ArrowDown' ? 1 : -1);
+    } else if (e.key === 'Escape') {
+      setQuery('');
+      inputRef.current?.focus();
+    }
+  };
+  const searching = query.trim() !== '';
+
   const pick = (result: Result) => {
     setQuery('');
     onPick(result.place);
@@ -82,20 +103,30 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
   return (
     <div className="search-bar">
       <input
+        ref={inputRef}
         type="search"
         value={query}
         placeholder={t('search.placeholder')}
         aria-label={t('search.placeholder')}
+        aria-describedby="search-count"
         onChange={(e) => setQuery(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Escape') setQuery('');
+          if (e.key === 'ArrowDown' && results.length > 0) {
+            e.preventDefault();
+            moveFocus(-1, 1);
+          }
         }}
       />
+      {/* 読み上げ向けに件数を伝える（画面には出さない） */}
+      <p id="search-count" className="visually-hidden" role="status">
+        {searching ? t('search.count', { count: results.length }) : ''}
+      </p>
       {results.length > 0 && (
-        <ul className="search-results" aria-label={t('search.results')}>
-          {results.map((result) => (
+        <ul ref={listRef} className="search-results" aria-label={t('search.results')}>
+          {results.map((result, index) => (
             <li key={result.key}>
-              <button type="button" onClick={() => pick(result)}>
+              <button type="button" onClick={() => pick(result)} onKeyDown={onResultKey(index)}>
                 <span>{localized(result.place.name, i18n.language)}</span>
                 <span className="search-kind">{result.kindLabel}</span>
               </button>

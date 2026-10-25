@@ -7,7 +7,8 @@ import type { KeyboardEvent } from 'react';
 export function pressable(label: string, onPress: () => void) {
   return {
     role: 'button',
-    tabIndex: 0,
+    // Tab で止まるのは地図の中で1か所だけ（rovingFocus.ts）。矢印キーで点を移る
+    tabIndex: -1,
     'aria-label': label,
     onClick: onPress,
     onKeyDown: (e: KeyboardEvent<SVGElement>) => {
