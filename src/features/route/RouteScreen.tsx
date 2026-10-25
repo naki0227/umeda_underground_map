@@ -15,7 +15,9 @@ import { planRoute } from './planRoute';
 import { routeUsesStairs, routeNeedsSteps } from '../../domain/route';
 import { nodeFloor, type LocalizedText, type NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
+import { STRIDE_M } from './stepDetector';
 import { useSpeech } from './useSpeech';
+import { StepSensor } from './StepSensor';
 
 interface Props {
   graph: Graph;
@@ -54,7 +56,7 @@ interface Props {
 
 /** 歩数のめやす（歩幅 0.7m）。案内の研究では、距離より歩数のほうが分かりやすいという声が多い */
 const walkingSteps = (meters: number) => {
-  const steps = Math.max(1, Math.round(meters / 0.7));
+  const steps = Math.max(1, Math.round(meters / STRIDE_M));
   return steps >= 50 ? Math.round(steps / 10) * 10 : steps;
 };
 
@@ -207,6 +209,7 @@ export function RouteScreen({
   const lastIndex = result !== null ? result.steps.length - 1 : -1;
   const currentIndex = Math.min(Math.max(stepIndex, 0), Math.max(lastIndex, 0));
   const next = result !== null && result.steps.length > 0 ? result.steps[currentIndex] : null;
+
   /** いまいるフロア = 表示中ステップの起点のフロア */
   const currentFloor = (() => {
     const node = graph.nodes.get(next?.fromNodeId ?? fromNodeId);
@@ -378,6 +381,13 @@ export function RouteScreen({
                 {t('route.nextStep')}
               </button>
             </div>
+          )}
+          {next !== null && lastIndex > 0 && (
+            <StepSensor
+              stepKey={currentIndex}
+              distanceM={next.distanceM}
+              hasNext={currentIndex < lastIndex}
+            />
           )}
 
           {rain && (

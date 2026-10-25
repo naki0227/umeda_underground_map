@@ -26,6 +26,8 @@
 
 対応言語: 日本語・English・한국어・简体中文・繁體中文・ไทย・Tiếng Việt・Bahasa Indonesia・Français・Español（地名・店名は日本語・英語に加え、韓国語・中国語〈簡体・繁体〉の名前を `src/data/placeNames.ts` で足す。ほかの言語では英語表記）
 
+出口ごとの紹介ページ（10 言語、検索から来る人向け）: `https://umeda.enludus.com/guide/ja/` など。`npm run build` で `dist/guide/` に書き出す（`src/app/guidePages.ts`）
+
 ## 誤りの報告
 
 お店や出口の情報が実際と違う場合は、アプリの **メニュー → 間違いを報告する** から Google フォームで送る。

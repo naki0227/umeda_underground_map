@@ -89,6 +89,8 @@ export const vi: Resource = {
     close: 'Đóng',
   },
   fpv: {
+    viewBehind: 'Nhìn từ phía sau',
+    viewEye: 'Nhìn ngang tầm mắt',
     left: 'Bên trái',
     right: 'Bên phải',
     along: 'Dọc đường',
@@ -112,6 +114,11 @@ export const vi: Resource = {
     showFirstPerson: 'Góc nhìn thứ nhất',
   },
   route: {
+    sensorOn: 'Đếm bước chân (cảm biến chuyển động)',
+    sensorOff: 'Dừng đếm bước',
+    sensorWalked: 'Đã đi khoảng {{walked}} / {{total}} m đoạn này',
+    sensorNearly: 'Sắp tới rồi. Thấy mốc thì chạm "Tiếp"',
+    sensorDenied: 'Không dùng được cảm biến (cho phép trong cài đặt, hoặc tiếp tục bằng "Tiếp")',
     stepFree: 'Chỉ thang máy',
     needsSteps:
       'Không có đường chỉ dùng thang máy hoặc dốc, nên đường này đi qua cầu thang hoặc thang cuốn.',
@@ -233,5 +240,20 @@ export const vi: Resource = {
     aed: 'AED',
     none: 'Không tìm thấy gần lối đi ngầm (một số tiện ích chưa có trong dữ liệu bản đồ)',
     setLocation: 'Đặt vị trí để sắp xếp theo khoảng cách',
+  },
+  guide: {
+    exitTitle: 'Lối ra {{exit}} Umeda ({{area}}) – cách đi | Umeda Underground Navi',
+    exitDescription:
+      'Lối ra {{exit}} khu phố ngầm Umeda ({{area}}). Gần: {{nearby}}. Chỉ đường góc nhìn thứ nhất đến lối ra này, kể cả khi không có GPS.',
+    exitIntro: 'Lối ra {{exit}} là lối lên mặt đường từ {{area}} ({{floor}}).',
+    openApp: 'Chỉ đường ngầm đến lối ra này',
+    openAppTop: 'Mở Umeda Underground Navi',
+    nearbyAbove: 'Tòa nhà gần đó trên mặt đất',
+    nearbyShops: 'Cửa hàng gần đó dưới lòng đất',
+    allExits: '← Tất cả lối ra Umeda',
+    indexTitle: 'Các lối ra khu phố ngầm Umeda | Umeda Underground Navi',
+    indexIntro:
+      '{{count}} lối ra của khu phố ngầm Umeda. Chọn số để xem tòa nhà, cửa hàng gần đó và chỉ đường ngầm.',
+    attribution: 'Dữ liệu bản đồ © OpenStreetMap contributors (ODbL)',
   },
 };

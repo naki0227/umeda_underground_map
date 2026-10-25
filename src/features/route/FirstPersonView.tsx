@@ -1,4 +1,4 @@
-import { useMemo, type ReactNode } from 'react';
+import { useMemo, useState, type ReactNode } from 'react';
 import { useTranslation } from 'react-i18next';
 import type { RouteStep } from '../../domain/directions';
 import type { SideItem, SideView } from '../../domain/sideView';
@@ -68,9 +68,35 @@ const pillBox = (label: SceneLabel): LabelBox => {
  * 案内中の一人称の画面。経路に沿った通路（曲がり角の先も）を描き、壁には店ごとの店先を
  * 種類の色で並べ、店名はアイコンつきの吹き出しで出す。左上に小さな地図、その右に次の動き
  */
+const VIEWPOINT_KEY = 'umeda-navi.viewpoint';
+type Viewpoint = 'eye' | 'behind';
+
+/** 前回選んだ視点（端末内）。保存できない環境では一人称 */
+function loadViewpoint(): Viewpoint {
+  try {
+    return globalThis.localStorage?.getItem(VIEWPOINT_KEY) === 'behind' ? 'behind' : 'eye';
+  } catch {
+    return 'eye';
+  }
+}
+
+function saveViewpoint(viewpoint: Viewpoint): void {
+  try {
+    globalThis.localStorage?.setItem(VIEWPOINT_KEY, viewpoint);
+  } catch {
+    // 保存できなくても、この案内の間は切り替わる
+  }
+}
+
 export function FirstPersonView({ scene, sideView, step, miniMap }: Props) {
   const { t, i18n } = useTranslation();
-  const drawing = useMemo(() => buildScene(scene), [scene]);
+  const [viewpoint, setViewpoint] = useState(loadViewpoint);
+  const drawing = useMemo(() => buildScene({ ...scene, viewpoint }), [scene, viewpoint]);
+  const toggleViewpoint = () => {
+    const next = viewpoint === 'eye' ? 'behind' : 'eye';
+    setViewpoint(next);
+    saveViewpoint(next);
+  };
   const pills = useMemo(() => {
     // 曲がる所の矢印は店名を押しのけないよう、重なりの判定に入れず一番下に描く
     const boxes = drawing.labels.map(pillBox);
@@ -145,6 +171,14 @@ export function FirstPersonView({ scene, sideView, step, miniMap }: Props) {
       </svg>
       <div className="fpv-header">
         {miniMap}
+        <button
+          type="button"
+          className="fpv-viewpoint"
+          aria-pressed={viewpoint === 'behind'}
+          onClick={toggleViewpoint}
+        >
+          {t(viewpoint === 'behind' ? 'fpv.viewEye' : 'fpv.viewBehind')}
+        </button>
         <div className="fpv-next">
           <span className="fpv-ahead-icon" aria-hidden>
             {ACTION_ICON[step.action]}

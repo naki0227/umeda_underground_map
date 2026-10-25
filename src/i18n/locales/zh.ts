@@ -88,6 +88,8 @@ export const zh: Resource = {
     close: '关闭',
   },
   fpv: {
+    viewBehind: '从后方看',
+    viewEye: '以视线高度看',
     left: '左侧',
     right: '右侧',
     along: '沿途',
@@ -111,6 +113,11 @@ export const zh: Resource = {
     showFirstPerson: '第一人称',
   },
   route: {
+    sensorOn: '计算步数（动作传感器）',
+    sensorOff: '停止计步',
+    sensorWalked: '本段已走约{{walked}}米 / {{total}}米',
+    sensorNearly: '快到了。看到地标后点“下一步”',
+    sensorDenied: '无法使用动作传感器（可在设置中允许，或继续用“下一步”）',
     stepFree: '仅限电梯',
     needsSteps: '仅靠电梯或坡道无法到达，此路线需经过楼梯或自动扶梯。',
     rainNote: '预报有雨，因此按不需要到地面的地下路线导航。',
@@ -225,5 +232,20 @@ export const zh: Resource = {
     aed: 'AED',
     none: '地下通道附近没有找到（部分设施不在地图数据中）',
     setLocation: '设置当前位置后按距离排序',
+  },
+  guide: {
+    exitTitle: '梅田 {{exit}} 出口（{{area}}）怎么走 | 梅田地下导航',
+    exitDescription:
+      '梅田地下街 {{exit}} 出口（{{area}}）。附近：{{nearby}}。即使在 GPS 收不到信号的地下，也能以第一人称导航到这个出口。',
+    exitIntro: '{{exit}} 出口是从{{area}}（{{floor}}）通往地面的出入口。',
+    openApp: '导航到这个出口（地下路线）',
+    openAppTop: '打开梅田地下导航',
+    nearbyAbove: '地面附近的建筑',
+    nearbyShops: '地下附近的店铺',
+    allExits: '← 梅田出口一览',
+    indexTitle: '梅田地下街出口一览 | 梅田地下导航',
+    indexIntro:
+      '梅田地下街共 {{count}} 个出口。选择编号即可查看附近的建筑和店铺，并获得地下路线导航。',
+    attribution: '地图数据 © OpenStreetMap contributors（ODbL）',
   },
 };

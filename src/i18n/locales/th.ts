@@ -89,6 +89,8 @@ export const th: Resource = {
     close: 'ปิด',
   },
   fpv: {
+    viewBehind: 'มองจากด้านหลัง',
+    viewEye: 'มองระดับสายตา',
     left: 'ซ้าย',
     right: 'ขวา',
     along: 'ระหว่างทาง',
@@ -112,6 +114,11 @@ export const th: Resource = {
     showFirstPerson: 'มุมมองบุคคลที่หนึ่ง',
   },
   route: {
+    sensorOn: 'นับก้าวที่เดิน (เซ็นเซอร์การเคลื่อนไหว)',
+    sensorOff: 'หยุดนับก้าว',
+    sensorWalked: 'เดินแล้วประมาณ {{walked}} / {{total}} ม. ในช่วงนี้',
+    sensorNearly: 'ใกล้ถึงแล้ว เห็นจุดสังเกตแล้วแตะ "ถัดไป"',
+    sensorDenied: 'ใช้เซ็นเซอร์ไม่ได้ (อนุญาตในการตั้งค่า หรือใช้ "ถัดไป" ต่อ)',
     stepFree: 'ลิฟต์เท่านั้น',
     needsSteps: 'ไม่มีเส้นทางที่ใช้แค่ลิฟต์หรือทางลาด เส้นทางนี้ต้องใช้บันไดหรือบันไดเลื่อน',
     rainNote: 'มีพยากรณ์ฝนตก จึงนำทางด้วยเส้นทางใต้ดินที่ไม่ต้องขึ้นบนดิน',
@@ -232,5 +239,20 @@ export const th: Resource = {
     aed: 'AED',
     none: 'ไม่พบใกล้ทางเดินใต้ดิน (บางแห่งไม่มีในข้อมูลแผนที่)',
     setLocation: 'ตั้งตำแหน่งปัจจุบันเพื่อเรียงตามระยะทาง',
+  },
+  guide: {
+    exitTitle: 'ทางออก {{exit}} อุเมดะ ({{area}}) ไปอย่างไร | Umeda Underground Navi',
+    exitDescription:
+      'ทางออก {{exit}} ของย่านใต้ดินอุเมดะ ({{area}}) ใกล้: {{nearby}} นำทางแบบมุมมองบุคคลที่หนึ่งไปยังทางออกนี้ แม้ GPS ใช้ไม่ได้',
+    exitIntro: 'ทางออก {{exit}} คือทางขึ้นสู่ถนนจาก {{area}} ({{floor}})',
+    openApp: 'นำทางใต้ดินไปทางออกนี้',
+    openAppTop: 'เปิด Umeda Underground Navi',
+    nearbyAbove: 'อาคารใกล้เคียงบนดิน',
+    nearbyShops: 'ร้านใกล้เคียงใต้ดิน',
+    allExits: '← ทางออกทั้งหมดในอุเมดะ',
+    indexTitle: 'ทางออกของย่านใต้ดินอุเมดะ | Umeda Underground Navi',
+    indexIntro:
+      'ทางออก {{count}} แห่งของย่านใต้ดินอุเมดะ เลือกหมายเลขเพื่อดูอาคารและร้านใกล้เคียง และเส้นทางใต้ดิน',
+    attribution: 'ข้อมูลแผนที่ © OpenStreetMap contributors (ODbL)',
   },
 };

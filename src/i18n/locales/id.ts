@@ -91,6 +91,8 @@ export const id: Resource = {
     close: 'Tutup',
   },
   fpv: {
+    viewBehind: 'Lihat dari belakang',
+    viewEye: 'Lihat setinggi mata',
     left: 'Kiri',
     right: 'Kanan',
     along: 'Sepanjang jalan',
@@ -114,6 +116,12 @@ export const id: Resource = {
     showFirstPerson: 'Sudut pandang orang pertama',
   },
   route: {
+    sensorOn: 'Hitung langkah saya (sensor gerak)',
+    sensorOff: 'Berhenti menghitung langkah',
+    sensorWalked: 'Sekitar {{walked}} / {{total}} m sudah ditempuh di bagian ini',
+    sensorNearly: 'Hampir sampai. Ketuk Berikutnya saat penanda terlihat',
+    sensorDenied:
+      'Sensor gerak tidak tersedia (izinkan di pengaturan, atau lanjutkan dengan Berikutnya)',
     stepFree: 'Hanya lift',
     needsSteps:
       'Tidak ada rute hanya dengan lift atau jalan landai, jadi rute ini melewati tangga atau eskalator.',
@@ -236,5 +244,20 @@ export const id: Resource = {
     aed: 'AED',
     none: 'Tidak ditemukan di dekat lorong bawah tanah (sebagian fasilitas belum ada di data peta)',
     setLocation: 'Atur lokasi Anda untuk mengurutkan menurut jarak',
+  },
+  guide: {
+    exitTitle: 'Pintu keluar {{exit}} Umeda ({{area}}) – cara ke sana | Umeda Underground Navi',
+    exitDescription:
+      'Pintu keluar {{exit}} kawasan bawah tanah Umeda ({{area}}). Dekat: {{nearby}}. Petunjuk arah sudut pandang orang pertama ke pintu keluar ini, meski GPS tak berfungsi.',
+    exitIntro: 'Pintu keluar {{exit}} adalah jalan naik ke jalan raya dari {{area}} ({{floor}}).',
+    openApp: 'Petunjuk arah bawah tanah ke pintu keluar ini',
+    openAppTop: 'Buka Umeda Underground Navi',
+    nearbyAbove: 'Gedung terdekat di atas tanah',
+    nearbyShops: 'Toko terdekat di bawah tanah',
+    allExits: '← Semua pintu keluar Umeda',
+    indexTitle: 'Pintu keluar kawasan bawah tanah Umeda | Umeda Underground Navi',
+    indexIntro:
+      '{{count}} pintu keluar kawasan bawah tanah Umeda. Pilih nomor untuk melihat gedung dan toko terdekat serta petunjuk arah bawah tanah.',
+    attribution: 'Data peta © OpenStreetMap contributors (ODbL)',
   },
 };

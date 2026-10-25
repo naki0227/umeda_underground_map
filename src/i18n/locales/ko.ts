@@ -89,6 +89,8 @@ export const ko: Resource = {
     close: '닫기',
   },
   fpv: {
+    viewBehind: '뒤에서 보기',
+    viewEye: '눈높이로 보기',
     left: '왼쪽',
     right: '오른쪽',
     along: '길가',
@@ -112,6 +114,11 @@ export const ko: Resource = {
     showFirstPerson: '1인칭',
   },
   route: {
+    sensorOn: '걸음 수 세기 (동작 센서)',
+    sensorOff: '걸음 수 세기 끄기',
+    sensorWalked: '이 구간 약 {{walked}}m / {{total}}m 걸었습니다',
+    sensorNearly: "곧 다음 안내입니다. 표지가 보이면 '다음'",
+    sensorDenied: "동작 센서를 사용할 수 없습니다 (설정에서 허용하거나 '다음'으로 진행하세요)",
     stepFree: '엘리베이터만',
     needsSteps: '엘리베이터나 경사로만으로는 갈 수 없어 계단이나 에스컬레이터를 지납니다.',
     rainNote: '비 예보가 있어 지상으로 나가지 않는 지하 길로 안내합니다.',
@@ -230,5 +237,20 @@ export const ko: Resource = {
     aed: 'AED',
     none: '지하 통로 근처에서 찾지 못했습니다 (지도 데이터에 없는 시설도 있습니다)',
     setLocation: '현재 위치를 설정하면 가까운 순으로 정렬됩니다',
+  },
+  guide: {
+    exitTitle: '우메다 {{exit}} 출구({{area}}) 가는 법 | 우메다 지하 내비',
+    exitDescription:
+      '우메다 지하상가 {{exit}} 출구({{area}}). 근처: {{nearby}}. GPS가 닿지 않는 지하에서도 1인칭 길 안내로 이 출구까지 안내합니다.',
+    exitIntro: '{{exit}} 출구는 {{area}}({{floor}})에서 지상으로 나가는 출입구입니다.',
+    openApp: '이 출구까지 지하 길 안내',
+    openAppTop: '우메다 지하 내비 열기',
+    nearbyAbove: '지상의 가까운 건물',
+    nearbyShops: '지하의 가까운 가게',
+    allExits: '← 우메다 출구 목록',
+    indexTitle: '우메다 지하상가 출구 목록 | 우메다 지하 내비',
+    indexIntro:
+      '우메다 지하상가 출구 {{count}}곳. 번호를 고르면 근처 건물과 가게, 지하 길 안내를 볼 수 있습니다.',
+    attribution: '지도 데이터 © OpenStreetMap contributors (ODbL)',
   },
 };

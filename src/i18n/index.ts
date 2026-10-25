@@ -32,6 +32,15 @@ function isAppLanguage(value: unknown): value is AppLanguage {
   return typeof value === 'string' && (APP_LANGUAGES as readonly string[]).includes(value);
 }
 
+/**
+ * URL で指定された言語（?hl=ko）。出口の紹介ページなどから、その言語のまま開くため。
+ * 選んだ言語として覚える（languageChanged で保存）
+ */
+export function languageFromUrl(search = globalThis.location?.search ?? ''): AppLanguage | null {
+  const value = new URLSearchParams(search).get('hl');
+  return isAppLanguage(value) ? value : null;
+}
+
 /** 前回選んだ言語。保存できない環境（プライベートモード等）では null */
 export function loadStoredLanguage(): AppLanguage | null {
   try {
@@ -100,6 +109,7 @@ export function initI18n(initialLanguage?: AppLanguage): typeof i18n {
       },
       lng:
         initialLanguage ??
+        languageFromUrl() ??
         loadStoredLanguage() ??
         detectLanguage(globalThis.navigator?.language ?? 'ja'),
       fallbackLng: 'en',

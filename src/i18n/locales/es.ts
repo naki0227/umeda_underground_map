@@ -90,6 +90,8 @@ export const es: Resource = {
     close: 'Cerrar',
   },
   fpv: {
+    viewBehind: 'Ver desde atrás',
+    viewEye: 'Ver a la altura de los ojos',
     left: 'Izquierda',
     right: 'Derecha',
     along: 'Por el camino',
@@ -113,6 +115,11 @@ export const es: Resource = {
     showFirstPerson: 'Primera persona',
   },
   route: {
+    sensorOn: 'Contar mis pasos (sensor de movimiento)',
+    sensorOff: 'Dejar de contar pasos',
+    sensorWalked: 'Unos {{walked}} de {{total}} m recorridos en este tramo',
+    sensorNearly: 'Casi llegas. Toca Siguiente al ver la referencia',
+    sensorDenied: 'El sensor no está disponible (permítelo en ajustes o sigue con Siguiente)',
     stepFree: 'Solo ascensores',
     needsSteps:
       'No hay ruta solo con ascensores o rampas, así que esta pasa por escaleras o una escalera mecánica.',
@@ -233,5 +240,20 @@ export const es: Resource = {
     aed: 'Desfibriladores',
     none: 'No se encontró nada cerca de los pasillos (faltan algunos servicios en los datos)',
     setLocation: 'Indica tu ubicación para ordenar por distancia',
+  },
+  guide: {
+    exitTitle: 'Umeda salida {{exit}} ({{area}}) – cómo llegar | Umeda Underground Navi',
+    exitDescription:
+      'Salida {{exit}} de la zona subterránea de Umeda ({{area}}). Cerca: {{nearby}}. Ruta en primera persona hasta esta salida, aunque no haya GPS.',
+    exitIntro: 'La salida {{exit}} sube a la calle desde {{area}} ({{floor}}).',
+    openApp: 'Cómo llegar a esta salida por el subterráneo',
+    openAppTop: 'Abrir Umeda Underground Navi',
+    nearbyAbove: 'Edificios cercanos en la superficie',
+    nearbyShops: 'Tiendas cercanas bajo tierra',
+    allExits: '← Todas las salidas de Umeda',
+    indexTitle: 'Salidas de la zona subterránea de Umeda | Umeda Underground Navi',
+    indexIntro:
+      '{{count}} salidas de la zona subterránea de Umeda. Elige un número para ver edificios y tiendas cercanos y la ruta subterránea.',
+    attribution: 'Datos del mapa © OpenStreetMap contributors (ODbL)',
   },
 };

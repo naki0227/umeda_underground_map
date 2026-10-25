@@ -90,6 +90,8 @@ export const fr: Resource = {
     close: 'Fermer',
   },
   fpv: {
+    viewBehind: 'Vue de derrière',
+    viewEye: 'Vue à hauteur d’yeux',
     left: 'À gauche',
     right: 'À droite',
     along: 'En chemin',
@@ -113,6 +115,12 @@ export const fr: Resource = {
     showFirstPerson: 'Vue subjective',
   },
   route: {
+    sensorOn: 'Compter mes pas (capteur de mouvement)',
+    sensorOff: 'Arrêter de compter les pas',
+    sensorWalked: 'Environ {{walked}} m sur {{total}} m parcourus sur ce tronçon',
+    sensorNearly: 'Presque arrivé. Touchez Suivant en voyant le repère',
+    sensorDenied:
+      'Capteur indisponible (autorisez-le dans les réglages, ou continuez avec Suivant)',
     stepFree: 'Ascenseurs uniquement',
     needsSteps:
       'Aucun itinéraire uniquement par ascenseurs ou rampes : celui-ci passe par des escaliers ou un escalator.',
@@ -236,5 +244,20 @@ export const fr: Resource = {
     aed: 'Défibrillateurs',
     none: 'Rien trouvé près des passages souterrains (certains services manquent dans les données)',
     setLocation: 'Indiquez votre position pour trier par distance',
+  },
+  guide: {
+    exitTitle: 'Umeda sortie {{exit}} ({{area}}) – comment y aller | Umeda Underground Navi',
+    exitDescription:
+      'Sortie {{exit}} des galeries souterraines d’Umeda ({{area}}). À proximité : {{nearby}}. Itinéraire en vue subjective jusqu’à cette sortie, même sans GPS.',
+    exitIntro: 'La sortie {{exit}} mène à la rue depuis {{area}} ({{floor}}).',
+    openApp: 'Itinéraire souterrain jusqu’à cette sortie',
+    openAppTop: 'Ouvrir Umeda Underground Navi',
+    nearbyAbove: 'Bâtiments proches en surface',
+    nearbyShops: 'Boutiques proches sous terre',
+    allExits: '← Toutes les sorties d’Umeda',
+    indexTitle: 'Sorties des galeries souterraines d’Umeda | Umeda Underground Navi',
+    indexIntro:
+      '{{count}} sorties des galeries souterraines d’Umeda. Choisissez un numéro pour voir les bâtiments et boutiques proches et l’itinéraire souterrain.',
+    attribution: 'Données cartographiques © OpenStreetMap contributors (ODbL)',
   },
 };

@@ -123,4 +123,16 @@ describe('buildScene floors and frontage', () => {
       expect(depths[i] - depths[i - 1]).toBeLessThan(4.2);
     }
   });
+
+  it('shows where you stand when viewed from behind and above', () => {
+    const eye = buildScene({ path, items: [] });
+    const behind = buildScene({ path, items: [], viewpoint: 'behind' });
+    expect(eye.polygons.some((p) => p.key === 'you')).toBe(false);
+    const you = behind.polygons.find((p) => p.key === 'you');
+    expect(you).toBeDefined();
+    // 自分の印は地平線より下（床の上）で、下のシートに隠れない高さに見える
+    const ys = you!.points.split(' ').map((pt) => Number(pt.split(',')[1]));
+    expect(Math.min(...ys)).toBeGreaterThan(behind.height * 0.3);
+    expect(Math.max(...ys)).toBeLessThan(behind.height * 0.7);
+  });
 });

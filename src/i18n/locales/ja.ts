@@ -84,6 +84,8 @@ export const ja = {
     close: '閉じる',
   },
   fpv: {
+    viewBehind: '後ろから見る',
+    viewEye: '目の高さで見る',
     left: '左',
     right: '右',
     along: '道沿い',
@@ -107,6 +109,12 @@ export const ja = {
     showFirstPerson: '一人称',
   },
   route: {
+    sensorOn: '歩いた分を数える（動きのセンサー）',
+    sensorOff: '歩数を数えるのをやめる',
+    sensorWalked: 'この区間 約{{walked}}m / {{total}}m 歩きました',
+    sensorNearly: 'そろそろ次の案内です。目印が見えたら「次へ」',
+    sensorDenied:
+      '動きのセンサーを使えませんでした（設定で許可するか、このまま「次へ」で進めます）',
     stepFree: 'エレベーターだけ',
     needsSteps: 'エレベーターやスロープだけでは行けないため、階段かエスカレーターを通ります。',
     rainNote: '雨の予報なので、地上に出ない地下の道で案内しています。',
@@ -226,5 +234,20 @@ export const ja = {
     aed: 'AED',
     none: '地下の通路の近くには見つかりませんでした（地図のデータにない設備もあります）',
     setLocation: '現在地を設定すると近い順に並びます',
+  },
+  guide: {
+    exitTitle: '梅田 {{exit}} 出口（{{area}}）への行き方 | 梅田地下ナビ',
+    exitDescription:
+      '梅田の地下街 {{exit}} 出口（{{area}}）。近く: {{nearby}}。GPS が届かない地下でも、一人称の道案内でこの出口まで案内します。',
+    exitIntro: '{{exit}} 出口は、{{area}}の {{floor}} にある地上への出入口です。',
+    openApp: 'この出口まで地下の道を案内する',
+    openAppTop: '梅田地下ナビを開く',
+    nearbyAbove: '地上の近くの建物',
+    nearbyShops: '地下の近くのお店',
+    allExits: '← 梅田の出口一覧',
+    indexTitle: '梅田の地下街 出口一覧 | 梅田地下ナビ',
+    indexIntro:
+      '梅田の地下街の出口 {{count}} か所。番号を選ぶと、その出口の近くの建物とお店、地下の道案内が見られます。',
+    attribution: '地図データ © OpenStreetMap contributors（ODbL）',
   },
 } as const;

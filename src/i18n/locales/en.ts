@@ -88,6 +88,8 @@ export const en: Resource = {
     close: 'Close',
   },
   fpv: {
+    viewBehind: 'View from behind',
+    viewEye: 'Eye-level view',
     left: 'Left',
     right: 'Right',
     along: 'Along the way',
@@ -111,6 +113,11 @@ export const en: Resource = {
     showFirstPerson: 'First person',
   },
   route: {
+    sensorOn: 'Count my steps (motion sensor)',
+    sensorOff: 'Stop counting steps',
+    sensorWalked: 'About {{walked}} m of {{total}} m walked on this part',
+    sensorNearly: 'Almost there. Tap Next when you see the landmark',
+    sensorDenied: "The motion sensor isn't available (allow it in settings, or keep using Next)",
     stepFree: 'Elevators only',
     needsSteps:
       'There is no route with only elevators or ramps, so this one uses stairs or an escalator.',
@@ -232,5 +239,20 @@ export const en: Resource = {
     aed: 'AED',
     none: 'None found near the underground passages (some facilities are missing from the map data)',
     setLocation: 'Set your location to sort by distance',
+  },
+  guide: {
+    exitTitle: 'Umeda Exit {{exit}} ({{area}}) – how to get there | Umeda Underground Navi',
+    exitDescription:
+      "Exit {{exit}} of the Umeda underground mall ({{area}}). Nearby: {{nearby}}. Step-by-step first-person directions to this exit, even where GPS doesn't work.",
+    exitIntro: 'Exit {{exit}} is a way up to the street from {{area}} ({{floor}}).',
+    openApp: 'Get underground directions to this exit',
+    openAppTop: 'Open Umeda Underground Navi',
+    nearbyAbove: 'Buildings nearby above ground',
+    nearbyShops: 'Shops nearby underground',
+    allExits: '← All Umeda exits',
+    indexTitle: 'Umeda underground mall exits | Umeda Underground Navi',
+    indexIntro:
+      '{{count}} exits of the Umeda underground mall. Pick a number to see nearby buildings and shops, and get underground directions.',
+    attribution: 'Map data © OpenStreetMap contributors (ODbL)',
   },
 };

@@ -43,7 +43,12 @@ export default defineConfig({
       includeAssets: pwaIncludeAssets,
       manifest: pwaManifest,
       // 数字の丸い字（woff2）もオフラインで使えるよう先に保存する
-      workbox: { globPatterns: ['**/*.{js,css,html,woff2}'] },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,woff2}'],
+        // 出口の紹介ページは数が多いので先に保存しない。開いたときもアプリにすり替えない
+        globIgnores: ['guide/**'],
+        navigateFallbackDenylist: [/\/guide\//],
+      },
     }),
   ],
   build: {

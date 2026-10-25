@@ -50,4 +50,9 @@ export interface SceneInput {
   floorChange?: { distanceM: number; icon: string; text: string };
   /** 折れ線の終点が目的地なら、そのアイコンと名前 */
   goal?: { icon: string; text: string };
+  /**
+   * 視点。eye は目の高さ（一人称）、behind は少し後ろ・上から自分の位置の印ごと見下ろす。
+   * 研究では後ろ・上からの視点の方が向きをつかむのが早く負担が少ない（Burigat ほか 2017）
+   */
+  viewpoint?: 'eye' | 'behind';
 }
