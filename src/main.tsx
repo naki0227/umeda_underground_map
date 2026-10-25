@@ -4,9 +4,11 @@ import './index.css';
 import { initI18n } from './i18n';
 import App from './App.tsx';
 import { applySaveDataPreference } from './app/saveData';
+import { checkForUpdatesWhenVisible } from './app/serviceWorkerUpdate';
 
 initI18n();
 applySaveDataPreference();
+checkForUpdatesWhenVisible();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
