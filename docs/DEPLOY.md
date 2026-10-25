@@ -2,7 +2,8 @@
 
 ## デプロイ先
 
-- **GitHub Pages**: https://naki0227.github.io/umeda_underground_map/
+- **GitHub Pages（独自ドメイン）**: https://umeda.enludus.com/ （旧 https://naki0227.github.io/umeda_underground_map/ は GitHub が自動で転送）
+- DNS: Cloudflare で `umeda` の CNAME を `naki0227.github.io` へ（Proxy は DNS only）。Settings → Pages の Custom domain は `umeda.enludus.com`、Enforce HTTPS をオン
 - 静的サイト（Vite のビルド成果物 `dist/`）。サーバー・データベース・API キーは使わない
 
 ## 仕組み
@@ -32,17 +33,19 @@ PR をマージすると main に push され、数分で公開 URL が更新さ
    - スマホで開き、ホーム画面に追加（PWA インストール）できる
 4. 古い表示のままなら、ページを再読み込みする（Service Worker の更新は次回アクセス時）
 
-### 3. 独自ドメインを使う場合（任意）
+### 3. 独自ドメイン（いまは https://umeda.enludus.com/）
 
-1. ドメインを取得する（レジストラは任意）
-2. DNS を設定する
-   - サブドメイン（例: `navi.example.com`）: `CNAME` レコードを `naki0227.github.io` に向ける
-   - Apex ドメイン（例: `example.com`）: GitHub のドキュメントにある Pages 用の `A` / `AAAA` レコードを登録する
-3. **Settings → Pages → Custom domain** にドメインを入力して保存し、**Enforce HTTPS** を有効にする
-4. **Settings → Secrets and variables → Actions → Variables** でリポジトリ変数 `BASE_PATH` を作り、値を `/` にする（ドメイン直下で配信するため）。あわせて `SITE_ORIGIN` を `https://<ドメイン>` にする（共有カードの画像の URL に使う）
-5. Actions の「Deploy to GitHub Pages」を手動実行し、新しいドメインで表示を確かめる
+いまの設定（2026-10-25）:
 
-独自ドメインをやめるときは、Custom domain を空にし、変数 `BASE_PATH`・`SITE_ORIGIN` を削除してから再デプロイする。
+1. Cloudflare の DNS で `umeda` の `CNAME` を `naki0227.github.io` に向ける（Proxy status は **DNS only**。オレンジの Proxied にすると GitHub が HTTPS の証明書を作れない）
+2. **Settings → Pages → Custom domain** に `umeda.enludus.com`、証明書ができたら **Enforce HTTPS** をオン
+3. ビルドの既定は `BASE_PATH=/`・`SITE_ORIGIN=https://umeda.enludus.com`（`vite.config.ts` と `.github/workflows/deploy.yml`）。リポジトリ変数 `BASE_PATH`・`SITE_ORIGIN` があればそちらが優先される
+4. 旧 URL（https://naki0227.github.io/umeda_underground_map/）は GitHub が新しいドメインへ自動で転送する
+
+ドメインを変えるときは、DNS と Custom domain を変え、リポジトリ変数 `SITE_ORIGIN` を `https://<新しいドメイン>` にして再デプロイする。
+独自ドメインをやめて github.io の下に戻すときは、Custom domain を空にし、リポジトリ変数を `BASE_PATH=/umeda_underground_map/`・`SITE_ORIGIN=https://naki0227.github.io` にして再デプロイする。
+
+切り替え直後は GitHub の CDN が古いページを最大10分ほど返すことがある（古いページは古い場所の JS を読みに行くので白い画面になる）。少し待ってから確かめる。
 
 ### 4. 誤り報告フォームの管理
 

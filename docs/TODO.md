@@ -18,6 +18,8 @@
 
 ## 完了
 
+- [x] 独自ドメイン https://umeda.enludus.com/ に移行（Cloudflare の CNAME、GitHub Pages の Custom domain、ビルドの既定を BASE_PATH=/・SITE_ORIGIN=https://umeda.enludus.com に。旧 github.io は自動で転送）（2026-10-25）
+
 - [x] 共有カード（OGP・X の summary_large_image）。1200×630 の画像 public/ogp.jpg、画像の絶対URLは vite.config.ts で公開URLに置き換える（独自ドメインは SITE_ORIGIN）（2026-10-24）
 
 - [x] 駅として行き先を選べる（「大阪駅」「阪神梅田」「東梅田」などで駅が先頭に出る。選ぶと、いまいる所から経路が一番短い改札へ案内し、道案内には選んだ改札の名前を出す）（2026-10-24）
