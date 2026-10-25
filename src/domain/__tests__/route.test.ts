@@ -91,4 +91,20 @@ describe('routeUsesStairs', () => {
     const route = findRoute(lifted, 'j1', 'exit1');
     expect(route && routeUsesStairs(lifted, route)).toBe(false);
   });
+
+  it('does not treat stairs with an escalator alongside as stairs', () => {
+    const both = buildGraph({
+      nodes: testNodes,
+      edges: testEdges.map((e) =>
+        e.attrs?.includes('stairs')
+          ? { ...e, attrs: ['stairs' as const, 'escalator' as const] }
+          : e,
+      ),
+    });
+    // 階段を避けても、エスカレーターが並ぶ近道はそのまま使う
+    const plain = findRoute(both, 'j3', 'j5');
+    const avoided = findRoute(both, 'j3', 'j5', { avoidStairs: true });
+    expect(avoided?.nodeIds).toEqual(plain?.nodeIds);
+    expect(avoided && routeUsesStairs(both, avoided)).toBe(false);
+  });
 });

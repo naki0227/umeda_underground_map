@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { BottomSheet } from './components/BottomSheet';
 import { TabBar } from './components/TabBar';
@@ -41,7 +41,7 @@ export default function App() {
   const graph = useMemo(() => buildGraph(umedaMap), []);
   const nav = useMapNavigation();
   const [avoidStairs, setAvoidStairs] = useState(false);
-  const favorites = useFavorites();
+  const favorites = useFavorites(graph, umedaMap);
   const gps = useInitialGeolocation();
   const [gpsNoteDismissed, setGpsNoteDismissed] = useState(false);
   const { acquire: acquireGps } = gps;
@@ -67,6 +67,14 @@ export default function App() {
   if (routeClock.request !== routeRequest)
     setRouteClock({ request: routeRequest, time: new Date() });
   const routeTime = routeClock.time;
+  // 案内中は1分ごとに時刻を進める。通路が閉まる・開く時刻をまたいだときだけ経路が変わる
+  // （同じ経路ならステップの位置はそのまま）
+  const routing = nav.currentNodeId !== null && nav.destination !== null;
+  useEffect(() => {
+    if (!routing) return;
+    const id = setInterval(() => setRouteClock((c) => ({ ...c, time: new Date() })), 60_000);
+    return () => clearInterval(id);
+  }, [routing]);
   const { targetNodeId, targetLabel } = useRouteTarget(graph, nav.currentNodeId, nav.destination, {
     avoidStairs,
     time: routeTime,
@@ -299,7 +307,7 @@ export default function App() {
 
       <TabBar
         sheet={nav.sheet}
-        onMap={nav.closeSheet}
+        onMap={nav.showMap}
         onSpots={nav.openSpots}
         onFavorites={nav.openFavorites}
         onMenu={nav.openMenu}

@@ -40,7 +40,14 @@ export function LocateScreen({
   const [entranceKey, setEntranceKey] = useState<EntranceKey>('');
   const [selectedShopIds, setSelectedShopIds] = useState<string[]>([]);
   const [shopQuery, setShopQuery] = useState('');
-  const [candidates, setCandidates] = useState<LocationCandidate[] | null>(null);
+  const [located, setLocated] = useState<{ key: string; result: LocationCandidate[] } | null>(null);
+  // 推定に使った入口・店・GPS が変わったら、古い推定結果は出さない
+  const inputKey = [
+    entranceKey,
+    selectedShopIds.join(','),
+    gps.position ? `${gps.position.lat},${gps.position.lng}` : '',
+  ].join('|');
+  const candidates = located?.key === inputKey ? located.result : null;
   const estimateRef = useRef<HTMLDivElement>(null);
 
   const entranceNodeId = useMemo(() => {
@@ -102,7 +109,7 @@ export function LocateScreen({
       gps: gps.position ?? initialGps ?? undefined,
       nearbyShopIds: selectedShopIds,
     });
-    setCandidates(result);
+    setLocated({ key: inputKey, result });
   };
 
   const nodeName = (nodeId: NodeId) => {

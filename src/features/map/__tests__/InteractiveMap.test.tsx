@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { InteractiveMap } from '../InteractiveMap';
@@ -28,6 +28,26 @@ describe('InteractiveMap', { timeout: 15_000 }, () => {
     expect(screen.getByTestId('map-view')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '拡大' })).toBeInTheDocument();
     expect(screen.getByRole('button', { name: '縮小' })).toBeInTheDocument();
+  });
+
+  it('zooms with the wheel without zooming the page, and ignores sideways scrolling', () => {
+    render(
+      <InteractiveMap
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onSelectPlace={() => {}}
+      />,
+    );
+    const svg = screen.getByTestId('map-view');
+    const before = svg.getAttribute('viewBox');
+    // 横スクロール（deltaY が 0）では拡大しない
+    expect(fireEvent.wheel(svg, { deltaX: 50, deltaY: 0 })).toBe(true);
+    expect(svg.getAttribute('viewBox')).toBe(before);
+    // 縦のホイールは地図だけを拡大し、ページの拡大（既定の動作）は止める
+    expect(fireEvent.wheel(svg, { deltaY: -100 })).toBe(false);
+    const width = (vb: string | null) => Number(vb?.split(' ')[2]);
+    expect(width(svg.getAttribute('viewBox'))).toBeLessThan(width(before));
   });
 
   it('highlights a route and shows markers', () => {

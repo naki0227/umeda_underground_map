@@ -56,8 +56,8 @@ export function classifyTurn(angleDeg: number): TurnDirection {
   return angleDeg > 0 ? 'right' : 'left';
 }
 
-/** フロア移動に使う設備。エスカレーター優先で表現する */
-function pickVia(attrs: EdgeAttr[] | undefined): EdgeAttr {
+/** フロア移動に使う設備。エスカレーター優先で表現する（案内文と一人称の札で共通） */
+export function pickVia(attrs: EdgeAttr[] | undefined): EdgeAttr {
   for (const preferred of ['escalator', 'elevator', 'slope', 'stairs'] as const) {
     if (attrs?.includes(preferred)) return preferred;
   }

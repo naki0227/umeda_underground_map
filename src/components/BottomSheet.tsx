@@ -18,6 +18,12 @@ interface Props {
 export function BottomSheet({ label, initialSnap = 'half', children }: Props) {
   const { t } = useTranslation();
   const [snap, setSnap] = useState<SheetSnap>(initialSnap);
+  // 呼び出し側が既定の高さを変えたとき（一人称⇄地図の切り替え）はそれに合わせる
+  const [lastInitial, setLastInitial] = useState(initialSnap);
+  if (lastInitial !== initialSnap) {
+    setLastInitial(initialSnap);
+    setSnap(initialSnap);
+  }
   const [dragRatio, setDragRatio] = useState<number | null>(null);
   const drag = useRef<{ startY: number; startRatio: number; moved: boolean } | null>(null);
   /** ドラッグの直後に来る click を段階切替と取り違えないための印 */

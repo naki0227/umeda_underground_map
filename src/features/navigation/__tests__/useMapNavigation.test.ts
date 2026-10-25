@@ -121,4 +121,16 @@ describe('useMapNavigation', () => {
     expect(result.current.destination).toBeNull();
     expect(result.current.currentNodeId).toBeNull();
   });
+
+  it('shows only the map from the map tab, even while navigating', () => {
+    const { result } = renderHook(() => useMapNavigation());
+    act(() => result.current.confirmLocation('wt-izumi'));
+    act(() => result.current.selectPlace(hepFive));
+    act(() => result.current.goToSelected());
+    expect(result.current.sheet).toBe('route');
+    act(() => result.current.showMap());
+    expect(result.current.sheet).toBe('none');
+    // 案内は続いている（目的地はそのまま）
+    expect(result.current.destination?.nodeId).toBe('wt-exit-h8');
+  });
 });

@@ -206,7 +206,7 @@ export function RouteScreen({
         >
           {t('route.avoidStairs')}
         </button>
-        {onToggleFirstPerson !== undefined && (
+        {onToggleFirstPerson !== undefined && (result?.steps.length ?? 0) > 0 && (
           <button
             type="button"
             className={firstPerson ? 'chip active' : 'chip'}
@@ -332,12 +332,14 @@ export function RouteScreen({
             </div>
           )}
 
-          <p className="total eta">
-            {t('route.eta', {
-              distance: Math.round(remainingM),
-              minutes: Math.max(1, Math.round(remainingM / WALK_SPEED_M_PER_MIN)),
-            })}
-          </p>
+          {result.steps.length > 0 && (
+            <p className="total eta">
+              {t('route.eta', {
+                distance: Math.round(remainingM),
+                minutes: Math.max(1, Math.round(remainingM / WALK_SPEED_M_PER_MIN)),
+              })}
+            </p>
+          )}
 
           <ol className="steps">
             {result.steps.map((step, index) => (
