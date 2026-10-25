@@ -46,6 +46,20 @@ export default defineConfig({
       workbox: { globPatterns: ['**/*.{js,css,html,woff2}'] },
     }),
   ],
+  build: {
+    rollupOptions: {
+      output: {
+        // 地図データ（OSM から生成）と React は別のファイルにする。コードだけ直したときに
+        // 変わらないデータを読み直さずに済む（ブラウザ・Service Worker の保存がそのまま使える）
+        manualChunks(id) {
+          if (id.includes('/src/data/generated/')) return 'map-data';
+          if (/\/node_modules\/(react|react-dom|scheduler|i18next|react-i18next)\//.test(id)) {
+            return 'vendor';
+          }
+        },
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     globals: true,

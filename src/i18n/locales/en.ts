@@ -36,6 +36,7 @@ export const en: Resource = {
   search: {
     placeholder: 'Enter destination (shops, exits, spots)',
     results: 'Search results',
+    count: 'Results: {{count}}',
     kindStation: 'Station',
     kindPoi: 'Above ground',
     kindShop: 'Underground shop',
@@ -165,6 +166,7 @@ export const en: Resource = {
     station: 'Station corridors',
   },
   map: {
+    keyboardHint: 'Use the arrow keys to move between places on the map and Enter to choose one',
     legendRoute: 'Route',
     fitRoute: 'Show the whole route',
     gpsHint: 'Approx. location (GPS)',
