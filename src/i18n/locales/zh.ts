@@ -2,7 +2,7 @@ import type { ja } from './ja';
 
 type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> };
 
-/** 简体中文。地名·店名はデータに中国語表記がないため英語表記で表示する */
+/** 简体中文。地名・店名は src/data/placeNames.ts の中国語、なければ英語表記 */
 export const zh: Resource = {
   app: {
     title: '梅田地下导航',

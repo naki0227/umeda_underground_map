@@ -8,12 +8,21 @@ export interface Speech {
   cancel: () => void;
 }
 
+const SPEECH_LANG: Record<string, string> = {
+  ja: 'ja-JP',
+  zh: 'zh-CN',
+  'zh-Hant': 'zh-TW',
+  ko: 'ko-KR',
+  th: 'th-TH',
+  vi: 'vi-VN',
+  id: 'id-ID',
+  fr: 'fr-FR',
+  es: 'es-ES',
+};
+
 /** 表示言語 → 読み上げの言語タグ */
 function speechLang(language: string): string {
-  if (language.startsWith('ja')) return 'ja-JP';
-  if (language.startsWith('zh')) return 'zh-CN';
-  if (language.startsWith('ko')) return 'ko-KR';
-  return 'en-US';
+  return SPEECH_LANG[language] ?? 'en-US';
 }
 
 /**

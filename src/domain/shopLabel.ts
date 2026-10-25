@@ -11,8 +11,18 @@ export function shopPlaceName(shop: Shop): LocalizedText {
   const { building, floor } = shop;
   if (building === undefined) return shop.name;
   const where = (name: string) => (floor === undefined ? name : `${name} ${floor}`);
+  const both = (lang: 'zh' | 'zh-Hant' | 'ko') => {
+    const name = shop.name[lang];
+    const place = building[lang];
+    return name !== undefined && place !== undefined
+      ? { [lang]: `${name}（${where(place)}）` }
+      : {};
+  };
   return {
     ja: `${shop.name.ja}（${where(building.ja)}）`,
     en: `${shop.name.en} (${where(building.en)})`,
+    ...both('zh'),
+    ...both('zh-Hant'),
+    ...both('ko'),
   };
 }

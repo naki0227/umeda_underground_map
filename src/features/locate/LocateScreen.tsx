@@ -90,8 +90,8 @@ export function LocateScreen({
     if (query === '') return selected;
     const matches = shops
       .filter((s) => !selectedShopIds.includes(s.id))
-      .filter(
-        (s) => s.name.ja.toLowerCase().includes(query) || s.name.en.toLowerCase().includes(query),
+      .filter((s) =>
+        Object.values(s.name).some((text: string) => text.toLowerCase().includes(query)),
       )
       .slice(0, MAX_SHOP_RESULTS);
     return [...selected, ...matches];

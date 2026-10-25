@@ -4,6 +4,14 @@ import { en } from '../locales/en';
 import { ko } from '../locales/ko';
 import { zh } from '../locales/zh';
 import { ja } from '../locales/ja';
+import { es } from '../locales/es';
+import { fr } from '../locales/fr';
+import { id } from '../locales/id';
+import { th } from '../locales/th';
+import { vi } from '../locales/vi';
+import { zhHant } from '../locales/zhHant';
+
+const ALL = { en, zh, 'zh-Hant': zhHant, ko, th, vi, id, fr, es };
 
 describe('detectLanguage', () => {
   it('detects Japanese', () => {
@@ -17,11 +25,21 @@ describe('detectLanguage', () => {
     expect(detectLanguage('ko-KR')).toBe('ko');
   });
 
-  it('falls back to English for other languages, including Traditional Chinese', () => {
+  it('uses Traditional Chinese for Taiwan, Hong Kong and zh-Hant', () => {
+    expect(detectLanguage('zh-TW')).toBe('zh-Hant');
+    expect(detectLanguage('zh-Hant-HK')).toBe('zh-Hant');
+    expect(detectLanguage('zh-HK')).toBe('zh-Hant');
+  });
+
+  it('detects the other supported languages and falls back to English', () => {
+    expect(detectLanguage('th-TH')).toBe('th');
+    expect(detectLanguage('vi')).toBe('vi');
+    expect(detectLanguage('id-ID')).toBe('id');
+    expect(detectLanguage('in')).toBe('id');
+    expect(detectLanguage('fr-FR')).toBe('fr');
+    expect(detectLanguage('es-MX')).toBe('es');
     expect(detectLanguage('en-US')).toBe('en');
-    expect(detectLanguage('zh-TW')).toBe('en');
-    expect(detectLanguage('zh-Hant-HK')).toBe('en');
-    expect(detectLanguage('fr')).toBe('en');
+    expect(detectLanguage('de')).toBe('en');
     expect(detectLanguage('')).toBe('en');
   });
 });
@@ -32,9 +50,42 @@ describe('localized', () => {
     expect(localized(text, 'ja')).toBe('泉の広場');
     expect(localized(text, 'en')).toBe('Izumi Plaza');
   });
+
+  it('uses the Chinese and Korean names when there are any, otherwise English', () => {
+    const text = {
+      ja: '円形広場',
+      en: 'Circular Plaza',
+      zh: '圆形广场',
+      'zh-Hant': '圓形廣場',
+      ko: '원형 광장',
+    };
+    expect(localized(text, 'zh')).toBe('圆形广场');
+    expect(localized(text, 'zh-Hant')).toBe('圓形廣場');
+    expect(localized(text, 'ko')).toBe('원형 광장');
+    expect(localized(text, 'th')).toBe('Circular Plaza');
+    expect(localized({ ja: '泉の広場', en: 'Izumi Plaza' }, 'ko')).toBe('Izumi Plaza');
+  });
 });
 
 describe('translation resources', () => {
+  it('every language has every key, with the same {{placeholders}}', () => {
+    const flat = (resource: Record<string, Record<string, string>>) =>
+      Object.fromEntries(
+        Object.entries(resource).flatMap(([section, values]) =>
+          Object.entries(values).map(([k, v]) => [`${section}.${k}`, v]),
+        ),
+      );
+    const vars = (text: string) => [...text.matchAll(/{{(\w+)}}/g)].map((m) => m[1]).sort();
+    const base = flat(ja);
+    for (const [lang, resource] of Object.entries(ALL)) {
+      const other = flat(resource);
+      expect(Object.keys(other).sort(), lang).toEqual(Object.keys(base).sort());
+      for (const key of Object.keys(base)) {
+        expect(vars(other[key]), `${lang} ${key}`).toEqual(vars(base[key]));
+      }
+    }
+  });
+
   it('ja and en have the same keys', () => {
     const jaKeys = Object.entries(ja).flatMap(([section, values]) =>
       Object.keys(values).map((k) => `${section}.${k}`),

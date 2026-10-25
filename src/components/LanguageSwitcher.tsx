@@ -4,8 +4,14 @@ import type { AppLanguage } from '../i18n';
 const LANGUAGES: { code: AppLanguage; label: string }[] = [
   { code: 'ja', label: '日本語' },
   { code: 'en', label: 'English' },
-  { code: 'zh', label: '简体中文' },
   { code: 'ko', label: '한국어' },
+  { code: 'zh', label: '简体中文' },
+  { code: 'zh-Hant', label: '繁體中文' },
+  { code: 'th', label: 'ไทย' },
+  { code: 'vi', label: 'Tiếng Việt' },
+  { code: 'id', label: 'Bahasa Indonesia' },
+  { code: 'fr', label: 'Français' },
+  { code: 'es', label: 'Español' },
 ];
 
 export function LanguageSwitcher() {
@@ -14,7 +20,7 @@ export function LanguageSwitcher() {
     <label className="language-switcher">
       <span className="visually-hidden">{t('language.label')}</span>
       <select
-        value={LANGUAGES.find((l) => i18n.language.startsWith(l.code))?.code ?? 'en'}
+        value={LANGUAGES.find((l) => i18n.language === l.code)?.code ?? 'en'}
         onChange={(e) => void i18n.changeLanguage(e.target.value)}
       >
         {LANGUAGES.map((lang) => (
