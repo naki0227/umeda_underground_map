@@ -12,10 +12,12 @@ import { fitGeoTransform, type LatLng } from '../../domain/geo';
 import type { Graph } from '../../domain/graph';
 import { isWithin, minuteOfDayInTokyo } from '../../domain/hours';
 import { planRoute } from './planRoute';
-import { routeUsesStairs } from '../../domain/route';
+import { routeUsesStairs, routeNeedsSteps } from '../../domain/route';
 import { nodeFloor, type LocalizedText, type NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
+import { STRIDE_M } from './stepDetector';
 import { useSpeech } from './useSpeech';
+import { StepSensor } from './StepSensor';
 
 interface Props {
   graph: Graph;
@@ -26,7 +28,15 @@ interface Props {
   /** 目的地が地上スポットなら出口ヒントを出す */
   aboveGround: boolean;
   avoidStairs: boolean;
+  /** 段差なし（エレベーター・スロープだけ）。avoidStairs も true のときだけ意味がある */
+  stepFree?: boolean;
+  /** 段差の扱いを ふつう → 階段を避ける → エレベーターだけ → ふつう と切り替える */
   onToggleAvoidStairs: () => void;
+  /** 曲がりの少ない「わかりやすい道」で案内する（既定）。false なら最短 */
+  simple?: boolean;
+  onToggleSimple?: () => void;
+  /** 雨の予報。地上の近道は勧めず、地下で案内していることを伝える */
+  rain?: boolean;
   onLost: () => void;
   onFinish: () => void;
   /** 経路シートを閉じて地図を見る（案内は継続） */
@@ -43,6 +53,12 @@ interface Props {
   compact?: boolean;
   onToggleFirstPerson?: () => void;
 }
+
+/** 歩数のめやす（歩幅 0.7m）。案内の研究では、距離より歩数のほうが分かりやすいという声が多い */
+const walkingSteps = (meters: number) => {
+  const steps = Math.max(1, Math.round(meters / STRIDE_M));
+  return steps >= 50 ? Math.round(steps / 10) * 10 : steps;
+};
 
 /** ステップの種類をアイコン1文字で表す */
 function stepIcon(step: RouteStep): string {
@@ -67,7 +83,11 @@ export function RouteScreen({
   destinationLabel,
   aboveGround,
   avoidStairs,
+  stepFree = false,
   onToggleAvoidStairs,
+  simple = false,
+  onToggleSimple,
+  rain = false,
   onLost,
   onFinish,
   onClose,
@@ -84,16 +104,41 @@ export function RouteScreen({
   const lateNight = isWithin(minute, LATE_NIGHT);
 
   const result = useMemo(() => {
-    const planned = planRoute(graph, fromNodeId, toNodeId, { avoidStairs, minute });
+    const planned = planRoute(graph, fromNodeId, toNodeId, {
+      avoidStairs,
+      stepFree,
+      minute,
+      simple,
+    });
     if (planned === null) return null;
     const { route, throughClosed } = planned;
+    // もう一方の選び方（最短 / わかりやすい道）と違えば、距離と曲がる回数の差を出して切り替えられるようにする
+    const other = planRoute(graph, fromNodeId, toNodeId, {
+      avoidStairs,
+      stepFree,
+      minute,
+      simple: !simple,
+    });
+    const steps = buildSteps(graph, route);
+    const differs = other !== null && other.route.nodeIds.join() !== route.nodeIds.join();
+    const turns = (list: RouteStep[]) =>
+      list.filter((s) => s.action === 'left' || s.action === 'right' || s.action === 'u-turn')
+        .length;
+    const alternative = differs
+      ? {
+          extraM: Math.round(Math.abs(route.totalDistanceM - other.route.totalDistanceM)),
+          turnsDiff: Math.abs(turns(steps) - turns(buildSteps(graph, other.route))),
+        }
+      : null;
     return {
       route,
-      steps: buildSteps(graph, route),
+      steps,
       usesStairs: routeUsesStairs(graph, route),
+      needsSteps: routeNeedsSteps(graph, route),
       throughClosed,
+      alternative,
     };
-  }, [graph, fromNodeId, toNodeId, avoidStairs, minute]);
+  }, [graph, fromNodeId, toNodeId, avoidStairs, stepFree, minute, simple]);
 
   /** 地上の方が近い可能性があるときの比較値と Google マップのリンク */
   const aboveGroundSuggestion = useMemo(() => {
@@ -164,6 +209,7 @@ export function RouteScreen({
   const lastIndex = result !== null ? result.steps.length - 1 : -1;
   const currentIndex = Math.min(Math.max(stepIndex, 0), Math.max(lastIndex, 0));
   const next = result !== null && result.steps.length > 0 ? result.steps[currentIndex] : null;
+
   /** いまいるフロア = 表示中ステップの起点のフロア */
   const currentFloor = (() => {
     const node = graph.nodes.get(next?.fromNodeId ?? fromNodeId);
@@ -204,7 +250,7 @@ export function RouteScreen({
           aria-pressed={avoidStairs}
           onClick={onToggleAvoidStairs}
         >
-          {t('route.avoidStairs')}
+          {t(stepFree ? 'route.stepFree' : 'route.avoidStairs')}
         </button>
         {onToggleFirstPerson !== undefined && (result?.steps.length ?? 0) > 0 && (
           <button
@@ -250,9 +296,30 @@ export function RouteScreen({
       ) : (
         <>
           {result.steps.length === 0 && <p className="hint ok">{t('route.alreadyHere')}</p>}
-          {avoidStairs && result.usesStairs && (
+          {stepFree && result.needsSteps && (
+            <p className="hint warn" data-testid="step-free-warning">
+              {t('route.needsSteps')}
+            </p>
+          )}
+          {avoidStairs && !stepFree && result.usesStairs && (
             <p className="hint warn" data-testid="stairs-warning">
               {t('route.usesStairs')}
+            </p>
+          )}
+          {result.alternative !== null && onToggleSimple !== undefined && (
+            <p className="hint route-choice" data-testid="route-choice">
+              {simple
+                ? t('route.simpleNote', {
+                    turns: result.alternative.turnsDiff,
+                    extra: result.alternative.extraM,
+                  })
+                : t('route.shortestNote', {
+                    turns: result.alternative.turnsDiff,
+                    extra: result.alternative.extraM,
+                  })}{' '}
+              <button type="button" className="link-button" onClick={onToggleSimple}>
+                {simple ? t('route.useShortest') : t('route.useSimple')}
+              </button>
             </p>
           )}
           {result.throughClosed && (
@@ -280,6 +347,8 @@ export function RouteScreen({
               <div className="next-body">
                 <span className="next-distance">
                   {t('route.stepGo', { distance: next.distanceM })}
+                  {next.distanceM > 0 &&
+                    ` · ${t('route.steps', { steps: walkingSteps(next.distanceM) })}`}
                 </span>
                 <span className="next-action">{actionText(next)}</span>
               </div>
@@ -313,8 +382,20 @@ export function RouteScreen({
               </button>
             </div>
           )}
+          {next !== null && lastIndex > 0 && (
+            <StepSensor
+              stepKey={currentIndex}
+              distanceM={next.distanceM}
+              hasNext={currentIndex < lastIndex}
+            />
+          )}
 
-          {aboveGroundSuggestion !== null && (
+          {rain && (
+            <p className="hint" data-testid="rain-note">
+              {t('route.rainNote')}
+            </p>
+          )}
+          {aboveGroundSuggestion !== null && !rain && (
             <div
               className={compact ? 'above-ground-suggest visually-hidden' : 'above-ground-suggest'}
               data-testid="above-ground-suggest"
@@ -355,6 +436,7 @@ export function RouteScreen({
                   {step.distanceM > 0 && (
                     <span className="step-distance">
                       {t('route.stepGo', { distance: step.distanceM })}
+                      {` · ${t('route.steps', { steps: walkingSteps(step.distanceM) })}`}
                     </span>
                   )}
                   <span className="step-action">{actionText(step)}</span>

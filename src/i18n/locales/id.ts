@@ -10,6 +10,10 @@ export const id: Resource = {
     dataVersionNote: 'Data toko dan pintu keluar per {{version}}',
   },
   locate: {
+    exitCodeLabel: 'Nomor pintu keluar di papan kuning terdekat (jika terlihat)',
+    exitCodePlaceholder: 'mis. D-21, H-49',
+    exitCodePick: 'Saya dekat pintu keluar {{exit}}',
+    exitCodeNone: 'Pintu keluar dengan nomor itu tidak ditemukan',
     title: 'Cari tahu posisi Anda',
     description:
       'Pilih pintu masuk yang Anda pakai atau toko yang terlihat di dekat Anda untuk memperkirakan posisi.',
@@ -36,6 +40,7 @@ export const id: Resource = {
     noCandidates: 'Tidak bisa memperkirakan. Coba pilih satu atau dua toko lagi.',
   },
   search: {
+    kindPoiExit: 'Atas tanah · Pintu keluar {{exit}}',
     placeholder: 'Masukkan tujuan (toko, pintu keluar, tempat)',
     results: 'Hasil pencarian',
     count: '{{count}} hasil ditemukan',
@@ -46,6 +51,10 @@ export const id: Resource = {
     kindNode: 'Pintu keluar / Stasiun',
   },
   place: {
+    share: 'Bagikan tempat ini (untuk janjian)',
+    copied: 'Tautan disalin',
+    shareTitle: 'Umeda Underground Navi: {{name}}',
+    nearestExit: 'Pintu keluar terdekat: {{exit}}. ',
     goHere: 'Petunjuk arah',
     setHere: 'Saya di sini',
     aboveGroundNote:
@@ -82,6 +91,8 @@ export const id: Resource = {
     close: 'Tutup',
   },
   fpv: {
+    viewBehind: 'Lihat dari belakang',
+    viewEye: 'Lihat setinggi mata',
     left: 'Kiri',
     right: 'Kanan',
     along: 'Sepanjang jalan',
@@ -105,6 +116,23 @@ export const id: Resource = {
     showFirstPerson: 'Sudut pandang orang pertama',
   },
   route: {
+    sensorOn: 'Hitung langkah saya (sensor gerak)',
+    sensorOff: 'Berhenti menghitung langkah',
+    sensorWalked: 'Sekitar {{walked}} / {{total}} m sudah ditempuh di bagian ini',
+    sensorNearly: 'Hampir sampai. Ketuk Berikutnya saat penanda terlihat',
+    sensorDenied:
+      'Sensor gerak tidak tersedia (izinkan di pengaturan, atau lanjutkan dengan Berikutnya)',
+    stepFree: 'Hanya lift',
+    needsSteps:
+      'Tidak ada rute hanya dengan lift atau jalan landai, jadi rute ini melewati tangga atau eskalator.',
+    rainNote: 'Diperkirakan hujan, jadi kami memandu lewat rute bawah tanah.',
+    simpleNote:
+      'Rute ini lebih sedikit belokan ({{turns}} belokan lebih sedikit, sekitar {{extra}} m lebih panjang dari yang terpendek).',
+    shortestNote:
+      'Ini rute terpendek (rute dengan {{turns}} belokan lebih sedikit sekitar {{extra}} m lebih panjang).',
+    useShortest: 'Pakai yang terpendek',
+    useSimple: 'Pakai yang lebih sedikit belokan',
+    steps: 'sekitar {{steps}} langkah',
     title: 'Petunjuk arah',
     from: 'Dari: {{name}}',
     to: 'Ke: {{name}}',
@@ -196,5 +224,40 @@ export const id: Resource = {
   },
   language: {
     label: 'Bahasa',
+  },
+  weather: {
+    toNearestExit: 'Pandu ke pintu keluar terdekat ({{exit}})',
+    warning: 'Ada peringatan hujan lebat / banjir di Kota Osaka.',
+    emergency: 'Ada peringatan darurat hujan lebat di Kota Osaka.',
+    floodAdvice:
+      'Kawasan bawah tanah bisa terendam. Ikuti pengumuman dan petugas, segera naik ke tempat tinggi di atas.',
+    floodPlan: 'Rencana banjir Kota Osaka',
+  },
+  amenity: {
+    title: 'Cari fasilitas',
+    toilet: 'Toilet',
+    accessible: 'Toilet difabel',
+    locker: 'Loker koin',
+    atm: 'ATM',
+    elevator: 'Lift',
+    info: 'Informasi',
+    aed: 'AED',
+    none: 'Tidak ditemukan di dekat lorong bawah tanah (sebagian fasilitas belum ada di data peta)',
+    setLocation: 'Atur lokasi Anda untuk mengurutkan menurut jarak',
+  },
+  guide: {
+    exitTitle: 'Pintu keluar {{exit}} Umeda ({{area}}) – cara ke sana | Umeda Underground Navi',
+    exitDescription:
+      'Pintu keluar {{exit}} kawasan bawah tanah Umeda ({{area}}). Dekat: {{nearby}}. Petunjuk arah sudut pandang orang pertama ke pintu keluar ini, meski GPS tak berfungsi.',
+    exitIntro: 'Pintu keluar {{exit}} adalah jalan naik ke jalan raya dari {{area}} ({{floor}}).',
+    openApp: 'Petunjuk arah bawah tanah ke pintu keluar ini',
+    openAppTop: 'Buka Umeda Underground Navi',
+    nearbyAbove: 'Gedung terdekat di atas tanah',
+    nearbyShops: 'Toko terdekat di bawah tanah',
+    allExits: '← Semua pintu keluar Umeda',
+    indexTitle: 'Pintu keluar kawasan bawah tanah Umeda | Umeda Underground Navi',
+    indexIntro:
+      '{{count}} pintu keluar kawasan bawah tanah Umeda. Pilih nomor untuk melihat gedung dan toko terdekat serta petunjuk arah bawah tanah.',
+    attribution: 'Data peta © OpenStreetMap contributors (ODbL)',
   },
 };

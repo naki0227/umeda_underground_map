@@ -1,4 +1,6 @@
 import type { AdjacentEdge, Graph } from './graph';
+import { MinHeap } from './minHeap';
+import { findSimpleRoute } from './simpleRoute';
 import { nodeFloor, type EdgeAttr, type NodeId } from './types';
 
 export interface RouteOptions {
@@ -6,6 +8,16 @@ export interface RouteOptions {
   avoidStairs?: boolean;
   /** いま通れない線（夜間に閉まる通路など）。true の線は使わない */
   isClosed?: (from: NodeId, edge: AdjacentEdge) => boolean;
+  /**
+   * 曲がる回数の少ない「わかりやすい経路」にする（simpleRoute.ts）。
+   * 曲がるたびに距離を足して比べる。最短より少し長くても、曲がりと分かれ道の少ない道を選ぶ
+   */
+  simple?: boolean;
+  /**
+   * 段差なし（エレベーター・スロープだけ）。スーツケース・ベビーカー・車いす向け。
+   * 階段に加えてエスカレーターだけの上り下りも強く避ける
+   */
+  stepFree?: boolean;
 }
 
 export interface Route {
@@ -14,55 +26,29 @@ export interface Route {
 }
 
 /** 階段回避時に階段エッジへ掛ける距離倍率。完全排除ではなく強い抑制。 */
-const STAIRS_PENALTY_FACTOR = 5;
+export const STAIRS_PENALTY_FACTOR = 5;
+/** 段差なしのとき、エレベーター・スロープのない上り下りに掛ける距離倍率 */
+export const STEP_FREE_PENALTY_FACTOR = 20;
 
-interface QueueEntry {
-  nodeId: NodeId;
-  cost: number;
+/** 線を通るときの距離倍率（階段を避ける・段差なし） */
+export function edgePenalty(
+  graph: Graph,
+  from: NodeId,
+  edge: AdjacentEdge,
+  options: RouteOptions,
+): number {
+  if (options.stepFree && !stepFreeEdge(graph, from, edge)) return STEP_FREE_PENALTY_FACTOR;
+  if (options.avoidStairs && stairsOnly(edge.attrs)) return STAIRS_PENALTY_FACTOR;
+  return 1;
 }
 
-/** 依存を増やさないための素朴な二分ヒープ */
-class MinHeap {
-  private items: QueueEntry[] = [];
-
-  get size(): number {
-    return this.items.length;
-  }
-
-  push(entry: QueueEntry): void {
-    this.items.push(entry);
-    let i = this.items.length - 1;
-    while (i > 0) {
-      const parent = (i - 1) >> 1;
-      if (this.items[parent].cost <= this.items[i].cost) break;
-      [this.items[parent], this.items[i]] = [this.items[i], this.items[parent]];
-      i = parent;
-    }
-  }
-
-  pop(): QueueEntry | undefined {
-    const top = this.items[0];
-    const last = this.items.pop();
-    if (this.items.length > 0 && last !== undefined) {
-      this.items[0] = last;
-      let i = 0;
-      for (;;) {
-        const left = i * 2 + 1;
-        const right = left + 1;
-        let smallest = i;
-        if (left < this.items.length && this.items[left].cost < this.items[smallest].cost) {
-          smallest = left;
-        }
-        if (right < this.items.length && this.items[right].cost < this.items[smallest].cost) {
-          smallest = right;
-        }
-        if (smallest === i) break;
-        [this.items[smallest], this.items[i]] = [this.items[i], this.items[smallest]];
-        i = smallest;
-      }
-    }
-    return top;
-  }
+/** 段差なしで通れる線か（階が変わらない、または変わるならエレベーター・スロープがある） */
+export function stepFreeEdge(graph: Graph, from: NodeId, edge: AdjacentEdge): boolean {
+  if (edge.attrs.includes('elevator') || edge.attrs.includes('slope')) return true;
+  if (edge.attrs.includes('stairs') || edge.attrs.includes('escalator')) return false;
+  const a = graph.nodes.get(from);
+  const b = graph.nodes.get(edge.to);
+  return a === undefined || b === undefined || nodeFloor(a) === nodeFloor(b);
 }
 
 /**
@@ -76,6 +62,7 @@ export function findRoute(
   options: RouteOptions = {},
 ): Route | null {
   if (!graph.nodes.has(from) || !graph.nodes.has(to)) return null;
+  if (options.simple) return findSimpleRoute(graph, from, to, options);
 
   const dist = new Map<NodeId, number>();
   const realDist = new Map<NodeId, number>();
@@ -98,7 +85,7 @@ export function findRoute(
 
     for (const edge of graph.adjacency.get(current.nodeId) ?? []) {
       if (options.isClosed?.(current.nodeId, edge)) continue;
-      const penalty = options.avoidStairs && stairsOnly(edge.attrs) ? STAIRS_PENALTY_FACTOR : 1;
+      const penalty = edgePenalty(graph, current.nodeId, edge, options);
       const nextCost = current.cost + edge.distanceM * penalty;
       const known = dist.get(edge.to);
       if (known === undefined || nextCost < known) {
@@ -123,7 +110,7 @@ export function findRoute(
 }
 
 /** 階段しかない通路か（エスカレーター等が並んでいる通路は階段を避けて通れる） */
-function stairsOnly(attrs: readonly EdgeAttr[]): boolean {
+export function stairsOnly(attrs: readonly EdgeAttr[]): boolean {
   return attrs.includes('stairs') && attrs.every((attr) => attr === 'stairs');
 }
 
@@ -142,6 +129,16 @@ export function routeUsesStairs(graph: Graph, route: Route): boolean {
     const b = graph.nodes.get(to);
     const changesFloor = a !== undefined && b !== undefined && nodeFloor(a) !== nodeFloor(b);
     if (changesFloor && edge.attrs.length === 0) return true;
+  }
+  return false;
+}
+
+/** 段差なしでは通れない上り下り（階段・エスカレーターだけ）が経路にあるか */
+export function routeNeedsSteps(graph: Graph, route: Route): boolean {
+  for (let i = 0; i < route.nodeIds.length - 1; i += 1) {
+    const from = route.nodeIds[i];
+    const edge = (graph.adjacency.get(from) ?? []).find((e) => e.to === route.nodeIds[i + 1]);
+    if (edge !== undefined && !stepFreeEdge(graph, from, edge)) return true;
   }
   return false;
 }

@@ -31,6 +31,10 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
     const q = query.trim().toLowerCase();
     if (q === '') return [];
     // 日本語・英語に加えて、中国語・韓国語の名前でも見つける
+    const exitLabel = (nodeId: string) => {
+      const exitNo = graph.nodes.get(nodeId)?.exitNo;
+      return exitNo === undefined ? undefined : t('search.kindPoiExit', { exit: exitNo });
+    };
     const matches = (name: LocalizedText) =>
       Object.values(name).some((text: string) => text.toLowerCase().includes(q));
 
@@ -51,7 +55,8 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
       .map((p) => ({
         key: p.id,
         place: { nodeId: p.nodeId, name: p.name, aboveGround: true },
-        kindLabel: t('search.kindPoi'),
+        // 地上の建物は、いちばん近い出口の番号も出す（「阪神百貨店 → 地上・出口 17」）
+        kindLabel: exitLabel(p.nodeId) ?? t('search.kindPoi'),
       }));
     // ビルの中の店はビル名でも見つかるようにする（「ヨドバシ」で中の店も出る）
     const shopResults: Result[] = shops

@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build",
+    "build": "tsc -b && vite build && vite build --config vite.guides.config.ts && node node_modules/.tmp/guides/writeGuides.js",
     "typecheck": "tsc -b --noEmit",
     "lint": "oxlint",
     "format": "prettier --write .",

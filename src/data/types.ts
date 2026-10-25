@@ -49,3 +49,20 @@ export interface Basemap {
   majorRoads: number[][];
   minorRoads: number[][];
 }
+
+/** 設備の種類（scripts/osm/amenities.mjs） */
+export type AmenityKind = 'toilet' | 'locker' | 'atm' | 'elevator' | 'info' | 'aed';
+
+/** OSM から取り出した設備（位置だけ。どの通路の点に付けるかは src/data/amenities.ts） */
+export interface GeneratedAmenity {
+  id: string;
+  kind: AmenityKind;
+  lat: number;
+  lng: number;
+  floor?: string;
+  name?: { ja: string; en: string };
+  /** 車いすで使えるトイレ（多目的トイレ） */
+  wheelchair?: boolean;
+  /** 開いている時間（OSM の opening_hours そのまま） */
+  hours?: string;
+}

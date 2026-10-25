@@ -28,6 +28,10 @@ const SIGN_BOTTOM_M = 2.4;
 const SIGN_TOP_M = 3.0;
 /** 目は起点より少し後ろに置く（起点にある店も左右に見えるように） */
 const BACK_M = 3;
+/** 後ろからの視点の目の高さ（天井 3.2m のすぐ下） */
+const BEHIND_EYE_M = 2.8;
+/** 後ろからの視点で自分の印を置く所（目の位置からの距離 m） */
+const YOU_M = BACK_M + 3;
 const CHUNK_M = 4;
 /** 段の縞の幅（m） */
 const STEP_M = 0.45;
@@ -49,6 +53,7 @@ const COLORS = {
   route: '#2f6bf2',
   opening: '#c8b9a2',
   stairs: '#4b5563',
+  you: '#1e3a9e',
 };
 
 /** 遠くほど霧の色に近づける */
@@ -59,7 +64,14 @@ const fogged = (color: string, depthM: number) =>
  * 一人称の通路の絵を組み立てる。経路の折れ線に沿って床・壁・天井を短く区切って作り、
  * 壁には店先（店ごとの四角）・出口・脇道を並べる。遠いものから順に描けば手前が上に重なる。
  */
-export function buildScene({ path, items, turn, goal, floorChange }: SceneInput): Scene {
+export function buildScene({
+  path,
+  items,
+  turn,
+  goal,
+  floorChange,
+  viewpoint = 'eye',
+}: SceneInput): Scene {
   const empty: Scene = { width: SCENE_WIDTH, height: SCENE_HEIGHT, polygons: [], labels: [] };
   const simplified = simplifyPath(path, 1.5);
   if (simplified.length < 2) return empty;
@@ -79,10 +91,11 @@ export function buildScene({ path, items, turn, goal, floorChange }: SceneInput)
   const camera: Camera = {
     position: eye,
     heading,
-    eyeM: 1.6 + heightAt(corridor, 0),
+    eyeM: (viewpoint === 'behind' ? BEHIND_EYE_M : 1.6) + heightAt(corridor, 0),
     width: SCENE_WIDTH,
     height: SCENE_HEIGHT,
-    horizonY: SCENE_HEIGHT * 0.41,
+    // 上から見るときは地平線を上げて床を広く見せる
+    horizonY: SCENE_HEIGHT * (viewpoint === 'behind' ? 0.3 : 0.41),
     focal: 280,
   };
 
@@ -133,6 +146,16 @@ export function buildScene({ path, items, turn, goal, floorChange }: SceneInput)
     const base = add(`floor-${i}`, flat(s0, s1, HALF_WIDTH_M, -HALF_WIDTH_M, 0), tile, floor);
     if (s1 > BACK_M) {
       add(`route-${i}`, flat(Math.max(s0, BACK_M), s1, 0.6, -0.6, 0), COLORS.route, floor);
+    }
+    // 後ろからの視点では、いまいる所（起点）に自分の印（進む向きの矢印）を置く
+    // （画面の下はシートに隠れるので、少し前に置く）
+    if (viewpoint === 'behind' && s0 <= YOU_M && s1 > YOU_M) {
+      const tip = at(YOU_M + 1.1, 0, 0.01);
+      const left = at(YOU_M - 0.4, 0.7, 0.01);
+      const notch = at(YOU_M, 0, 0.01);
+      const right = at(YOU_M - 0.4, -0.7, 0.01);
+      const points = projectPolygon(camera, [tip, left, notch, right]);
+      if (points !== null) floor.push({ key: 'you', points: points.points, fill: COLORS.you });
     }
     push(floor, base?.depth);
     const ceiling: ScenePolygon[] = [];

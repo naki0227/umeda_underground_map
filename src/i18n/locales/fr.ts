@@ -10,6 +10,10 @@ export const fr: Resource = {
     dataVersionNote: 'Boutiques et sorties à jour au {{version}}',
   },
   locate: {
+    exitCodeLabel: 'Numéro de sortie sur un panneau jaune près de vous (si vous en voyez un)',
+    exitCodePlaceholder: 'ex. D-21, H-49',
+    exitCodePick: 'Je suis près de la sortie {{exit}}',
+    exitCodeNone: 'Aucune sortie avec ce numéro',
     title: 'Où êtes-vous ?',
     description:
       'Choisissez l’entrée utilisée ou les boutiques visibles autour de vous pour estimer votre position.',
@@ -36,6 +40,7 @@ export const fr: Resource = {
     noCandidates: 'Estimation impossible. Choisissez une ou deux boutiques de plus.',
   },
   search: {
+    kindPoiExit: 'Surface · Sortie {{exit}}',
     placeholder: 'Destination (boutiques, sorties, lieux)',
     results: 'Résultats de recherche',
     count: '{{count}} résultat(s)',
@@ -46,6 +51,10 @@ export const fr: Resource = {
     kindNode: 'Sortie / Gare',
   },
   place: {
+    share: 'Partager ce lieu (pour un rendez-vous)',
+    copied: 'Lien copié',
+    shareTitle: 'Umeda Underground Navi : {{name}}',
+    nearestExit: 'Sortie la plus proche : {{exit}}. ',
     goHere: 'Itinéraire',
     setHere: 'Je suis ici',
     aboveGroundNote: 'Ce lieu est en surface. Nous vous guidons jusqu’à la sortie la plus proche.',
@@ -81,6 +90,8 @@ export const fr: Resource = {
     close: 'Fermer',
   },
   fpv: {
+    viewBehind: 'Vue de derrière',
+    viewEye: 'Vue à hauteur d’yeux',
     left: 'À gauche',
     right: 'À droite',
     along: 'En chemin',
@@ -104,6 +115,23 @@ export const fr: Resource = {
     showFirstPerson: 'Vue subjective',
   },
   route: {
+    sensorOn: 'Compter mes pas (capteur de mouvement)',
+    sensorOff: 'Arrêter de compter les pas',
+    sensorWalked: 'Environ {{walked}} m sur {{total}} m parcourus sur ce tronçon',
+    sensorNearly: 'Presque arrivé. Touchez Suivant en voyant le repère',
+    sensorDenied:
+      'Capteur indisponible (autorisez-le dans les réglages, ou continuez avec Suivant)',
+    stepFree: 'Ascenseurs uniquement',
+    needsSteps:
+      'Aucun itinéraire uniquement par ascenseurs ou rampes : celui-ci passe par des escaliers ou un escalator.',
+    rainNote: 'De la pluie est prévue : nous restons sur des itinéraires souterrains.',
+    simpleNote:
+      'Itinéraire avec moins de virages ({{turns}} de moins, environ {{extra}} m de plus que le plus court).',
+    shortestNote:
+      'Itinéraire le plus court (celui avec {{turns}} virages de moins fait environ {{extra}} m de plus).',
+    useShortest: 'Prendre le plus court',
+    useSimple: 'Moins de virages',
+    steps: 'environ {{steps}} pas',
     title: 'Itinéraire',
     from: 'Départ : {{name}}',
     to: 'Arrivée : {{name}}',
@@ -196,5 +224,40 @@ export const fr: Resource = {
   },
   language: {
     label: 'Langue',
+  },
+  weather: {
+    toNearestExit: 'Me guider vers la sortie la plus proche ({{exit}})',
+    warning: 'Alerte fortes pluies / inondation à Osaka.',
+    emergency: 'Alerte d’urgence pour fortes pluies à Osaka.',
+    floodAdvice:
+      'Les galeries souterraines peuvent être inondées. Suivez les annonces et le personnel, et remontez tôt en hauteur.',
+    floodPlan: 'Plan inondation de la ville d’Osaka',
+  },
+  amenity: {
+    title: 'Trouver un service',
+    toilet: 'Toilettes',
+    accessible: 'Toilettes accessibles',
+    locker: 'Consignes',
+    atm: 'Distributeurs',
+    elevator: 'Ascenseurs',
+    info: 'Informations',
+    aed: 'Défibrillateurs',
+    none: 'Rien trouvé près des passages souterrains (certains services manquent dans les données)',
+    setLocation: 'Indiquez votre position pour trier par distance',
+  },
+  guide: {
+    exitTitle: 'Umeda sortie {{exit}} ({{area}}) – comment y aller | Umeda Underground Navi',
+    exitDescription:
+      'Sortie {{exit}} des galeries souterraines d’Umeda ({{area}}). À proximité : {{nearby}}. Itinéraire en vue subjective jusqu’à cette sortie, même sans GPS.',
+    exitIntro: 'La sortie {{exit}} mène à la rue depuis {{area}} ({{floor}}).',
+    openApp: 'Itinéraire souterrain jusqu’à cette sortie',
+    openAppTop: 'Ouvrir Umeda Underground Navi',
+    nearbyAbove: 'Bâtiments proches en surface',
+    nearbyShops: 'Boutiques proches sous terre',
+    allExits: '← Toutes les sorties d’Umeda',
+    indexTitle: 'Sorties des galeries souterraines d’Umeda | Umeda Underground Navi',
+    indexIntro:
+      '{{count}} sorties des galeries souterraines d’Umeda. Choisissez un numéro pour voir les bâtiments et boutiques proches et l’itinéraire souterrain.',
+    attribution: 'Données cartographiques © OpenStreetMap contributors (ODbL)',
   },
 };

@@ -5,6 +5,10 @@ export const ja = {
     dataVersionNote: '店舗・出口情報は {{version}} 時点のものです',
   },
   locate: {
+    exitCodeLabel: '近くの黄色い案内板の出口番号（わかれば）',
+    exitCodePlaceholder: '例: D-21、H-49',
+    exitCodePick: '{{exit}} 出口のそばにいる',
+    exitCodeNone: 'その番号の出口は見つかりませんでした',
     title: '現在地を確認する',
     description: '入口や近くのお店を選ぶと、いまいる場所を推定します。',
     entranceLabel: 'どこから地下に入りましたか？（わかれば）',
@@ -30,6 +34,7 @@ export const ja = {
     noCandidates: '推定できませんでした。お店をもう1〜2件選んでみてください。',
   },
   search: {
+    kindPoiExit: '地上・{{exit}} 出口',
     placeholder: '目的地を入力（お店・出口・スポット）',
     results: '検索結果',
     count: '{{count}}件見つかりました',
@@ -40,6 +45,10 @@ export const ja = {
     kindNode: '出口・駅',
   },
   place: {
+    share: 'この場所を送る（待ち合わせにも）',
+    copied: 'リンクをコピーしました',
+    shareTitle: '梅田地下ナビ: {{name}}',
+    nearestExit: 'いちばん近い出口: {{exit}}。',
     goHere: 'ここへ行く',
     setHere: 'いまここにいる',
     aboveGroundNote: '地上のスポットです。いちばん近い出口まで案内します。',
@@ -75,6 +84,8 @@ export const ja = {
     close: '閉じる',
   },
   fpv: {
+    viewBehind: '後ろから見る',
+    viewEye: '目の高さで見る',
     left: '左',
     right: '右',
     along: '道沿い',
@@ -98,6 +109,21 @@ export const ja = {
     showFirstPerson: '一人称',
   },
   route: {
+    sensorOn: '歩いた分を数える（動きのセンサー）',
+    sensorOff: '歩数を数えるのをやめる',
+    sensorWalked: 'この区間 約{{walked}}m / {{total}}m 歩きました',
+    sensorNearly: 'そろそろ次の案内です。目印が見えたら「次へ」',
+    sensorDenied:
+      '動きのセンサーを使えませんでした（設定で許可するか、このまま「次へ」で進めます）',
+    stepFree: 'エレベーターだけ',
+    needsSteps: 'エレベーターやスロープだけでは行けないため、階段かエスカレーターを通ります。',
+    rainNote: '雨の予報なので、地上に出ない地下の道で案内しています。',
+    simpleNote: '曲がる回数の少ない道です（曲がり {{turns}} 回少なく、最短より約{{extra}}m長い）。',
+    shortestNote:
+      '最短の道です（曲がる回数の少ない道は、曲がり {{turns}} 回少なく約{{extra}}m長い）。',
+    useShortest: '最短の道にする',
+    useSimple: '曲がりの少ない道にする',
+    steps: '約{{steps}}歩',
     title: '道案内',
     from: '現在地: {{name}}',
     to: '目的地: {{name}}',
@@ -114,7 +140,7 @@ export const ja = {
     avoidStairs: '階段を避ける',
     finish: '終了',
     floorNow: '現在: {{floor}}',
-    floorNext: '次:{{floor}}',
+    floorNext: '次: {{floor}}',
     aboveGroundSuggest:
       '地上を歩いた方が近いかもしれません（地下 約{{underground}}m／直線 約{{straight}}m）',
     openGoogleMaps: 'Googleマップで地上の徒歩ルートを見る',
@@ -188,5 +214,40 @@ export const ja = {
   },
   language: {
     label: '言語',
+  },
+  weather: {
+    toNearestExit: 'いちばん近い出口（{{exit}}）へ案内',
+    warning: '大阪市に大雨・洪水の警報が出ています。',
+    emergency: '大阪市に大雨特別警報が出ています。',
+    floodAdvice:
+      '地下街は浸水のおそれがあります。館内放送と係員の案内に従い、早めに地上の高い所へ。',
+    floodPlan: '大阪市の浸水対策',
+  },
+  amenity: {
+    title: '設備をさがす',
+    toilet: 'トイレ',
+    accessible: '多目的トイレ',
+    locker: 'コインロッカー',
+    atm: 'ATM',
+    elevator: 'エレベーター',
+    info: '案内所',
+    aed: 'AED',
+    none: '地下の通路の近くには見つかりませんでした（地図のデータにない設備もあります）',
+    setLocation: '現在地を設定すると近い順に並びます',
+  },
+  guide: {
+    exitTitle: '梅田 {{exit}} 出口（{{area}}）への行き方 | 梅田地下ナビ',
+    exitDescription:
+      '梅田の地下街 {{exit}} 出口（{{area}}）。近く: {{nearby}}。GPS が届かない地下でも、一人称の道案内でこの出口まで案内します。',
+    exitIntro: '{{exit}} 出口は、{{area}}の {{floor}} にある地上への出入口です。',
+    openApp: 'この出口まで地下の道を案内する',
+    openAppTop: '梅田地下ナビを開く',
+    nearbyAbove: '地上の近くの建物',
+    nearbyShops: '地下の近くのお店',
+    allExits: '← 梅田の出口一覧',
+    indexTitle: '梅田の地下街 出口一覧 | 梅田地下ナビ',
+    indexIntro:
+      '梅田の地下街の出口 {{count}} か所。番号を選ぶと、その出口の近くの建物とお店、地下の道案内が見られます。',
+    attribution: '地図データ © OpenStreetMap contributors（ODbL）',
   },
 } as const;
