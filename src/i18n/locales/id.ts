@@ -114,6 +114,9 @@ export const id: Resource = {
     showFirstPerson: 'Sudut pandang orang pertama',
   },
   route: {
+    stepFree: 'Hanya lift',
+    needsSteps:
+      'Tidak ada rute hanya dengan lift atau jalan landai, jadi rute ini melewati tangga atau eskalator.',
     rainNote: 'Diperkirakan hujan, jadi kami memandu lewat rute bawah tanah.',
     simpleNote:
       'Rute ini lebih sedikit belokan ({{turns}} belokan lebih sedikit, sekitar {{extra}} m lebih panjang dari yang terpendek).',
@@ -215,10 +218,23 @@ export const id: Resource = {
     label: 'Bahasa',
   },
   weather: {
+    toNearestExit: 'Pandu ke pintu keluar terdekat ({{exit}})',
     warning: 'Ada peringatan hujan lebat / banjir di Kota Osaka.',
     emergency: 'Ada peringatan darurat hujan lebat di Kota Osaka.',
     floodAdvice:
       'Kawasan bawah tanah bisa terendam. Ikuti pengumuman dan petugas, segera naik ke tempat tinggi di atas.',
     floodPlan: 'Rencana banjir Kota Osaka',
+  },
+  amenity: {
+    title: 'Cari fasilitas',
+    toilet: 'Toilet',
+    accessible: 'Toilet difabel',
+    locker: 'Loker koin',
+    atm: 'ATM',
+    elevator: 'Lift',
+    info: 'Informasi',
+    aed: 'AED',
+    none: 'Tidak ditemukan di dekat lorong bawah tanah (sebagian fasilitas belum ada di data peta)',
+    setLocation: 'Atur lokasi Anda untuk mengurutkan menurut jarak',
   },
 };

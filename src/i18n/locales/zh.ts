@@ -111,6 +111,8 @@ export const zh: Resource = {
     showFirstPerson: '第一人称',
   },
   route: {
+    stepFree: '仅限电梯',
+    needsSteps: '仅靠电梯或坡道无法到达，此路线需经过楼梯或自动扶梯。',
     rainNote: '预报有雨，因此按不需要到地面的地下路线导航。',
     simpleNote: '这是转弯较少的路线（少转 {{turns}} 次，比最短路线长约{{extra}}米）。',
     shortestNote: '这是最短路线（转弯少 {{turns}} 次的路线长约{{extra}}米）。',
@@ -206,9 +208,22 @@ export const zh: Resource = {
     label: '语言',
   },
   weather: {
+    toNearestExit: '带我去最近的出口（{{exit}}）',
     warning: '大阪市发布了大雨・洪水警报。',
     emergency: '大阪市发布了大雨特别警报。',
     floodAdvice: '地下街有浸水危险。请听从广播和工作人员的指引，尽早前往地面高处。',
     floodPlan: '大阪市浸水对策',
+  },
+  amenity: {
+    title: '查找设施',
+    toilet: '洗手间',
+    accessible: '无障碍洗手间',
+    locker: '投币储物柜',
+    atm: 'ATM',
+    elevator: '电梯',
+    info: '咨询处',
+    aed: 'AED',
+    none: '地下通道附近没有找到（部分设施不在地图数据中）',
+    setLocation: '设置当前位置后按距离排序',
   },
 };

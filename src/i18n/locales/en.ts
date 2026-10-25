@@ -111,6 +111,9 @@ export const en: Resource = {
     showFirstPerson: 'First person',
   },
   route: {
+    stepFree: 'Elevators only',
+    needsSteps:
+      'There is no route with only elevators or ramps, so this one uses stairs or an escalator.',
     rainNote: 'Rain is forecast, so we keep you on underground routes.',
     simpleNote:
       'This route has fewer turns ({{turns}} fewer, about {{extra}}m longer than the shortest).',
@@ -211,10 +214,23 @@ export const en: Resource = {
     label: 'Language',
   },
   weather: {
+    toNearestExit: 'Guide me to the nearest exit ({{exit}})',
     warning: 'Heavy rain / flood warning for Osaka City.',
     emergency: 'EMERGENCY heavy rain warning for Osaka City.',
     floodAdvice:
       'The underground mall may flood. Follow announcements and staff, and move to higher ground above early.',
     floodPlan: 'Osaka City flood plan',
+  },
+  amenity: {
+    title: 'Find facilities',
+    toilet: 'Toilets',
+    accessible: 'Accessible toilets',
+    locker: 'Coin lockers',
+    atm: 'ATMs',
+    elevator: 'Elevators',
+    info: 'Information',
+    aed: 'AED',
+    none: 'None found near the underground passages (some facilities are missing from the map data)',
+    setLocation: 'Set your location to sort by distance',
   },
 };

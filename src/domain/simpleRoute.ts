@@ -1,6 +1,6 @@
 import type { Graph } from './graph';
 import { MinHeap } from './minHeap';
-import { STAIRS_PENALTY_FACTOR, stairsOnly, type Route, type RouteOptions } from './route';
+import { edgePenalty, type Route, type RouteOptions } from './route';
 import type { NodeId } from './types';
 
 /** はっきり曲がる（30°より大きい）ときに足す距離。研究では最も簡単な経路は最短より平均 16% 長い程度 */
@@ -69,7 +69,7 @@ export function findSimpleRoute(
       if (here && before && next && turnAngle(before, here, next) > TURN_DEG) {
         extra = TURN_PENALTY_M + (branches >= 4 ? BUSY_JUNCTION_PENALTY_M : 0);
       }
-      const stairs = options.avoidStairs && stairsOnly(edge.attrs) ? STAIRS_PENALTY_FACTOR : 1;
+      const stairs = edgePenalty(graph, node, edge, options);
       const nextKey = key(edge.to, node);
       const nextCost = current.cost + edge.distanceM * stairs + extra;
       const known = cost.get(nextKey);

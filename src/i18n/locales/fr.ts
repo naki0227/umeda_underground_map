@@ -113,6 +113,9 @@ export const fr: Resource = {
     showFirstPerson: 'Vue subjective',
   },
   route: {
+    stepFree: 'Ascenseurs uniquement',
+    needsSteps:
+      'Aucun itinéraire uniquement par ascenseurs ou rampes : celui-ci passe par des escaliers ou un escalator.',
     rainNote: 'De la pluie est prévue : nous restons sur des itinéraires souterrains.',
     simpleNote:
       'Itinéraire avec moins de virages ({{turns}} de moins, environ {{extra}} m de plus que le plus court).',
@@ -215,10 +218,23 @@ export const fr: Resource = {
     label: 'Langue',
   },
   weather: {
+    toNearestExit: 'Me guider vers la sortie la plus proche ({{exit}})',
     warning: 'Alerte fortes pluies / inondation à Osaka.',
     emergency: 'Alerte d’urgence pour fortes pluies à Osaka.',
     floodAdvice:
       'Les galeries souterraines peuvent être inondées. Suivez les annonces et le personnel, et remontez tôt en hauteur.',
     floodPlan: 'Plan inondation de la ville d’Osaka',
+  },
+  amenity: {
+    title: 'Trouver un service',
+    toilet: 'Toilettes',
+    accessible: 'Toilettes accessibles',
+    locker: 'Consignes',
+    atm: 'Distributeurs',
+    elevator: 'Ascenseurs',
+    info: 'Informations',
+    aed: 'Défibrillateurs',
+    none: 'Rien trouvé près des passages souterrains (certains services manquent dans les données)',
+    setLocation: 'Indiquez votre position pour trier par distance',
   },
 };

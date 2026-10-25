@@ -112,6 +112,8 @@ export const ko: Resource = {
     showFirstPerson: '1인칭',
   },
   route: {
+    stepFree: '엘리베이터만',
+    needsSteps: '엘리베이터나 경사로만으로는 갈 수 없어 계단이나 에스컬레이터를 지납니다.',
     rainNote: '비 예보가 있어 지상으로 나가지 않는 지하 길로 안내합니다.',
     simpleNote: '꺾는 횟수가 적은 길입니다 ({{turns}}번 덜 꺾고, 최단보다 약 {{extra}}m 깁니다).',
     shortestNote: '최단 경로입니다 ({{turns}}번 덜 꺾는 길은 약 {{extra}}m 깁니다).',
@@ -210,10 +212,23 @@ export const ko: Resource = {
     label: '언어',
   },
   weather: {
+    toNearestExit: '가장 가까운 출구({{exit}})로 안내',
     warning: '오사카시에 호우・홍수 경보가 발령되었습니다.',
     emergency: '오사카시에 호우 특별경보가 발령되었습니다.',
     floodAdvice:
       '지하상가가 침수될 수 있습니다. 안내 방송과 직원의 안내에 따라 일찍 지상의 높은 곳으로 이동하세요.',
     floodPlan: '오사카시 침수 대책',
+  },
+  amenity: {
+    title: '시설 찾기',
+    toilet: '화장실',
+    accessible: '다목적 화장실',
+    locker: '코인로커',
+    atm: 'ATM',
+    elevator: '엘리베이터',
+    info: '안내소',
+    aed: 'AED',
+    none: '지하 통로 근처에서 찾지 못했습니다 (지도 데이터에 없는 시설도 있습니다)',
+    setLocation: '현재 위치를 설정하면 가까운 순으로 정렬됩니다',
   },
 };

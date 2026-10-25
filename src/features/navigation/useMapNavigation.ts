@@ -19,6 +19,7 @@ export interface MapNavigationActions {
   selectPlace: (place: Place) => void;
   /** 選択中の場所へ行く。現在地未設定なら先に位置確定シートへ */
   goToSelected: () => void;
+  goTo: (place: Place) => void;
   /** 選択中の場所を現在地として設定する */
   setHereSelected: () => void;
   /** 位置確定の完了 */
@@ -61,6 +62,16 @@ export function useMapNavigation(): MapNavigationState & MapNavigationActions {
     setSelectedPlace(null);
     setSheet(currentNodeId !== null ? 'route' : 'locate');
   }, [selectedPlace, currentNodeId]);
+
+  /** 場所を選ばずに、そのまま案内を始める（警報のときの「近い出口へ」など） */
+  const goTo = useCallback(
+    (place: Place) => {
+      setDestination(place);
+      setSelectedPlace(null);
+      setSheet(currentNodeId !== null ? 'route' : 'locate');
+    },
+    [currentNodeId],
+  );
 
   const setHereSelected = useCallback(() => {
     if (selectedPlace === null) return;
@@ -119,6 +130,7 @@ export function useMapNavigation(): MapNavigationState & MapNavigationActions {
     lost,
     selectPlace,
     goToSelected,
+    goTo,
     setHereSelected,
     confirmLocation,
     openLocate,

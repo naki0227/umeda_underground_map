@@ -112,6 +112,9 @@ export const vi: Resource = {
     showFirstPerson: 'Góc nhìn thứ nhất',
   },
   route: {
+    stepFree: 'Chỉ thang máy',
+    needsSteps:
+      'Không có đường chỉ dùng thang máy hoặc dốc, nên đường này đi qua cầu thang hoặc thang cuốn.',
     rainNote: 'Dự báo có mưa nên chúng tôi dẫn đường dưới lòng đất, không lên mặt đất.',
     simpleNote:
       'Đường này ít rẽ hơn (ít hơn {{turns}} lần rẽ, dài hơn đường ngắn nhất khoảng {{extra}} m).',
@@ -212,10 +215,23 @@ export const vi: Resource = {
     label: 'Ngôn ngữ',
   },
   weather: {
+    toNearestExit: 'Dẫn đến lối ra gần nhất ({{exit}})',
     warning: 'Có cảnh báo mưa lớn / lũ lụt tại thành phố Osaka.',
     emergency: 'Có cảnh báo đặc biệt về mưa lớn tại thành phố Osaka.',
     floodAdvice:
       'Khu phố ngầm có thể bị ngập. Hãy làm theo thông báo và nhân viên, sớm lên chỗ cao trên mặt đất.',
     floodPlan: 'Kế hoạch chống ngập của Osaka',
+  },
+  amenity: {
+    title: 'Tìm tiện ích',
+    toilet: 'Nhà vệ sinh',
+    accessible: 'Nhà vệ sinh tiếp cận',
+    locker: 'Tủ khóa',
+    atm: 'ATM',
+    elevator: 'Thang máy',
+    info: 'Quầy thông tin',
+    aed: 'AED',
+    none: 'Không tìm thấy gần lối đi ngầm (một số tiện ích chưa có trong dữ liệu bản đồ)',
+    setLocation: 'Đặt vị trí để sắp xếp theo khoảng cách',
   },
 };

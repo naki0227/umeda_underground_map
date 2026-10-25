@@ -113,6 +113,9 @@ export const es: Resource = {
     showFirstPerson: 'Primera persona',
   },
   route: {
+    stepFree: 'Solo ascensores',
+    needsSteps:
+      'No hay ruta solo con ascensores o rampas, así que esta pasa por escaleras o una escalera mecánica.',
     rainNote: 'Se prevé lluvia, así que te guiamos por rutas subterráneas.',
     simpleNote: 'Ruta con menos giros ({{turns}} menos, unos {{extra}} m más que la más corta).',
     shortestNote:
@@ -212,10 +215,23 @@ export const es: Resource = {
     label: 'Idioma',
   },
   weather: {
+    toNearestExit: 'Llévame a la salida más cercana ({{exit}})',
     warning: 'Aviso por lluvias fuertes / inundación en Osaka.',
     emergency: 'Aviso de emergencia por lluvias fuertes en Osaka.',
     floodAdvice:
       'La zona subterránea puede inundarse. Sigue los avisos y al personal y sube pronto a un lugar alto.',
     floodPlan: 'Plan de inundaciones de Osaka',
+  },
+  amenity: {
+    title: 'Buscar servicios',
+    toilet: 'Aseos',
+    accessible: 'Aseos accesibles',
+    locker: 'Taquillas',
+    atm: 'Cajeros',
+    elevator: 'Ascensores',
+    info: 'Información',
+    aed: 'Desfibriladores',
+    none: 'No se encontró nada cerca de los pasillos (faltan algunos servicios en los datos)',
+    setLocation: 'Indica tu ubicación para ordenar por distancia',
   },
 };

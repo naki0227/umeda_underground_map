@@ -13,6 +13,11 @@ export interface RouteOptions {
    * 曲がるたびに距離を足して比べる。最短より少し長くても、曲がりと分かれ道の少ない道を選ぶ
    */
   simple?: boolean;
+  /**
+   * 段差なし（エレベーター・スロープだけ）。スーツケース・ベビーカー・車いす向け。
+   * 階段に加えてエスカレーターだけの上り下りも強く避ける
+   */
+  stepFree?: boolean;
 }
 
 export interface Route {
@@ -22,6 +27,29 @@ export interface Route {
 
 /** 階段回避時に階段エッジへ掛ける距離倍率。完全排除ではなく強い抑制。 */
 export const STAIRS_PENALTY_FACTOR = 5;
+/** 段差なしのとき、エレベーター・スロープのない上り下りに掛ける距離倍率 */
+export const STEP_FREE_PENALTY_FACTOR = 20;
+
+/** 線を通るときの距離倍率（階段を避ける・段差なし） */
+export function edgePenalty(
+  graph: Graph,
+  from: NodeId,
+  edge: AdjacentEdge,
+  options: RouteOptions,
+): number {
+  if (options.stepFree && !stepFreeEdge(graph, from, edge)) return STEP_FREE_PENALTY_FACTOR;
+  if (options.avoidStairs && stairsOnly(edge.attrs)) return STAIRS_PENALTY_FACTOR;
+  return 1;
+}
+
+/** 段差なしで通れる線か（階が変わらない、または変わるならエレベーター・スロープがある） */
+export function stepFreeEdge(graph: Graph, from: NodeId, edge: AdjacentEdge): boolean {
+  if (edge.attrs.includes('elevator') || edge.attrs.includes('slope')) return true;
+  if (edge.attrs.includes('stairs') || edge.attrs.includes('escalator')) return false;
+  const a = graph.nodes.get(from);
+  const b = graph.nodes.get(edge.to);
+  return a === undefined || b === undefined || nodeFloor(a) === nodeFloor(b);
+}
 
 /**
  * Dijkstra法で最短経路を求める。出口（地上への出入口）は途中では通らない。
@@ -57,7 +85,7 @@ export function findRoute(
 
     for (const edge of graph.adjacency.get(current.nodeId) ?? []) {
       if (options.isClosed?.(current.nodeId, edge)) continue;
-      const penalty = options.avoidStairs && stairsOnly(edge.attrs) ? STAIRS_PENALTY_FACTOR : 1;
+      const penalty = edgePenalty(graph, current.nodeId, edge, options);
       const nextCost = current.cost + edge.distanceM * penalty;
       const known = dist.get(edge.to);
       if (known === undefined || nextCost < known) {
@@ -101,6 +129,16 @@ export function routeUsesStairs(graph: Graph, route: Route): boolean {
     const b = graph.nodes.get(to);
     const changesFloor = a !== undefined && b !== undefined && nodeFloor(a) !== nodeFloor(b);
     if (changesFloor && edge.attrs.length === 0) return true;
+  }
+  return false;
+}
+
+/** 段差なしでは通れない上り下り（階段・エスカレーターだけ）が経路にあるか */
+export function routeNeedsSteps(graph: Graph, route: Route): boolean {
+  for (let i = 0; i < route.nodeIds.length - 1; i += 1) {
+    const from = route.nodeIds[i];
+    const edge = (graph.adjacency.get(from) ?? []).find((e) => e.to === route.nodeIds[i + 1]);
+    if (edge !== undefined && !stepFreeEdge(graph, from, edge)) return true;
   }
   return false;
 }

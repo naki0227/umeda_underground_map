@@ -16,6 +16,7 @@ node scripts/osm/fetch.mjs .osm/umeda.osm
 
 # 2. 生成（取得日を記録する）
 OSM_EXTRACT_DATE=$(date +%F) node scripts/osm/build.mjs .osm/umeda.osm
+node scripts/osm/amenities.mjs .osm/umeda.osm   # トイレ・コインロッカー・ATM・エレベーター・案内所・AED
 npx prettier --write src/data/generated
 
 # 3. 確認
@@ -26,14 +27,15 @@ npm test
 
 ## 中身
 
-| ファイル       | 役割                                                                                                                     |
-| -------------- | ------------------------------------------------------------------------------------------------------------------------ |
-| `fetch.mjs`    | OSM API からマスに分けて取得し、1 つの OSM XML にまとめる                                                                |
-| `basemap.mjs`  | 地図の下地（地上の道路・建物の輪郭、地下街の床の形）。`src/data/generated/basemap.ts` に書き出す                         |
-| `parseOsm.mjs` | OSM XML の読み込み（node / way / tag）                                                                                   |
-| `network.mjs`  | 地下の歩行グラフ作成（地下の通路＋上り下りの階段、15m 以内の切れ目をつなぐ、出入口を 30m 以内でつなぐ、次数2の点を縮約） |
-| `overlay.mjs`  | 手作業で重ねるデータ（改札・広場・区画名・阪急三番街 B1/B2・地上スポットの一覧）。値の根拠をコメントに書く               |
-| `build.mjs`    | 上をまとめて `osmData.ts` を書き出す                                                                                     |
+| ファイル        | 役割                                                                                                                                                 |
+| --------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `fetch.mjs`     | OSM API からマスに分けて取得し、1 つの OSM XML にまとめる                                                                                            |
+| `basemap.mjs`   | 地図の下地（地上の道路・建物の輪郭、地下街の床の形）。`src/data/generated/basemap.ts` に書き出す                                                     |
+| `parseOsm.mjs`  | OSM XML の読み込み（node / way / tag）                                                                                                               |
+| `network.mjs`   | 地下の歩行グラフ作成（地下の通路＋上り下りの階段、15m 以内の切れ目をつなぐ、出入口を 30m 以内でつなぐ、次数2の点を縮約）                             |
+| `overlay.mjs`   | 手作業で重ねるデータ（改札・広場・区画名・阪急三番街 B1/B2・地上スポットの一覧）。値の根拠をコメントに書く                                           |
+| `build.mjs`     | 上をまとめて `osmData.ts` を書き出す                                                                                                                 |
+| `amenities.mjs` | 設備（トイレ・コインロッカー・ATM・エレベーター・案内所・AED）を `amenities.ts` に書き出す。通路の点への付け方は `src/data/amenities.ts`（40m 以内） |
 
 ## 生成の規則
 

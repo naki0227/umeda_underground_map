@@ -107,6 +107,8 @@ export const ja = {
     showFirstPerson: '一人称',
   },
   route: {
+    stepFree: 'エレベーターだけ',
+    needsSteps: 'エレベーターやスロープだけでは行けないため、階段かエスカレーターを通ります。',
     rainNote: '雨の予報なので、地上に出ない地下の道で案内しています。',
     simpleNote: '曲がる回数の少ない道です（曲がり {{turns}} 回少なく、最短より約{{extra}}m長い）。',
     shortestNote:
@@ -206,10 +208,23 @@ export const ja = {
     label: '言語',
   },
   weather: {
+    toNearestExit: 'いちばん近い出口（{{exit}}）へ案内',
     warning: '大阪市に大雨・洪水の警報が出ています。',
     emergency: '大阪市に大雨特別警報が出ています。',
     floodAdvice:
       '地下街は浸水のおそれがあります。館内放送と係員の案内に従い、早めに地上の高い所へ。',
     floodPlan: '大阪市の浸水対策',
+  },
+  amenity: {
+    title: '設備をさがす',
+    toilet: 'トイレ',
+    accessible: '多目的トイレ',
+    locker: 'コインロッカー',
+    atm: 'ATM',
+    elevator: 'エレベーター',
+    info: '案内所',
+    aed: 'AED',
+    none: '地下の通路の近くには見つかりませんでした（地図のデータにない設備もあります）',
+    setLocation: '現在地を設定すると近い順に並びます',
   },
 } as const;
