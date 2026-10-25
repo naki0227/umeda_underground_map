@@ -1,13 +1,14 @@
 import { projectToPlane } from '../domain/geo';
 import type { MapNode, Poi, UndergroundMap } from '../domain/types';
 import { osmData } from './generated/osmData';
+import { withEnglishName } from './englishNames';
 import { mergeShops } from './mergeShops';
 import { officialShops } from './officialShops';
 import type { GeneratedNode, GeneratedPoi } from './types';
 
 /** 生成データのノードに平面座標を付ける（x, y は緯度経度から一意に決まる） */
 function toMapNode({ osmId: _osmId, ...node }: GeneratedNode): MapNode {
-  return { ...node, ...projectToPlane(node) };
+  return { ...node, name: withEnglishName(node.name), ...projectToPlane(node) };
 }
 
 /** 地上スポットの最寄り出口（直線距離）。出口がなければ改札 */
@@ -31,7 +32,7 @@ const nodes = osmData.nodes.map(toMapNode);
 const areaById = new Map(nodes.map((n) => [n.id, n.area]));
 const pois: Poi[] = osmData.pois.map((poi) => ({
   id: poi.id,
-  name: poi.name,
+  name: withEnglishName(poi.name),
   lat: poi.lat,
   lng: poi.lng,
   nodeId: nearestExitId(nodes, poi),
@@ -49,6 +50,10 @@ export const umedaMap: UndergroundMap = {
   dataVersion: osmData.generatedAt,
   nodes,
   edges: osmData.edges,
-  shops: mergeShops(officialShops, osmData.shops, (id) => areaById.get(id)),
+  shops: mergeShops(officialShops, osmData.shops, (id) => areaById.get(id)).map((shop) => ({
+    ...shop,
+    name: withEnglishName(shop.name),
+    ...(shop.building ? { building: withEnglishName(shop.building) } : {}),
+  })),
   pois,
 };
