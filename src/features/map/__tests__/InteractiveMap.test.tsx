@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { InteractiveMap } from '../InteractiveMap';
@@ -30,7 +30,7 @@ describe('InteractiveMap', { timeout: 15_000 }, () => {
     expect(screen.getByRole('button', { name: '縮小' })).toBeInTheDocument();
   });
 
-  it('zooms with the wheel without zooming the page, and ignores sideways scrolling', () => {
+  it('zooms with the wheel without zooming the page, and ignores sideways scrolling', async () => {
     render(
       <InteractiveMap
         graph={graph}
@@ -44,10 +44,11 @@ describe('InteractiveMap', { timeout: 15_000 }, () => {
     // 横スクロール（deltaY が 0）では拡大しない
     expect(fireEvent.wheel(svg, { deltaX: 50, deltaY: 0 })).toBe(true);
     expect(svg.getAttribute('viewBox')).toBe(before);
-    // 縦のホイールは地図だけを拡大し、ページの拡大（既定の動作）は止める
+    // 縦のホイールは地図だけを拡大し、ページの拡大（既定の動作）は止める。
+    // 回している間は CSS で拡大し、止まってから地図を描き直す
     expect(fireEvent.wheel(svg, { deltaY: -100 })).toBe(false);
     const width = (vb: string | null) => Number(vb?.split(' ')[2]);
-    expect(width(svg.getAttribute('viewBox'))).toBeLessThan(width(before));
+    await waitFor(() => expect(width(svg.getAttribute('viewBox'))).toBeLessThan(width(before)));
   });
 
   it('highlights a route and shows markers', () => {

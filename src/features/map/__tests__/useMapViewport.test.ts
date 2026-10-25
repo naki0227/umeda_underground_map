@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { fitRectViewBox } from '../useMapViewport';
+import { fitRectViewBox } from '../viewBoxFit';
 
 const pixel = { width: 400, height: 800 };
 const limits = { minWidth: 120, maxWidth: 5000 };

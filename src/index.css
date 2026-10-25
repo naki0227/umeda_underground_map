@@ -82,13 +82,26 @@ body {
 }
 
 .interactive-map,
+.map-pan,
 .interactive-map svg {
   width: 100%;
   height: 100%;
 }
 
-.interactive-map svg {
+/* ドラッグ・ピンチの途中はこの要素を CSS で動かし、指を離してから地図を描き直す */
+.interactive-map {
+  overflow: hidden;
   background: var(--ground);
+}
+
+.map-pan {
+  transform-origin: 0 0;
+  will-change: transform;
+}
+
+.interactive-map svg {
+  /* 動かしている途中も、画面の外にあった地図が見えるように */
+  overflow: visible;
   touch-action: none;
   cursor: grab;
 }
