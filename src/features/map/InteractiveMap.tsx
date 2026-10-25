@@ -29,7 +29,8 @@ import { DEFAULT_RAILWAY_COLOR, gateRailway, pinIcon } from './mapIcons';
 import { MapMarkers } from './MapMarkers';
 import { pressable } from './pressable';
 import { routeArrows } from './routeArrows';
-import { useMapViewport, type Bounds, type Rect, type ViewInsets } from './useMapViewport';
+import { useMapViewport } from './useMapViewport';
+import type { Bounds, Rect, ViewInsets } from './viewBoxFit';
 import { buildMapZones } from './zones';
 import { basemap } from '../../data/generated/basemap';
 
@@ -346,10 +347,15 @@ function InteractiveMapView({
       level === 'detail' ? floorShops.filter((shop) => !focusIds.has(shop.id)) : ([] as Shop[]);
     return { focus, others };
   }, [focusNodeIds, floorShops, level]);
-  const orderedLabelShops = useMemo(
-    () => [...labelShops.focus, ...labelShops.others],
-    [labelShops],
-  );
+  /** 店名と、同じノードで何番目か（同じノードの店名は縦に並べる。mapLabels の判定と同じ並び） */
+  const orderedLabelShops = useMemo(() => {
+    const seen = new Map<NodeId, number>();
+    return [...labelShops.focus, ...labelShops.others].map((shop) => {
+      const row = seen.get(shop.nodeId) ?? 0;
+      seen.set(shop.nodeId, row + 1);
+      return { shop, row };
+    });
+  }, [labelShops]);
 
   const shopsByNode = useMemo(() => {
     const groups = new Map<NodeId, Shop[]>();
@@ -452,272 +458,270 @@ function InteractiveMapView({
 
   return (
     <div className="interactive-map">
-      <svg
-        ref={viewport.containerRef}
-        viewBox={viewport.viewBox}
-        role="group"
-        aria-label={t('map.title')}
-        data-testid="map-view"
-        data-detail={level}
-        data-floor={floor}
-        className={hasRoute ? 'has-route' : undefined}
-        {...viewport.handlers}
-      >
-        {/* 下地: 地上の建物の輪郭と道路 */}
-        <MapBasemap basemap={basemap} />
-        {/* 地下街の床（地下街ごとの色） */}
-        {zones.map((zone) => (
-          <polygon
-            key={zone.area}
-            className={`map-zone zone-${zone.area}${floor === 'B1' ? '' : ' off-floor'}`}
-            data-area={zone.area}
-            points={zone.points}
-          />
-        ))}
-        {zones
-          .filter((zone) => zone.area !== 'station' && visibleLabels.has(`zone:${zone.area}`))
-          .map((zone) => (
-            <Fixed key={`label-${zone.area}`} at={zone.center} k={k}>
-              <text className="map-zone-label" textAnchor="middle">
-                {t(`area.${zone.area}`)}
-              </text>
-            </Fixed>
-          ))}
-
-        {/* 地下の通路（実際の幅に近い太さの線） */}
-        <g className="map-network">
-          {slabs.map(({ key, from, to, a, b }) => (
-            <line
-              key={`top-${key}`}
-              className={
-                floorView.isEdgeOnFloor(from, to, floor) ? 'map-edge' : 'map-edge off-floor'
-              }
-              x1={a.px}
-              y1={a.py}
-              x2={b.px}
-              y2={b.py}
+      <div className="map-pan" ref={viewport.panRef}>
+        <svg
+          ref={viewport.containerRef}
+          viewBox={viewport.viewBox}
+          role="group"
+          aria-label={t('map.title')}
+          data-testid="map-view"
+          data-detail={level}
+          data-floor={floor}
+          className={hasRoute ? 'has-route' : undefined}
+          {...viewport.handlers}
+        >
+          {/* 下地: 地上の建物の輪郭と道路 */}
+          <MapBasemap basemap={basemap} />
+          {/* 地下街の床（地下街ごとの色） */}
+          {zones.map((zone) => (
+            <polygon
+              key={zone.area}
+              className={`map-zone zone-${zone.area}${floor === 'B1' ? '' : ' off-floor'}`}
+              data-area={zone.area}
+              points={zone.points}
             />
           ))}
-        </g>
-        {routeRuns?.map((run, index) => (
-          <g key={`route-${index}`} className={run.onFloor ? undefined : 'off-floor'}>
-            <polyline
-              className="map-route-casing"
-              points={run.attr}
-              vectorEffect="non-scaling-stroke"
-            />
-            <polyline
-              className="map-route"
-              points={run.attr}
-              data-testid="map-route"
-              vectorEffect="non-scaling-stroke"
-            />
-          </g>
-        ))}
-        {focusPoints !== null && (
-          <polyline
-            className="map-route-focus"
-            points={focusPoints}
-            data-testid="map-route-focus"
-            vectorEffect="non-scaling-stroke"
-          />
-        )}
-        {arrows.map(({ at: p, angleDeg }, index) => (
-          <g
-            key={`arrow-${index}`}
-            className="map-route-arrow"
-            data-testid="map-route-arrow"
-            transform={`translate(${p.px} ${p.py}) rotate(${angleDeg}) scale(${k})`}
-          >
-            <path d="M -4 -5 L 3 0 L -4 5" />
-          </g>
-        ))}
-        {level === 'detail' &&
-          nodes
-            .filter((n) => n.kind === 'junction' && isNodeOnFloor(n.id))
-            .map((node) => (
-              <Fixed key={node.id} at={at(node.id)} k={k}>
-                <circle className="map-node" r={3} />
+          {zones
+            .filter((zone) => zone.area !== 'station' && visibleLabels.has(`zone:${zone.area}`))
+            .map((zone) => (
+              <Fixed key={`label-${zone.area}`} at={zone.center} k={k}>
+                <text className="map-zone-label" textAnchor="middle">
+                  {t(`area.${zone.area}`)}
+                </text>
               </Fixed>
             ))}
-        {level !== 'overview' &&
-          facilities
-            .filter(({ key }) => visibleLabels.has(`facility:${key}`))
-            .map(({ key, label, mid }) => {
-              const width = chipWidthPx(label, FACILITY_FONT_PX);
-              return (
-                <Fixed key={key} at={mid} k={k}>
-                  <g className="map-facility">
-                    <rect x={-width / 2} y={-8} width={width} height={16} rx={8} />
-                    <text y={4}>{label}</text>
-                  </g>
-                </Fixed>
-              );
-            })}
-        {level === 'detail' &&
-          [...shopsByNode.entries()].flatMap(([nodeId, group]) => {
-            const p = screenOf.get(nodeId);
-            if (!p) return [];
-            return group.map((shop, index) => {
-              const { dx, dy } = shopOffset(index, group.length);
-              return (
-                <Fixed key={shop.id} at={p} k={k}>
-                  <circle
-                    className="map-shop-pin"
-                    data-shop-id={shop.id}
-                    cx={dx}
-                    cy={dy}
-                    r={4.5}
-                    {...pressable(nameOf(shop.name), () =>
-                      pick({ nodeId, name: shop.name, aboveGround: false }),
-                    )}
-                  >
-                    <title>{nameOf(shop.name)}</title>
-                  </circle>
-                </Fixed>
-              );
-            });
-          })}
-        {orderedLabelShops.map((shop, index) => {
-          // 同じノードの店名は縦に並べる（mapLabels の判定と同じ並び）
-          const row = orderedLabelShops
-            .slice(0, index)
-            .filter((other) => other.nodeId === shop.nodeId).length;
-          if (!visibleLabels.has(`shop:${shop.id}`)) return null;
-          return (
-            <Fixed key={`label-${shop.id}`} at={screenOf.get(shop.nodeId) as ScreenPoint} k={k}>
-              <text
-                className="map-shop-label"
-                data-testid="map-shop-label"
-                x={SHOP_LABEL_OFFSET_PX.x}
-                y={SHOP_LABEL_OFFSET_PX.y + row * (SHOP_LABEL_FONT_PX + 4)}
-                pointerEvents="none"
-              >
-                {nameOf(shop.name)}
-              </text>
-            </Fixed>
-          );
-        })}
-        {pins.map((node) => {
-          const label = visibleLabels.has(`pin:${node.id}`)
-            ? pinLabelText(node, k, language)
-            : null;
-          const railway = node.kind === 'gate' ? gateRailway(node) : null;
-          return (
-            <Fixed key={node.id} at={at(node.id)} k={k}>
-              <g
-                className={`map-pin ${node.kind}`}
-                data-node-id={node.id}
-                {...pressable(nameOf(node.name), () =>
-                  pick({ nodeId: node.id, name: node.name, aboveGround: false }),
-                )}
-              >
-                <circle r={PIN_ICON_RADIUS_PX} />
-                <text
-                  className="map-pin-icon"
-                  textAnchor="middle"
-                  dominantBaseline="central"
-                  aria-hidden
-                >
-                  {pinIcon(node)}
-                </text>
-                {label !== null && (
-                  <g className="map-pin-label" pointerEvents="none">
-                    <rect
-                      x={PIN_LABEL_X_PX}
-                      y={-PIN_LABEL_HEIGHT_PX / 2}
-                      width={chipWidthPx(label, LABEL_FONT_PX)}
-                      height={PIN_LABEL_HEIGHT_PX}
-                      rx={PIN_LABEL_HEIGHT_PX / 2}
-                      style={
-                        node.kind === 'gate'
-                          ? { fill: railway?.color ?? DEFAULT_RAILWAY_COLOR }
-                          : undefined
-                      }
-                    />
-                    <text
-                      className="map-label"
-                      x={PIN_LABEL_X_PX + chipWidthPx(label, LABEL_FONT_PX) / 2}
-                      textAnchor="middle"
-                      dominantBaseline="central"
-                    >
-                      {label}
-                    </text>
-                  </g>
-                )}
-              </g>
-            </Fixed>
-          );
-        })}
-        {exits.map((node) => {
-          const label = exitLabel(node);
-          const width = chipWidthPx(label, EXIT_FONT_PX);
-          const showBadge = visibleLabels.has(`exit:${node.id}`);
-          const onRoute = routeSet.has(node.id);
-          const classes = ['map-exit-badge'];
-          if (!showBadge) classes.push('compact');
-          if (onRoute) classes.push('on-route');
-          return (
-            <Fixed key={node.id} at={at(node.id)} k={k}>
-              <g
-                className={classes.join(' ')}
-                data-node-id={node.id}
-                {...pressable(
-                  node.exitNo !== undefined
-                    ? `${node.exitNo} ${nameOf(node.name)}`
-                    : nameOf(node.name),
-                  () => pick({ nodeId: node.id, name: node.name, aboveGround: false }),
-                )}
-              >
-                {showBadge ? (
-                  <>
-                    <rect
-                      x={-width / 2}
-                      y={-EXIT_BADGE_HEIGHT_PX / 2}
-                      width={width}
-                      height={EXIT_BADGE_HEIGHT_PX}
-                      rx={6}
-                    />
-                    <text y={4} textAnchor="middle">
-                      {label}
-                    </text>
-                  </>
-                ) : (
-                  <>
-                    {/* 小さな点でも押せるよう、透明な当たり判定を広めに取る */}
-                    <circle className="hit-area" r={11} />
-                    <circle r={level === 'overview' ? 2.5 : 3.5} />
-                  </>
-                )}
-                <title>{nameOf(node.name)}</title>
-              </g>
-            </Fixed>
-          );
-        })}
 
-        <MapGroundLayer
-          buildings={buildings}
-          unitsPerPixel={k}
-          labelLayout={visibleLabels}
-          linkedPoiIds={linked}
-          onPick={pick}
-        />
-        {selectedPoint !== undefined && (
-          <Fixed at={selectedPoint} k={k}>
-            <g className="selection-ring" data-testid="map-selection" pointerEvents="none">
-              <circle r={16} />
+          {/* 地下の通路（実際の幅に近い太さの線） */}
+          <g className="map-network">
+            {slabs.map(({ key, from, to, a, b }) => (
+              <line
+                key={`top-${key}`}
+                className={
+                  floorView.isEdgeOnFloor(from, to, floor) ? 'map-edge' : 'map-edge off-floor'
+                }
+                x1={a.px}
+                y1={a.py}
+                x2={b.px}
+                y2={b.py}
+              />
+            ))}
+          </g>
+          {routeRuns?.map((run, index) => (
+            <g key={`route-${index}`} className={run.onFloor ? undefined : 'off-floor'}>
+              <polyline
+                className="map-route-casing"
+                points={run.attr}
+                vectorEffect="non-scaling-stroke"
+              />
+              <polyline
+                className="map-route"
+                points={run.attr}
+                data-testid="map-route"
+                vectorEffect="non-scaling-stroke"
+              />
             </g>
-          </Fixed>
-        )}
-        {gpsHint !== null && (
-          <GpsHint hint={gpsHint} k={k} label={t('map.gpsHint')} onSelect={onSelectGpsHint} />
-        )}
-        <MapMarkers
-          unitsPerPixel={k}
-          current={currentNodeId ? at(currentNodeId) : undefined}
-          destination={destinationNodeId ? at(destinationNodeId) : undefined}
-        />
-      </svg>
+          ))}
+          {focusPoints !== null && (
+            <polyline
+              className="map-route-focus"
+              points={focusPoints}
+              data-testid="map-route-focus"
+              vectorEffect="non-scaling-stroke"
+            />
+          )}
+          {arrows.map(({ at: p, angleDeg }, index) => (
+            <g
+              key={`arrow-${index}`}
+              className="map-route-arrow"
+              data-testid="map-route-arrow"
+              transform={`translate(${p.px} ${p.py}) rotate(${angleDeg}) scale(${k})`}
+            >
+              <path d="M -4 -5 L 3 0 L -4 5" />
+            </g>
+          ))}
+          {level === 'detail' &&
+            nodes
+              .filter((n) => n.kind === 'junction' && isNodeOnFloor(n.id))
+              .map((node) => (
+                <Fixed key={node.id} at={at(node.id)} k={k}>
+                  <circle className="map-node" r={3} />
+                </Fixed>
+              ))}
+          {level !== 'overview' &&
+            facilities
+              .filter(({ key }) => visibleLabels.has(`facility:${key}`))
+              .map(({ key, label, mid }) => {
+                const width = chipWidthPx(label, FACILITY_FONT_PX);
+                return (
+                  <Fixed key={key} at={mid} k={k}>
+                    <g className="map-facility">
+                      <rect x={-width / 2} y={-8} width={width} height={16} rx={8} />
+                      <text y={4}>{label}</text>
+                    </g>
+                  </Fixed>
+                );
+              })}
+          {level === 'detail' &&
+            [...shopsByNode.entries()].flatMap(([nodeId, group]) => {
+              const p = screenOf.get(nodeId);
+              if (!p) return [];
+              return group.map((shop, index) => {
+                const { dx, dy } = shopOffset(index, group.length);
+                return (
+                  <Fixed key={shop.id} at={p} k={k}>
+                    <circle
+                      className="map-shop-pin"
+                      data-shop-id={shop.id}
+                      cx={dx}
+                      cy={dy}
+                      r={4.5}
+                      {...pressable(nameOf(shop.name), () =>
+                        pick({ nodeId, name: shop.name, aboveGround: false }),
+                      )}
+                    >
+                      <title>{nameOf(shop.name)}</title>
+                    </circle>
+                  </Fixed>
+                );
+              });
+            })}
+          {orderedLabelShops.map(({ shop, row }) => {
+            if (!visibleLabels.has(`shop:${shop.id}`)) return null;
+            return (
+              <Fixed key={`label-${shop.id}`} at={screenOf.get(shop.nodeId) as ScreenPoint} k={k}>
+                <text
+                  className="map-shop-label"
+                  data-testid="map-shop-label"
+                  x={SHOP_LABEL_OFFSET_PX.x}
+                  y={SHOP_LABEL_OFFSET_PX.y + row * (SHOP_LABEL_FONT_PX + 4)}
+                  pointerEvents="none"
+                >
+                  {nameOf(shop.name)}
+                </text>
+              </Fixed>
+            );
+          })}
+          {pins.map((node) => {
+            const label = visibleLabels.has(`pin:${node.id}`)
+              ? pinLabelText(node, k, language)
+              : null;
+            const railway = node.kind === 'gate' ? gateRailway(node) : null;
+            return (
+              <Fixed key={node.id} at={at(node.id)} k={k}>
+                <g
+                  className={`map-pin ${node.kind}`}
+                  data-node-id={node.id}
+                  {...pressable(nameOf(node.name), () =>
+                    pick({ nodeId: node.id, name: node.name, aboveGround: false }),
+                  )}
+                >
+                  <circle r={PIN_ICON_RADIUS_PX} />
+                  <text
+                    className="map-pin-icon"
+                    textAnchor="middle"
+                    dominantBaseline="central"
+                    aria-hidden
+                  >
+                    {pinIcon(node)}
+                  </text>
+                  {label !== null && (
+                    <g className="map-pin-label" pointerEvents="none">
+                      <rect
+                        x={PIN_LABEL_X_PX}
+                        y={-PIN_LABEL_HEIGHT_PX / 2}
+                        width={chipWidthPx(label, LABEL_FONT_PX)}
+                        height={PIN_LABEL_HEIGHT_PX}
+                        rx={PIN_LABEL_HEIGHT_PX / 2}
+                        style={
+                          node.kind === 'gate'
+                            ? { fill: railway?.color ?? DEFAULT_RAILWAY_COLOR }
+                            : undefined
+                        }
+                      />
+                      <text
+                        className="map-label"
+                        x={PIN_LABEL_X_PX + chipWidthPx(label, LABEL_FONT_PX) / 2}
+                        textAnchor="middle"
+                        dominantBaseline="central"
+                      >
+                        {label}
+                      </text>
+                    </g>
+                  )}
+                </g>
+              </Fixed>
+            );
+          })}
+          {exits.map((node) => {
+            const label = exitLabel(node);
+            const width = chipWidthPx(label, EXIT_FONT_PX);
+            const showBadge = visibleLabels.has(`exit:${node.id}`);
+            const onRoute = routeSet.has(node.id);
+            const classes = ['map-exit-badge'];
+            if (!showBadge) classes.push('compact');
+            if (onRoute) classes.push('on-route');
+            return (
+              <Fixed key={node.id} at={at(node.id)} k={k}>
+                <g
+                  className={classes.join(' ')}
+                  data-node-id={node.id}
+                  {...pressable(
+                    node.exitNo !== undefined
+                      ? `${node.exitNo} ${nameOf(node.name)}`
+                      : nameOf(node.name),
+                    () => pick({ nodeId: node.id, name: node.name, aboveGround: false }),
+                  )}
+                >
+                  {showBadge ? (
+                    <>
+                      <rect
+                        x={-width / 2}
+                        y={-EXIT_BADGE_HEIGHT_PX / 2}
+                        width={width}
+                        height={EXIT_BADGE_HEIGHT_PX}
+                        rx={6}
+                      />
+                      <text y={4} textAnchor="middle">
+                        {label}
+                      </text>
+                    </>
+                  ) : (
+                    <>
+                      {/* 小さな点でも押せるよう、透明な当たり判定を広めに取る */}
+                      <circle className="hit-area" r={11} />
+                      <circle r={level === 'overview' ? 2.5 : 3.5} />
+                    </>
+                  )}
+                  <title>{nameOf(node.name)}</title>
+                </g>
+              </Fixed>
+            );
+          })}
+
+          <MapGroundLayer
+            buildings={buildings}
+            unitsPerPixel={k}
+            labelLayout={visibleLabels}
+            linkedPoiIds={linked}
+            onPick={pick}
+          />
+          {selectedPoint !== undefined && (
+            <Fixed at={selectedPoint} k={k}>
+              <g className="selection-ring" data-testid="map-selection" pointerEvents="none">
+                <circle r={16} />
+              </g>
+            </Fixed>
+          )}
+          {gpsHint !== null && (
+            <GpsHint hint={gpsHint} k={k} label={t('map.gpsHint')} onSelect={onSelectGpsHint} />
+          )}
+          <MapMarkers
+            unitsPerPixel={k}
+            current={currentNodeId ? at(currentNodeId) : undefined}
+            destination={destinationNodeId ? at(destinationNodeId) : undefined}
+          />
+        </svg>
+      </div>
       <div className="map-legend" data-testid="map-legend">
         <span>
           <i className="swatch underground" />

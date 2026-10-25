@@ -1,4 +1,6 @@
-import type { LocalizedText } from '../../domain/types';
+import type { Graph } from '../../domain/graph';
+import { STATIONS, stationGates } from '../../domain/stations';
+import type { LocalizedText, NodeId } from '../../domain/types';
 import type { Place } from '../map/InteractiveMap';
 
 const STORAGE_KEY = 'umeda-navi.favorites';
@@ -69,4 +71,54 @@ export function toggleFavorite(favorites: Place[], place: Place): Place[] {
     return favorites.filter((f) => favoriteKey(f) !== key);
   }
   return [place, ...favorites].slice(0, MAX_FAVORITES);
+}
+
+interface Named {
+  nodeId: NodeId;
+  name: LocalizedText;
+}
+
+/**
+ * 保存済みのお気に入りを、いまの地図データに合わせ直す。地図データを作り直すと
+ * ノードの番号が変わることがあるため、無くなったノードは同じ名前の場所に付け替え、
+ * 見つからなければ外す。駅は改札の候補をいまのデータから引き直す。
+ */
+export function reconcileFavorites(
+  favorites: Place[],
+  graph: Graph,
+  places: { shops: Named[]; pois: Named[] },
+): Place[] {
+  const byName = new Map<string, NodeId>();
+  for (const node of graph.nodes.values()) byName.set(node.name.ja, node.id);
+  for (const item of [...places.shops, ...places.pois]) {
+    if (graph.nodes.has(item.nodeId) && !byName.has(item.name.ja)) {
+      byName.set(item.name.ja, item.nodeId);
+    }
+  }
+  return favorites.flatMap((place): Place[] => {
+    if (place.nodeIds !== undefined) {
+      const station = STATIONS.find((s) => s.name.ja === place.name.ja);
+      const gates = station ? stationGates(station, graph.nodes.values()) : [];
+      return gates.length > 0 ? [{ ...place, nodeId: gates[0], nodeIds: gates }] : [];
+    }
+    // 名前が同じなら付け替えずにそのまま。名前が別の場所になっていたら名前で探し直す
+    const sameName = favoriteNodeName(place, graph, places);
+    if (sameName) return [place];
+    const nodeId = byName.get(place.name.ja);
+    return nodeId === undefined ? [] : [{ ...place, nodeId }];
+  });
+}
+
+/** そのノードに、お気に入りと同じ名前の場所（ノード・店・地上スポット）がまだあるか */
+function favoriteNodeName(
+  place: Place,
+  graph: Graph,
+  places: { shops: Named[]; pois: Named[] },
+): boolean {
+  const node = graph.nodes.get(place.nodeId);
+  if (node === undefined) return false;
+  if (node.name.ja === place.name.ja) return true;
+  return [...places.shops, ...places.pois].some(
+    (item) => item.nodeId === place.nodeId && item.name.ja === place.name.ja,
+  );
 }

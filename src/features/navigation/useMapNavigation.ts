@@ -37,6 +37,8 @@ export interface MapNavigationActions {
   clearDestination: () => void;
   /** シートを閉じる（案内中なら経路シートへ戻る。経路シート自体を閉じると地図だけになる） */
   closeSheet: () => void;
+  /** 地図タブ: シートを閉じて地図だけにする */
+  showMap: () => void;
   /** 閉じた経路シートを再表示する */
   openRoute: () => void;
 }
@@ -99,6 +101,12 @@ export function useMapNavigation(): MapNavigationState & MapNavigationActions {
     setSheet(navigating && sheet !== 'route' ? 'route' : 'none');
   }, [destination, currentNodeId, sheet]);
 
+  /** 地図タブ: 開いているシートと選択を閉じて地図だけにする（案内中でも経路のシートを出さない） */
+  const showMap = useCallback(() => {
+    setSelectedPlace(null);
+    setSheet('none');
+  }, []);
+
   const openRoute = useCallback(() => {
     if (destination !== null && currentNodeId !== null) setSheet('route');
   }, [destination, currentNodeId]);
@@ -120,6 +128,7 @@ export function useMapNavigation(): MapNavigationState & MapNavigationActions {
     markLost,
     clearDestination,
     closeSheet,
+    showMap,
     openRoute,
   };
 }

@@ -1,5 +1,5 @@
 import type { AdjacentEdge, Graph } from './graph';
-import { nodeFloor, type NodeId } from './types';
+import { nodeFloor, type EdgeAttr, type NodeId } from './types';
 
 export interface RouteOptions {
   /** 階段を避ける（エレベーター・スロープ優先）。該当エッジにペナルティを課す。 */
@@ -98,8 +98,7 @@ export function findRoute(
 
     for (const edge of graph.adjacency.get(current.nodeId) ?? []) {
       if (options.isClosed?.(current.nodeId, edge)) continue;
-      const penalty =
-        options.avoidStairs && edge.attrs.includes('stairs') ? STAIRS_PENALTY_FACTOR : 1;
+      const penalty = options.avoidStairs && stairsOnly(edge.attrs) ? STAIRS_PENALTY_FACTOR : 1;
       const nextCost = current.cost + edge.distanceM * penalty;
       const known = dist.get(edge.to);
       if (known === undefined || nextCost < known) {
@@ -123,6 +122,11 @@ export function findRoute(
   return { nodeIds, totalDistanceM: realDist.get(to) ?? 0 };
 }
 
+/** 階段しかない通路か（エスカレーター等が並んでいる通路は階段を避けて通れる） */
+function stairsOnly(attrs: readonly EdgeAttr[]): boolean {
+  return attrs.includes('stairs') && attrs.every((attr) => attr === 'stairs');
+}
+
 /**
  * 経路に階段が含まれるか。階段属性のエッジに加え、設備が不明なフロア移動
  * （案内文では階段として表現する）も階段とみなす。
@@ -133,12 +137,11 @@ export function routeUsesStairs(graph: Graph, route: Route): boolean {
     const to = route.nodeIds[i + 1];
     const edge = (graph.adjacency.get(from) ?? []).find((e) => e.to === to);
     if (edge === undefined) continue;
-    if (edge.attrs.includes('stairs')) return true;
+    if (stairsOnly(edge.attrs)) return true;
     const a = graph.nodes.get(from);
     const b = graph.nodes.get(to);
     const changesFloor = a !== undefined && b !== undefined && nodeFloor(a) !== nodeFloor(b);
-    const hasStepFree = edge.attrs.some((attr) => attr !== 'stairs');
-    if (changesFloor && !hasStepFree) return true;
+    if (changesFloor && edge.attrs.length === 0) return true;
   }
   return false;
 }

@@ -7,7 +7,7 @@ import {
   WALK_SPEED_M_PER_MIN,
 } from '../../app/config';
 import { googleMapsWalkingUrl, shouldSuggestAboveGround } from '../../domain/aboveGround';
-import { buildSteps, type RouteStep } from '../../domain/directions';
+import { buildSteps, stepPlaceName, type RouteStep } from '../../domain/directions';
 import { fitGeoTransform, type LatLng } from '../../domain/geo';
 import type { Graph } from '../../domain/graph';
 import { isWithin, minuteOfDayInTokyo } from '../../domain/hours';
@@ -138,7 +138,7 @@ export function RouteScreen({
     const name =
       step.action === 'arrive' && step.atNodeId === toNodeId && !aboveGround
         ? destinationName
-        : nodeName(step.atNodeId);
+        : stepPlaceName(nodeName(step.atNodeId));
     switch (step.action) {
       case 'left':
         return t('route.actionLeft', { name });
@@ -206,7 +206,7 @@ export function RouteScreen({
         >
           {t('route.avoidStairs')}
         </button>
-        {onToggleFirstPerson !== undefined && (
+        {onToggleFirstPerson !== undefined && (result?.steps.length ?? 0) > 0 && (
           <button
             type="button"
             className={firstPerson ? 'chip active' : 'chip'}
@@ -294,7 +294,7 @@ export function RouteScreen({
             </div>
           )}
           {next !== null && lastIndex > 0 && onStepChange !== undefined && (
-            <div className="step-nav">
+            <div className="step-nav sticky-actions">
               <button
                 type="button"
                 className="secondary"
@@ -332,12 +332,14 @@ export function RouteScreen({
             </div>
           )}
 
-          <p className="total eta">
-            {t('route.eta', {
-              distance: Math.round(remainingM),
-              minutes: Math.max(1, Math.round(remainingM / WALK_SPEED_M_PER_MIN)),
-            })}
-          </p>
+          {result.steps.length > 0 && (
+            <p className="total eta">
+              {t('route.eta', {
+                distance: Math.round(remainingM),
+                minutes: Math.max(1, Math.round(remainingM / WALK_SPEED_M_PER_MIN)),
+              })}
+            </p>
+          )}
 
           <ol className="steps">
             {result.steps.map((step, index) => (

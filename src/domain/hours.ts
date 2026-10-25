@@ -28,13 +28,17 @@ const toMinutes = (hhmm: string): MinuteOfDay => {
 };
 
 /** 日本時間（Asia/Tokyo）での時刻。端末のタイムゾーンによらない */
+// 作るのが重いので1つを使い回す
+let tokyoClock: Intl.DateTimeFormat | null = null;
+
 export function minuteOfDayInTokyo(date: Date): MinuteOfDay {
-  const parts = new Intl.DateTimeFormat('en-US', {
+  tokyoClock ??= new Intl.DateTimeFormat('en-US', {
     timeZone: 'Asia/Tokyo',
     hour: '2-digit',
     minute: '2-digit',
     hourCycle: 'h23',
-  }).formatToParts(date);
+  });
+  const parts = tokyoClock.formatToParts(date);
   const value = (type: string) => Number(parts.find((p) => p.type === type)?.value ?? 0);
   return value('hour') * 60 + value('minute');
 }

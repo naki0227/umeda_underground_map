@@ -1,6 +1,6 @@
 import { fireEvent, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import { beforeAll, describe, expect, it } from 'vitest';
+import { beforeAll, describe, expect, it, vi } from 'vitest';
 import { initI18n } from '../../i18n';
 import { BottomSheet } from '../BottomSheet';
 import { nearestSnap, nextSnap } from '../sheetSnap';
@@ -59,5 +59,18 @@ describe('BottomSheet', () => {
     fireEvent.click(handle);
     expect(sheet).toHaveAttribute('data-snap', 'full');
     expect(sheet).not.toHaveClass('dragging');
+  });
+
+  it('closes with Escape and takes focus when it opens', () => {
+    const onClose = vi.fn();
+    render(
+      <BottomSheet label="テスト" onClose={onClose}>
+        <button type="button">中</button>
+      </BottomSheet>,
+    );
+    const sheet = screen.getByRole('dialog', { name: 'テスト' });
+    expect(sheet).toHaveFocus();
+    fireEvent.keyDown(screen.getByRole('button', { name: '中' }), { key: 'Escape' });
+    expect(onClose).toHaveBeenCalledTimes(1);
   });
 });

@@ -16,7 +16,7 @@ interface Props {
 export function PlaceSheet({ place, onGo, onSetHere, onClose, favorite, onToggleFavorite }: Props) {
   const { t, i18n } = useTranslation();
   return (
-    <BottomSheet label={localized(place.name, i18n.language)} initialSnap="peek">
+    <BottomSheet label={localized(place.name, i18n.language)} onClose={onClose} initialSnap="peek">
       <div className="sheet-header">
         <h2>{localized(place.name, i18n.language)}</h2>
         <button
@@ -32,7 +32,7 @@ export function PlaceSheet({ place, onGo, onSetHere, onClose, favorite, onToggle
         </button>
       </div>
       {place.aboveGround && <p className="hint">{t('place.aboveGroundNote')}</p>}
-      <div className="route-actions">
+      <div className="route-actions sticky-actions">
         <button type="button" className="primary" onClick={onGo}>
           {t('place.goHere')}
         </button>

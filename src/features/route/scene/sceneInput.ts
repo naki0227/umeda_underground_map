@@ -1,4 +1,4 @@
-import type { RouteStep } from '../../../domain/directions';
+import { pickVia, type RouteStep } from '../../../domain/directions';
 import { projectToPlane } from '../../../domain/geo';
 import type { Graph } from '../../../domain/graph';
 import type { Route } from '../../../domain/route';
@@ -48,9 +48,6 @@ export function projectOntoPath(
   }
   return best;
 }
-
-const pickVia = (attrs: EdgeAttr[] | undefined): EdgeAttr =>
-  attrs?.find((a) => a === 'escalator' || a === 'elevator' || a === 'stairs') ?? 'stairs';
 
 export const TURN_ICON: Partial<Record<RouteStep['action'], string>> = {
   left: '↰',

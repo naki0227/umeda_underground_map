@@ -56,8 +56,8 @@ export function classifyTurn(angleDeg: number): TurnDirection {
   return angleDeg > 0 ? 'right' : 'left';
 }
 
-/** フロア移動に使う設備。エスカレーター優先で表現する */
-function pickVia(attrs: EdgeAttr[] | undefined): EdgeAttr {
+/** フロア移動に使う設備。エスカレーター優先で表現する（案内文と一人称の札で共通） */
+export function pickVia(attrs: EdgeAttr[] | undefined): EdgeAttr {
   for (const preferred of ['escalator', 'elevator', 'slope', 'stairs'] as const) {
     if (attrs?.includes(preferred)) return preferred;
   }
@@ -226,4 +226,12 @@ export function stepNodeIds(route: Route, step: RouteStep): NodeId[] {
   const end = route.nodeIds.indexOf(step.atNodeId, start);
   if (end === -1) return [step.atNodeId];
   return route.nodeIds.slice(start, end + 1);
+}
+
+/**
+ * 案内文に入れる場所の名前。英語の地点名は「In front of …」「Near …」の形で作ってあり、
+ * 「Turn left at {{name}}」に入れると前置詞が重なるので、頭の言い回しを外す
+ */
+export function stepPlaceName(name: string): string {
+  return name.replace(/^(In front of|Near) /, '');
 }

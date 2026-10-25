@@ -97,7 +97,7 @@ export const ko: Resource = {
     showMap: '지도 보기',
     distance: '{{distance}}m',
     goal: '목적지',
-    floorSign: '{{via}}로 {{floor}}',
+    floorSign: '{{via}}(으)로 {{floor}} 이동',
     openMap: '전체 지도 열기',
     showFirstPerson: '1인칭',
   },

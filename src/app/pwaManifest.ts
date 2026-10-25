@@ -4,14 +4,18 @@
  */
 import type { ManifestOptions } from 'vite-plugin-pwa';
 
-export const PWA_THEME_COLOR = '#0e7490';
+/** 画面の地（紙色）と同じ。index.html の theme-color と合わせる */
+export const PWA_THEME_COLOR = '#efebea';
 
 export const pwaManifest: Partial<ManifestOptions> & Pick<ManifestOptions, 'icons'> = {
-  name: 'Umeda Underground Navi',
-  short_name: 'UmedaNavi',
-  description: 'Offline-first navigation for the Umeda underground mall',
+  // ホーム画面に出る名前（lang が ja なので日本語に）
+  id: './',
+  name: '梅田地下ナビ',
+  short_name: '梅田地下ナビ',
+  description:
+    '梅田の地下街の道案内。GPS が届かない地下でも、近くのお店から現在地を当てて案内します。',
   theme_color: PWA_THEME_COLOR,
-  background_color: '#ffffff',
+  background_color: PWA_THEME_COLOR,
   display: 'standalone',
   lang: 'ja',
   icons: [

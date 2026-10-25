@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export type GeolocationStatus = 'idle' | 'loading' | 'success' | 'error';
 
@@ -17,6 +17,8 @@ export interface GeolocationState {
 export function useGeolocation(): GeolocationState {
   const [status, setStatus] = useState<GeolocationStatus>('idle');
   const [position, setPosition] = useState<GeolocationState['position']>(null);
+  /** 最後に出した要求の番号。遅れて返ってきた古い結果で上書きしない */
+  const latest = useRef(0);
 
   const acquire = useCallback(() => {
     if (!('geolocation' in navigator)) {
@@ -24,8 +26,10 @@ export function useGeolocation(): GeolocationState {
       return;
     }
     setStatus('loading');
+    const request = ++latest.current;
     navigator.geolocation.getCurrentPosition(
       (result) => {
+        if (request !== latest.current) return;
         setPosition({
           lat: result.coords.latitude,
           lng: result.coords.longitude,
@@ -34,6 +38,9 @@ export function useGeolocation(): GeolocationState {
         setStatus('success');
       },
       () => {
+        if (request !== latest.current) return;
+        // 取れなかったときに前の位置を出し続けない
+        setPosition(null);
         setStatus('error');
       },
       { enableHighAccuracy: false, timeout: 8000, maximumAge: 60000 },
