@@ -2,7 +2,7 @@ import type { ja } from './ja';
 
 type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> };
 
-/** 한국어. 지명·가게 이름은 데이터에 한국어 표기가 없어 영어 표기로 표시한다 */
+/** 한국어. 地名・店名は src/data/placeNames.ts の韓国語、なければ英語表記 */
 export const ko: Resource = {
   app: {
     title: '우메다 지하 내비',

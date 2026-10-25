@@ -1,14 +1,18 @@
 import { projectToPlane } from '../domain/geo';
-import type { MapNode, Poi, UndergroundMap } from '../domain/types';
+import type { LocalizedText, MapNode, Poi, UndergroundMap } from '../domain/types';
 import { osmData } from './generated/osmData';
 import { withEnglishName } from './englishNames';
+import { withPlaceTranslations } from './placeNames';
 import { mergeShops } from './mergeShops';
 import { officialShops } from './officialShops';
 import type { GeneratedNode, GeneratedPoi } from './types';
 
+/** 英語名の日本語を置き換え、中国語・韓国語の名前を足す */
+const localizeName = (text: LocalizedText) => withPlaceTranslations(withEnglishName(text));
+
 /** 生成データのノードに平面座標を付ける（x, y は緯度経度から一意に決まる） */
 function toMapNode({ osmId: _osmId, ...node }: GeneratedNode): MapNode {
-  return { ...node, name: withEnglishName(node.name), ...projectToPlane(node) };
+  return { ...node, name: localizeName(node.name), ...projectToPlane(node) };
 }
 
 /** 地上スポットの最寄り出口（直線距離）。出口がなければ改札 */
@@ -32,7 +36,7 @@ const nodes = osmData.nodes.map(toMapNode);
 const areaById = new Map(nodes.map((n) => [n.id, n.area]));
 const pois: Poi[] = osmData.pois.map((poi) => ({
   id: poi.id,
-  name: withEnglishName(poi.name),
+  name: localizeName(poi.name),
   lat: poi.lat,
   lng: poi.lng,
   nodeId: nearestExitId(nodes, poi),
@@ -52,8 +56,8 @@ export const umedaMap: UndergroundMap = {
   edges: osmData.edges,
   shops: mergeShops(officialShops, osmData.shops, (id) => areaById.get(id)).map((shop) => ({
     ...shop,
-    name: withEnglishName(shop.name),
-    ...(shop.building ? { building: withEnglishName(shop.building) } : {}),
+    name: localizeName(shop.name),
+    ...(shop.building ? { building: localizeName(shop.building) } : {}),
   })),
   pois,
 };

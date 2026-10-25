@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import type { Graph } from '../../domain/graph';
 import { shopPlaceName } from '../../domain/shopLabel';
 import { matchStations, stationGates } from '../../domain/stations';
-import type { Poi, Shop } from '../../domain/types';
+import type { LocalizedText, Poi, Shop } from '../../domain/types';
 import { localized } from '../../i18n';
 import type { Place } from '../map/InteractiveMap';
 
@@ -30,8 +30,9 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
   const results = useMemo<Result[]>(() => {
     const q = query.trim().toLowerCase();
     if (q === '') return [];
-    const matches = (ja: string, en: string) =>
-      ja.toLowerCase().includes(q) || en.toLowerCase().includes(q);
+    // 日本語・英語に加えて、中国語・韓国語の名前でも見つける
+    const matches = (name: LocalizedText) =>
+      Object.values(name).some((text: string) => text.toLowerCase().includes(q));
 
     // 駅（改札がいくつもある）は先頭に。選ぶと、いまいる所から一番近い改札へ案内する
     const stationResults: Result[] = matchStations(q).flatMap((station) => {
@@ -46,7 +47,7 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
       ];
     });
     const poiResults: Result[] = pois
-      .filter((p) => matches(p.name.ja, p.name.en))
+      .filter((p) => matches(p.name))
       .map((p) => ({
         key: p.id,
         place: { nodeId: p.nodeId, name: p.name, aboveGround: true },
@@ -55,7 +56,7 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
     // ビルの中の店はビル名でも見つかるようにする（「ヨドバシ」で中の店も出る）
     const shopResults: Result[] = shops
       .map((s) => ({ shop: s, name: shopPlaceName(s) }))
-      .filter(({ name }) => matches(name.ja, name.en))
+      .filter(({ name }) => matches(name))
       .map(({ shop: s, name }) => ({
         key: s.id,
         place: { nodeId: s.nodeId, name, aboveGround: false },
@@ -63,7 +64,7 @@ export function SearchBar({ graph, shops, pois, onPick }: Props) {
       }));
     // 出口・駅・広場を先に、通路の分岐（「ekimo梅田 北」など）は後ろに並べる
     const nodeResults: Result[] = [...graph.nodes.values()]
-      .filter((n) => matches(n.name.ja, n.name.en) || (n.exitNo ?? '').toLowerCase() === q)
+      .filter((n) => matches(n.name) || (n.exitNo ?? '').toLowerCase() === q)
       .sort((a, b) => Number(a.kind === 'junction') - Number(b.kind === 'junction'))
       .map((n) => ({
         key: n.id,

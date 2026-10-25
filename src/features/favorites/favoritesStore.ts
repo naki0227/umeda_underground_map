@@ -18,6 +18,15 @@ function isLocalizedText(value: unknown): value is LocalizedText {
   return typeof v.ja === 'string' && typeof v.en === 'string';
 }
 
+/** 保存した名前から、知っている言語の名前だけを取り出す */
+function pickName(name: LocalizedText): LocalizedText {
+  const picked: LocalizedText = { ja: name.ja, en: name.en };
+  for (const lang of ['zh', 'zh-Hant', 'ko'] as const) {
+    if (typeof name[lang] === 'string') picked[lang] = name[lang];
+  }
+  return picked;
+}
+
 function isPlace(value: unknown): value is Place {
   if (typeof value !== 'object' || value === null) return false;
   const v = value as Record<string, unknown>;
@@ -40,7 +49,7 @@ export function loadFavorites(): Place[] {
       .filter(isPlace)
       .map((p) => ({
         nodeId: p.nodeId,
-        name: { ja: p.name.ja, en: p.name.en },
+        name: pickName(p.name),
         aboveGround: p.aboveGround,
         // 駅など、行き先の候補が複数あるもの
         ...(Array.isArray(p.nodeIds) && p.nodeIds.every((id) => typeof id === 'string')
@@ -89,23 +98,35 @@ export function reconcileFavorites(
   places: { shops: Named[]; pois: Named[] },
 ): Place[] {
   const byName = new Map<string, NodeId>();
-  for (const node of graph.nodes.values()) byName.set(node.name.ja, node.id);
+  /** いまのデータの名前（中国語・韓国語の名前が増えていれば、それも使えるように） */
+  const currentName = new Map<string, LocalizedText>();
+  for (const node of graph.nodes.values()) {
+    byName.set(node.name.ja, node.id);
+    currentName.set(node.name.ja, node.name);
+  }
   for (const item of [...places.shops, ...places.pois]) {
     if (graph.nodes.has(item.nodeId) && !byName.has(item.name.ja)) {
       byName.set(item.name.ja, item.nodeId);
     }
+    if (!currentName.has(item.name.ja)) currentName.set(item.name.ja, item.name);
   }
+  const refreshed = (place: Place): Place => ({
+    ...place,
+    name: currentName.get(place.name.ja) ?? place.name,
+  });
   return favorites.flatMap((place): Place[] => {
     if (place.nodeIds !== undefined) {
       const station = STATIONS.find((s) => s.name.ja === place.name.ja);
       const gates = station ? stationGates(station, graph.nodes.values()) : [];
-      return gates.length > 0 ? [{ ...place, nodeId: gates[0], nodeIds: gates }] : [];
+      return station && gates.length > 0
+        ? [{ ...place, name: station.name, nodeId: gates[0], nodeIds: gates }]
+        : [];
     }
     // 名前が同じなら付け替えずにそのまま。名前が別の場所になっていたら名前で探し直す
     const sameName = favoriteNodeName(place, graph, places);
-    if (sameName) return [place];
+    if (sameName) return [refreshed(place)];
     const nodeId = byName.get(place.name.ja);
-    return nodeId === undefined ? [] : [{ ...place, nodeId }];
+    return nodeId === undefined ? [] : [refreshed({ ...place, nodeId })];
   });
 }
 

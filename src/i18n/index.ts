@@ -3,10 +3,27 @@ import { initReactI18next } from 'react-i18next';
 import { en } from './locales/en';
 import { ja } from './locales/ja';
 import { ko } from './locales/ko';
+import { es } from './locales/es';
+import { fr } from './locales/fr';
+import { id } from './locales/id';
+import { th } from './locales/th';
+import { vi } from './locales/vi';
 import { zh } from './locales/zh';
+import { zhHant } from './locales/zhHant';
 import type { LocalizedText } from '../domain/types';
 
-export const APP_LANGUAGES = ['ja', 'en', 'zh', 'ko'] as const;
+export const APP_LANGUAGES = [
+  'ja',
+  'en',
+  'zh',
+  'zh-Hant',
+  'ko',
+  'th',
+  'vi',
+  'id',
+  'fr',
+  'es',
+] as const;
 export type AppLanguage = (typeof APP_LANGUAGES)[number];
 
 const LANGUAGE_STORAGE_KEY = 'umeda-navi.language';
@@ -41,18 +58,25 @@ function applyDocumentLanguage(language: string): void {
 export function detectLanguage(navigatorLanguage: string): AppLanguage {
   const lang = navigatorLanguage.toLowerCase();
   if (lang.startsWith('ja')) return 'ja';
-  // 繁体字（zh-TW / zh-HK / zh-Hant）は簡体字 UI ではなく英語にする
-  if (lang.startsWith('zh') && !/^zh-(tw|hk|mo|hant)/.test(lang)) return 'zh';
-  if (lang.startsWith('ko')) return 'ko';
-  return 'en';
+  // 台湾・香港・マカオと zh-Hant は繁体字、それ以外の中国語は簡体字
+  if (lang.startsWith('zh')) return /^zh-(tw|hk|mo|hant)/.test(lang) ? 'zh-Hant' : 'zh';
+  // 「in」はインドネシア語の古い言語コード
+  if (lang.startsWith('in')) return 'id';
+  const base = lang.split('-')[0];
+  return APP_LANGUAGES.find((code) => code === base) ?? 'en';
 }
 
 /**
  * マップデータの多言語名を現在の言語で取り出す。
- * データは日本語・英語のみなので、中国語・韓国語では英語表記を使う。
+ * 中国語（簡体・繁体）・韓国語は、その言語の名前があればそれを、なければ英語名を使う。
+ * ほかの言語（タイ語・ベトナム語など）は英語名。
  */
 export function localized(text: LocalizedText, language: string): string {
-  return language === 'ja' ? text.ja : text.en;
+  if (language === 'ja') return text.ja;
+  if (language === 'zh' || language === 'zh-Hant' || language === 'ko') {
+    return text[language] ?? text.en;
+  }
+  return text.en;
 }
 
 export function initI18n(initialLanguage?: AppLanguage): typeof i18n {
@@ -66,7 +90,13 @@ export function initI18n(initialLanguage?: AppLanguage): typeof i18n {
         ja: { translation: ja },
         en: { translation: en },
         zh: { translation: zh },
+        'zh-Hant': { translation: zhHant },
         ko: { translation: ko },
+        th: { translation: th },
+        vi: { translation: vi },
+        id: { translation: id },
+        fr: { translation: fr },
+        es: { translation: es },
       },
       lng:
         initialLanguage ??

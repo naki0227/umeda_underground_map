@@ -2,6 +2,10 @@
 export interface LocalizedText {
   ja: string;
   en: string;
+  /** 中国語（簡体・繁体）・韓国語の名前（src/data/placeNames.ts が足す）。なければ英語名 */
+  zh?: string;
+  'zh-Hant'?: string;
+  ko?: string;
 }
 
 export type NodeId = string;
