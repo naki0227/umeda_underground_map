@@ -1,6 +1,6 @@
 # 梅田地下ナビ / Umeda Underground Navi
 
-**公開URL: https://naki0227.github.io/umeda_underground_map/**
+**公開URL: https://umeda.enludus.com/**（旧URL https://naki0227.github.io/umeda_underground_map/ からも自動で移動）
 
 梅田の地下街（ホワイティうめだ・ディアモール大阪・阪急三番街・ekimo梅田・ドーチカと駅の連絡通路）専用の道案内 PWA。
 地下では GPS が使えない前提で、**入口や近くに見えるお店から現在地を一度だけ推定**し、以降は静的な経路案内を表示する。

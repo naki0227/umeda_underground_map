@@ -28,10 +28,10 @@ jobs:
       - name: Build
         run: npm run build
         env:
-          # 独自ドメインを使う場合はリポジトリ変数 BASE_PATH に / を設定する（docs/DEPLOY.md）
-          BASE_PATH: ${{ vars.BASE_PATH || '/umeda_underground_map/' }}
-          # 共有カード（OGP）の画像の絶対URLに使う。独自ドメインではリポジトリ変数 SITE_ORIGIN に https://<ドメイン>
-          SITE_ORIGIN: ${{ vars.SITE_ORIGIN || 'https://naki0227.github.io' }}
+          # 公開先は独自ドメイン（https://umeda.enludus.com/）の直下。変えるときはリポジトリ変数で上書きする（docs/DEPLOY.md）
+          BASE_PATH: ${{ vars.BASE_PATH || '/' }}
+          # 共有カード（OGP）の画像の絶対URLに使う
+          SITE_ORIGIN: ${{ vars.SITE_ORIGIN || 'https://umeda.enludus.com' }}
       - uses: actions/upload-pages-artifact@v3
         with:
           path: dist

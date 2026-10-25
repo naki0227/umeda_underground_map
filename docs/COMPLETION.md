@@ -18,7 +18,7 @@
 - UI: アイソメトリック地図（ゾーン・出口バッジ・設備チップ・凡例・地上建物）、現在地/目的地のデュアル入力、検索、場所シート、位置確定シート（クイックチップ・推定位置カード）、経路シート（次の動作カード・到着まで・階段回避・迷った・終了）、スポット/メニュータブ
 - i18n: 日本語 / 英語
 - CI（GitHub Actions）: typecheck / format check / lint / test（57件）/ build。main は緑
-- 公開: GitHub Pages（https://naki0227.github.io/umeda_underground_map/ 、main push で自動デプロイ）
+- 公開: GitHub Pages（https://umeda.enludus.com/ 、main push で自動デプロイ。旧 github.io の URL は自動で転送）
 
 ### データの入り具合（`src/data/`）
 
