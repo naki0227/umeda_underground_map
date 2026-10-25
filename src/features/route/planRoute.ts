@@ -12,11 +12,12 @@ export function planRoute(
   graph: Graph,
   from: NodeId,
   to: NodeId,
-  options: { avoidStairs: boolean; minute: MinuteOfDay },
+  options: { avoidStairs: boolean; minute: MinuteOfDay; simple?: boolean },
 ): { route: Route; throughClosed: boolean } | null {
   const isClosed = closedEdgePredicate(graph, TIMED_PASSAGES, options.minute);
-  const open = findRoute(graph, from, to, { avoidStairs: options.avoidStairs, isClosed });
+  const { avoidStairs, simple } = options;
+  const open = findRoute(graph, from, to, { avoidStairs, simple, isClosed });
   if (open !== null) return { route: open, throughClosed: false };
-  const any = findRoute(graph, from, to, { avoidStairs: options.avoidStairs });
+  const any = findRoute(graph, from, to, { avoidStairs, simple });
   return any === null ? null : { route: any, throughClosed: true };
 }

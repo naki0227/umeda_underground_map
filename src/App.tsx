@@ -24,6 +24,9 @@ import { buildSceneInput } from './features/route/scene/sceneInput';
 import { SearchBar } from './features/search/SearchBar';
 import { SpotsSheet } from './features/spots/SpotsSheet';
 import { FavoritesSheet } from './features/favorites/FavoritesSheet';
+import { placeFromUrl } from './app/shareLink';
+import { useWakeLock } from './app/useWakeLock';
+import { useWeather } from './app/useWeather';
 import { useFavorites } from './features/favorites/useFavorites';
 
 /** 地図と現在地の推定に使う地下の店（ビルの地上階の店は検索・目的地だけ） */
@@ -36,13 +39,28 @@ const DEFAULT_SHEET_INSET = 0.6;
 /** GPS 位置から最寄りノードまでこれ以上離れていたら「範囲外」とする（m） */
 const GPS_AREA_RANGE_M = 600;
 
+/** 大阪駅周辺地区の地下空間の浸水対策（大阪市）。警報のときに案内する */
+const FLOOD_PLAN_URL = 'https://www.city.osaka.lg.jp/kikikanrishitsu/page/0000259323.html';
+
 export default function App() {
   const { t, i18n } = useTranslation();
   const graph = useMemo(() => buildGraph(umedaMap), []);
   const nav = useMapNavigation();
+  // 共有されたリンク（?to=…）で開いたら、その場所を選んだ状態で始める。URL は元に戻す
+  const { selectPlace } = nav;
+  useEffect(() => {
+    const shared = placeFromUrl(globalThis.location.search, graph, umedaMap);
+    if (shared === null) return;
+    selectPlace(shared);
+    globalThis.history.replaceState(null, '', globalThis.location.pathname);
+  }, [graph, selectPlace]);
   const [avoidStairs, setAvoidStairs] = useState(false);
+  // 曲がりの少ない「わかりやすい道」を既定に（最短より平均 1% ほど長いだけで、5 本に 1 本は曲がりが 2 回ほど減る）
+  const [preferShortest, setPreferShortest] = useState(false);
   const favorites = useFavorites(graph, umedaMap);
   const gps = useInitialGeolocation();
+  // テストでは外へ取りに行かない
+  const weather = useWeather(import.meta.env.MODE !== 'test');
   const [gpsNoteDismissed, setGpsNoteDismissed] = useState(false);
   const { acquire: acquireGps } = gps;
   const locateGps = useCallback(() => {
@@ -85,9 +103,10 @@ export default function App() {
       planRoute(graph, nav.currentNodeId, targetNodeId, {
         avoidStairs,
         minute: minuteOfDayInTokyo(routeTime),
+        simple: !preferShortest,
       })?.route ?? null
     );
-  }, [graph, nav.currentNodeId, targetNodeId, avoidStairs, routeTime]);
+  }, [graph, nav.currentNodeId, targetNodeId, avoidStairs, routeTime, preferShortest]);
 
   // 案内中に表示しているステップ。経路が変わったら先頭に戻す
   const routeKey = route?.nodeIds.join('>') ?? '';
@@ -125,6 +144,8 @@ export default function App() {
   const setFirstPerson = (on: boolean) => setFirstPersonState({ routeKey, on });
   /** 一人称の画面に切り替わっている（地図と検索欄は隠す） */
   const fpvOn = nav.sheet === 'route' && firstPerson && fpv !== null && nav.destination !== null;
+  // 案内中は画面を消さない
+  useWakeLock(nav.sheet === 'route');
 
   /** 選択中・目的地の地上スポット（地図で最寄り出口までの点線を出す） */
   const linkedPoiIds = useMemo(() => {
@@ -182,6 +203,18 @@ export default function App() {
         onSelectPlace={nav.selectPlace}
       />
 
+      {weather?.floodWarning && !fpvOn && (
+        <div role="alert" className="flood-banner" data-testid="flood-banner">
+          <strong>
+            {t(weather.floodWarning === 'emergency' ? 'weather.emergency' : 'weather.warning')}
+          </strong>{' '}
+          {t('weather.floodAdvice')}{' '}
+          <a href={FLOOD_PLAN_URL} target="_blank" rel="noopener noreferrer">
+            {t('weather.floodPlan')}
+          </a>
+        </div>
+      )}
+
       {gpsHint !== null && !gpsHint.inArea && !gpsNoteDismissed && (
         <div role="status">
           <button type="button" className="gps-note" onClick={() => setGpsNoteDismissed(true)}>
@@ -205,6 +238,7 @@ export default function App() {
       {nav.sheet === 'place' && nav.selectedPlace !== null && (
         <PlaceSheet
           place={nav.selectedPlace}
+          exitNo={graph.nodes.get(nav.selectedPlace.nodeId)?.exitNo}
           onGo={nav.goToSelected}
           onSetHere={nav.setHereSelected}
           onClose={nav.closeSheet}
@@ -271,6 +305,9 @@ export default function App() {
             destinationLabel={targetLabel ?? nav.destination.name}
             aboveGround={nav.destination.aboveGround}
             avoidStairs={avoidStairs}
+            simple={!preferShortest}
+            rain={weather?.rain === true}
+            onToggleSimple={() => setPreferShortest((v) => !v)}
             onToggleAvoidStairs={() => setAvoidStairs((v) => !v)}
             onLost={nav.markLost}
             onFinish={nav.clearDestination}

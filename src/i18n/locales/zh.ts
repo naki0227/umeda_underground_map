@@ -10,6 +10,10 @@ export const zh: Resource = {
     dataVersionNote: '店铺和出口信息截至 {{version}}',
   },
   locate: {
+    exitCodeLabel: '附近黄色指示牌上的出口编号（如果看得到）',
+    exitCodePlaceholder: '例：D-21、H-49',
+    exitCodePick: '我在 {{exit}} 出口附近',
+    exitCodeNone: '没有找到这个编号的出口',
     title: '确认当前位置',
     description: '选择你进入地下的入口或附近能看到的店铺，即可推测你的位置。',
     entranceLabel: '你是从哪里进入地下的？（如果知道）',
@@ -34,6 +38,7 @@ export const zh: Resource = {
     noCandidates: '无法推测。请再选择一到两家店铺。',
   },
   search: {
+    kindPoiExit: '地面 · {{exit}} 出口',
     placeholder: '输入目的地（店铺、出口、景点）',
     results: '搜索结果',
     count: '找到{{count}}个结果',
@@ -44,6 +49,10 @@ export const zh: Resource = {
     kindNode: '出口·车站',
   },
   place: {
+    share: '分享这个地点（也可用于约见面）',
+    copied: '已复制链接',
+    shareTitle: '梅田地下导航：{{name}}',
+    nearestExit: '最近的出口：{{exit}}。',
     goHere: '去这里',
     setHere: '我现在在这里',
     aboveGroundNote: '这是地面上的地点。将带你到最近的出口。',
@@ -102,6 +111,12 @@ export const zh: Resource = {
     showFirstPerson: '第一人称',
   },
   route: {
+    rainNote: '预报有雨，因此按不需要到地面的地下路线导航。',
+    simpleNote: '这是转弯较少的路线（少转 {{turns}} 次，比最短路线长约{{extra}}米）。',
+    shortestNote: '这是最短路线（转弯少 {{turns}} 次的路线长约{{extra}}米）。',
+    useShortest: '改为最短路线',
+    useSimple: '改为转弯少的路线',
+    steps: '约{{steps}}步',
     title: '导航',
     from: '当前位置：{{name}}',
     to: '目的地：{{name}}',
@@ -189,5 +204,11 @@ export const zh: Resource = {
   },
   language: {
     label: '语言',
+  },
+  weather: {
+    warning: '大阪市发布了大雨・洪水警报。',
+    emergency: '大阪市发布了大雨特别警报。',
+    floodAdvice: '地下街有浸水危险。请听从广播和工作人员的指引，尽早前往地面高处。',
+    floodPlan: '大阪市浸水对策',
   },
 };

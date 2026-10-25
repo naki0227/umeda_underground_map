@@ -1,4 +1,6 @@
 import type { AdjacentEdge, Graph } from './graph';
+import { MinHeap } from './minHeap';
+import { findSimpleRoute } from './simpleRoute';
 import { nodeFloor, type EdgeAttr, type NodeId } from './types';
 
 export interface RouteOptions {
@@ -6,6 +8,11 @@ export interface RouteOptions {
   avoidStairs?: boolean;
   /** いま通れない線（夜間に閉まる通路など）。true の線は使わない */
   isClosed?: (from: NodeId, edge: AdjacentEdge) => boolean;
+  /**
+   * 曲がる回数の少ない「わかりやすい経路」にする（simpleRoute.ts）。
+   * 曲がるたびに距離を足して比べる。最短より少し長くても、曲がりと分かれ道の少ない道を選ぶ
+   */
+  simple?: boolean;
 }
 
 export interface Route {
@@ -14,56 +21,7 @@ export interface Route {
 }
 
 /** 階段回避時に階段エッジへ掛ける距離倍率。完全排除ではなく強い抑制。 */
-const STAIRS_PENALTY_FACTOR = 5;
-
-interface QueueEntry {
-  nodeId: NodeId;
-  cost: number;
-}
-
-/** 依存を増やさないための素朴な二分ヒープ */
-class MinHeap {
-  private items: QueueEntry[] = [];
-
-  get size(): number {
-    return this.items.length;
-  }
-
-  push(entry: QueueEntry): void {
-    this.items.push(entry);
-    let i = this.items.length - 1;
-    while (i > 0) {
-      const parent = (i - 1) >> 1;
-      if (this.items[parent].cost <= this.items[i].cost) break;
-      [this.items[parent], this.items[i]] = [this.items[i], this.items[parent]];
-      i = parent;
-    }
-  }
-
-  pop(): QueueEntry | undefined {
-    const top = this.items[0];
-    const last = this.items.pop();
-    if (this.items.length > 0 && last !== undefined) {
-      this.items[0] = last;
-      let i = 0;
-      for (;;) {
-        const left = i * 2 + 1;
-        const right = left + 1;
-        let smallest = i;
-        if (left < this.items.length && this.items[left].cost < this.items[smallest].cost) {
-          smallest = left;
-        }
-        if (right < this.items.length && this.items[right].cost < this.items[smallest].cost) {
-          smallest = right;
-        }
-        if (smallest === i) break;
-        [this.items[smallest], this.items[i]] = [this.items[i], this.items[smallest]];
-        i = smallest;
-      }
-    }
-    return top;
-  }
-}
+export const STAIRS_PENALTY_FACTOR = 5;
 
 /**
  * Dijkstra法で最短経路を求める。出口（地上への出入口）は途中では通らない。
@@ -76,6 +34,7 @@ export function findRoute(
   options: RouteOptions = {},
 ): Route | null {
   if (!graph.nodes.has(from) || !graph.nodes.has(to)) return null;
+  if (options.simple) return findSimpleRoute(graph, from, to, options);
 
   const dist = new Map<NodeId, number>();
   const realDist = new Map<NodeId, number>();
@@ -123,7 +82,7 @@ export function findRoute(
 }
 
 /** 階段しかない通路か（エスカレーター等が並んでいる通路は階段を避けて通れる） */
-function stairsOnly(attrs: readonly EdgeAttr[]): boolean {
+export function stairsOnly(attrs: readonly EdgeAttr[]): boolean {
   return attrs.includes('stairs') && attrs.every((attr) => attr === 'stairs');
 }
 

@@ -10,6 +10,10 @@ export const ko: Resource = {
     dataVersionNote: '가게·출구 정보는 {{version}} 기준입니다',
   },
   locate: {
+    exitCodeLabel: '근처 노란 안내판의 출구 번호 (보이면)',
+    exitCodePlaceholder: '예: D-21, H-49',
+    exitCodePick: '{{exit}} 출구 근처에 있어요',
+    exitCodeNone: '그 번호의 출구를 찾지 못했습니다',
     title: '현재 위치 확인',
     description: '들어온 입구나 근처에 보이는 가게를 고르면 현재 위치를 추정합니다.',
     entranceLabel: '어디에서 지하로 들어왔나요? (아는 경우)',
@@ -35,6 +39,7 @@ export const ko: Resource = {
     noCandidates: '추정하지 못했습니다. 가게를 한두 개 더 골라 보세요.',
   },
   search: {
+    kindPoiExit: '지상 · {{exit}} 출구',
     placeholder: '목적지 입력 (가게·출구·장소)',
     results: '검색 결과',
     count: '{{count}}개 찾았습니다',
@@ -45,6 +50,10 @@ export const ko: Resource = {
     kindNode: '출구·역',
   },
   place: {
+    share: '이 장소 보내기 (약속 장소로도)',
+    copied: '링크를 복사했습니다',
+    shareTitle: '우메다 지하 내비: {{name}}',
+    nearestExit: '가장 가까운 출구: {{exit}}. ',
     goHere: '여기로 가기',
     setHere: '지금 여기 있어요',
     aboveGroundNote: '지상의 장소입니다. 가장 가까운 출구까지 안내합니다.',
@@ -103,6 +112,12 @@ export const ko: Resource = {
     showFirstPerson: '1인칭',
   },
   route: {
+    rainNote: '비 예보가 있어 지상으로 나가지 않는 지하 길로 안내합니다.',
+    simpleNote: '꺾는 횟수가 적은 길입니다 ({{turns}}번 덜 꺾고, 최단보다 약 {{extra}}m 깁니다).',
+    shortestNote: '최단 경로입니다 ({{turns}}번 덜 꺾는 길은 약 {{extra}}m 깁니다).',
+    useShortest: '최단 경로로',
+    useSimple: '덜 꺾는 길로',
+    steps: '약 {{steps}}걸음',
     title: '길 안내',
     from: '현재 위치: {{name}}',
     to: '목적지: {{name}}',
@@ -193,5 +208,12 @@ export const ko: Resource = {
   },
   language: {
     label: '언어',
+  },
+  weather: {
+    warning: '오사카시에 호우・홍수 경보가 발령되었습니다.',
+    emergency: '오사카시에 호우 특별경보가 발령되었습니다.',
+    floodAdvice:
+      '지하상가가 침수될 수 있습니다. 안내 방송과 직원의 안내에 따라 일찍 지상의 높은 곳으로 이동하세요.',
+    floodPlan: '오사카시 침수 대책',
   },
 };

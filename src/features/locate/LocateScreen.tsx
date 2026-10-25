@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { matchExitCode } from '../../domain/exitCode';
 import type { Graph } from '../../domain/graph';
 import { locate, type LocationCandidate } from '../../domain/locate';
 import { nodeFloor, type NodeId, type Poi, type Shop } from '../../domain/types';
@@ -40,6 +41,12 @@ export function LocateScreen({
   const [entranceKey, setEntranceKey] = useState<EntranceKey>('');
   const [selectedShopIds, setSelectedShopIds] = useState<string[]>([]);
   const [shopQuery, setShopQuery] = useState('');
+  // 目の前の案内板の出口番号（黄色い看板の「M-12」など）。選ぶとその出口のそばにいるとして案内を始める
+  const [exitCode, setExitCode] = useState('');
+  const exitMatches = useMemo(
+    () => matchExitCode(graph.nodes.values(), exitCode),
+    [graph, exitCode],
+  );
   const [located, setLocated] = useState<{ key: string; result: LocationCandidate[] } | null>(null);
   // 推定に使った入口・店・GPS が変わったら、古い推定結果は出さない
   const inputKey = [
@@ -128,6 +135,36 @@ export function LocateScreen({
     <section>
       {lost && <p className="hint warn">{t('lost.description')}</p>}
       <p className="description">{t('locate.description')}</p>
+
+      <div className="field">
+        <label htmlFor="locate-exit-code">{t('locate.exitCodeLabel')}</label>
+        <input
+          id="locate-exit-code"
+          type="search"
+          inputMode="text"
+          autoCapitalize="characters"
+          value={exitCode}
+          placeholder={t('locate.exitCodePlaceholder')}
+          onChange={(e) => setExitCode(e.target.value)}
+        />
+        {exitMatches.length > 0 && (
+          <ul className="choice-list">
+            {exitMatches.map((node) => (
+              <li key={node.id}>
+                <button type="button" className="exit-code-pick" onClick={() => onConfirm(node.id)}>
+                  {t('locate.exitCodePick', { exit: node.exitNo })}
+                  {/* 同じ番号の出口が 2 か所あるときは、どの地下街かを添える */}
+                  {exitMatches.filter((n) => n.exitNo === node.exitNo).length > 1 &&
+                    `（${t(`area.${node.area}`)}・${nodeFloor(node)}）`}
+                </button>
+              </li>
+            ))}
+          </ul>
+        )}
+        {exitCode.trim() !== '' && exitMatches.length === 0 && (
+          <p className="hint">{t('locate.exitCodeNone')}</p>
+        )}
+      </div>
 
       <div className="field">
         <span>{t('locate.quickLabel')}</span>

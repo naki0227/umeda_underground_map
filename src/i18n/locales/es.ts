@@ -10,6 +10,10 @@ export const es: Resource = {
     dataVersionNote: 'Tiendas y salidas actualizadas al {{version}}',
   },
   locate: {
+    exitCodeLabel: 'Número de salida en un cartel amarillo cercano (si lo ves)',
+    exitCodePlaceholder: 'p. ej. D-21, H-49',
+    exitCodePick: 'Estoy cerca de la salida {{exit}}',
+    exitCodeNone: 'No hay ninguna salida con ese número',
     title: '¿Dónde estás?',
     description:
       'Elige la entrada que usaste o las tiendas que ves cerca para estimar tu posición.',
@@ -36,6 +40,7 @@ export const es: Resource = {
     noCandidates: 'No se pudo estimar. Elige una o dos tiendas más.',
   },
   search: {
+    kindPoiExit: 'Superficie · Salida {{exit}}',
     placeholder: 'Destino (tiendas, salidas, lugares)',
     results: 'Resultados de búsqueda',
     count: '{{count}} resultado(s)',
@@ -46,6 +51,10 @@ export const es: Resource = {
     kindNode: 'Salida / Estación',
   },
   place: {
+    share: 'Compartir este lugar (para quedar)',
+    copied: 'Enlace copiado',
+    shareTitle: 'Umeda Underground Navi: {{name}}',
+    nearestExit: 'Salida más cercana: {{exit}}. ',
     goHere: 'Cómo llegar',
     setHere: 'Estoy aquí',
     aboveGroundNote: 'Este lugar está en la superficie. Te guiamos hasta la salida más cercana.',
@@ -104,6 +113,13 @@ export const es: Resource = {
     showFirstPerson: 'Primera persona',
   },
   route: {
+    rainNote: 'Se prevé lluvia, así que te guiamos por rutas subterráneas.',
+    simpleNote: 'Ruta con menos giros ({{turns}} menos, unos {{extra}} m más que la más corta).',
+    shortestNote:
+      'Es la ruta más corta (la que tiene {{turns}} giros menos es unos {{extra}} m más larga).',
+    useShortest: 'Usar la más corta',
+    useSimple: 'Menos giros',
+    steps: 'unos {{steps}} pasos',
     title: 'Ruta',
     from: 'Desde: {{name}}',
     to: 'Hasta: {{name}}',
@@ -194,5 +210,12 @@ export const es: Resource = {
   },
   language: {
     label: 'Idioma',
+  },
+  weather: {
+    warning: 'Aviso por lluvias fuertes / inundación en Osaka.',
+    emergency: 'Aviso de emergencia por lluvias fuertes en Osaka.',
+    floodAdvice:
+      'La zona subterránea puede inundarse. Sigue los avisos y al personal y sube pronto a un lugar alto.',
+    floodPlan: 'Plan de inundaciones de Osaka',
   },
 };

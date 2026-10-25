@@ -10,6 +10,10 @@ export const fr: Resource = {
     dataVersionNote: 'Boutiques et sorties à jour au {{version}}',
   },
   locate: {
+    exitCodeLabel: 'Numéro de sortie sur un panneau jaune près de vous (si vous en voyez un)',
+    exitCodePlaceholder: 'ex. D-21, H-49',
+    exitCodePick: 'Je suis près de la sortie {{exit}}',
+    exitCodeNone: 'Aucune sortie avec ce numéro',
     title: 'Où êtes-vous ?',
     description:
       'Choisissez l’entrée utilisée ou les boutiques visibles autour de vous pour estimer votre position.',
@@ -36,6 +40,7 @@ export const fr: Resource = {
     noCandidates: 'Estimation impossible. Choisissez une ou deux boutiques de plus.',
   },
   search: {
+    kindPoiExit: 'Surface · Sortie {{exit}}',
     placeholder: 'Destination (boutiques, sorties, lieux)',
     results: 'Résultats de recherche',
     count: '{{count}} résultat(s)',
@@ -46,6 +51,10 @@ export const fr: Resource = {
     kindNode: 'Sortie / Gare',
   },
   place: {
+    share: 'Partager ce lieu (pour un rendez-vous)',
+    copied: 'Lien copié',
+    shareTitle: 'Umeda Underground Navi : {{name}}',
+    nearestExit: 'Sortie la plus proche : {{exit}}. ',
     goHere: 'Itinéraire',
     setHere: 'Je suis ici',
     aboveGroundNote: 'Ce lieu est en surface. Nous vous guidons jusqu’à la sortie la plus proche.',
@@ -104,6 +113,14 @@ export const fr: Resource = {
     showFirstPerson: 'Vue subjective',
   },
   route: {
+    rainNote: 'De la pluie est prévue : nous restons sur des itinéraires souterrains.',
+    simpleNote:
+      'Itinéraire avec moins de virages ({{turns}} de moins, environ {{extra}} m de plus que le plus court).',
+    shortestNote:
+      'Itinéraire le plus court (celui avec {{turns}} virages de moins fait environ {{extra}} m de plus).',
+    useShortest: 'Prendre le plus court',
+    useSimple: 'Moins de virages',
+    steps: 'environ {{steps}} pas',
     title: 'Itinéraire',
     from: 'Départ : {{name}}',
     to: 'Arrivée : {{name}}',
@@ -196,5 +213,12 @@ export const fr: Resource = {
   },
   language: {
     label: 'Langue',
+  },
+  weather: {
+    warning: 'Alerte fortes pluies / inondation à Osaka.',
+    emergency: 'Alerte d’urgence pour fortes pluies à Osaka.',
+    floodAdvice:
+      'Les galeries souterraines peuvent être inondées. Suivez les annonces et le personnel, et remontez tôt en hauteur.',
+    floodPlan: 'Plan inondation de la ville d’Osaka',
   },
 };

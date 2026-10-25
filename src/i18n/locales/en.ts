@@ -9,6 +9,10 @@ export const en: Resource = {
     dataVersionNote: 'Shop and exit data as of {{version}}',
   },
   locate: {
+    exitCodeLabel: 'Exit number on a yellow sign near you (if you see one)',
+    exitCodePlaceholder: 'e.g. D-21, H-49',
+    exitCodePick: "I'm near exit {{exit}}",
+    exitCodeNone: 'No exit with that number',
     title: 'Find where you are',
     description: 'Pick the entrance you used and shops you can see nearby.',
     entranceLabel: 'Where did you enter the underground? (if known)',
@@ -34,6 +38,7 @@ export const en: Resource = {
     noCandidates: 'Could not estimate. Try selecting one or two more shops.',
   },
   search: {
+    kindPoiExit: 'Above ground · Exit {{exit}}',
     placeholder: 'Enter destination (shops, exits, spots)',
     results: 'Search results',
     count: 'Results: {{count}}',
@@ -44,6 +49,10 @@ export const en: Resource = {
     kindNode: 'Exit / Station',
   },
   place: {
+    share: 'Share this place (e.g. to meet up)',
+    copied: 'Link copied',
+    shareTitle: 'Umeda Underground Navi: {{name}}',
+    nearestExit: 'Nearest exit: {{exit}}. ',
     goHere: 'Directions',
     setHere: "I'm here now",
     aboveGroundNote: 'This place is above ground. We guide you to the nearest exit.',
@@ -102,6 +111,14 @@ export const en: Resource = {
     showFirstPerson: 'First person',
   },
   route: {
+    rainNote: 'Rain is forecast, so we keep you on underground routes.',
+    simpleNote:
+      'This route has fewer turns ({{turns}} fewer, about {{extra}}m longer than the shortest).',
+    shortestNote:
+      'This is the shortest route (one with {{turns}} fewer turns is about {{extra}}m longer).',
+    useShortest: 'Use the shortest',
+    useSimple: 'Use fewer turns',
+    steps: 'about {{steps}} steps',
     title: 'Directions',
     from: 'From: {{name}}',
     to: 'To: {{name}}',
@@ -192,5 +209,12 @@ export const en: Resource = {
   },
   language: {
     label: 'Language',
+  },
+  weather: {
+    warning: 'Heavy rain / flood warning for Osaka City.',
+    emergency: 'EMERGENCY heavy rain warning for Osaka City.',
+    floodAdvice:
+      'The underground mall may flood. Follow announcements and staff, and move to higher ground above early.',
+    floodPlan: 'Osaka City flood plan',
   },
 };

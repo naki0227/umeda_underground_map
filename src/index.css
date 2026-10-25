@@ -1632,3 +1632,27 @@ button.candidate {
   stroke-width: 2;
   stroke-linejoin: round;
 }
+
+/* 文の中のボタン（「最短の道にする」など）。見た目は文字のリンク */
+.link-button {
+  padding: 0;
+  min-height: 0;
+  border: none;
+  background: none;
+  color: var(--action);
+  font-size: var(--fs-s);
+  font-weight: 600;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.nearest-exit {
+  display: block;
+  color: var(--text-strong);
+}
+
+.share-place {
+  display: block;
+  margin: 4px 0 0;
+  min-height: 44px;
+}

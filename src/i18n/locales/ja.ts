@@ -5,6 +5,10 @@ export const ja = {
     dataVersionNote: '店舗・出口情報は {{version}} 時点のものです',
   },
   locate: {
+    exitCodeLabel: '近くの黄色い案内板の出口番号（わかれば）',
+    exitCodePlaceholder: '例: D-21、H-49',
+    exitCodePick: '{{exit}} 出口のそばにいる',
+    exitCodeNone: 'その番号の出口は見つかりませんでした',
     title: '現在地を確認する',
     description: '入口や近くのお店を選ぶと、いまいる場所を推定します。',
     entranceLabel: 'どこから地下に入りましたか？（わかれば）',
@@ -30,6 +34,7 @@ export const ja = {
     noCandidates: '推定できませんでした。お店をもう1〜2件選んでみてください。',
   },
   search: {
+    kindPoiExit: '地上・{{exit}} 出口',
     placeholder: '目的地を入力（お店・出口・スポット）',
     results: '検索結果',
     count: '{{count}}件見つかりました',
@@ -40,6 +45,10 @@ export const ja = {
     kindNode: '出口・駅',
   },
   place: {
+    share: 'この場所を送る（待ち合わせにも）',
+    copied: 'リンクをコピーしました',
+    shareTitle: '梅田地下ナビ: {{name}}',
+    nearestExit: 'いちばん近い出口: {{exit}}。',
     goHere: 'ここへ行く',
     setHere: 'いまここにいる',
     aboveGroundNote: '地上のスポットです。いちばん近い出口まで案内します。',
@@ -98,6 +107,13 @@ export const ja = {
     showFirstPerson: '一人称',
   },
   route: {
+    rainNote: '雨の予報なので、地上に出ない地下の道で案内しています。',
+    simpleNote: '曲がる回数の少ない道です（曲がり {{turns}} 回少なく、最短より約{{extra}}m長い）。',
+    shortestNote:
+      '最短の道です（曲がる回数の少ない道は、曲がり {{turns}} 回少なく約{{extra}}m長い）。',
+    useShortest: '最短の道にする',
+    useSimple: '曲がりの少ない道にする',
+    steps: '約{{steps}}歩',
     title: '道案内',
     from: '現在地: {{name}}',
     to: '目的地: {{name}}',
@@ -114,7 +130,7 @@ export const ja = {
     avoidStairs: '階段を避ける',
     finish: '終了',
     floorNow: '現在: {{floor}}',
-    floorNext: '次:{{floor}}',
+    floorNext: '次: {{floor}}',
     aboveGroundSuggest:
       '地上を歩いた方が近いかもしれません（地下 約{{underground}}m／直線 約{{straight}}m）',
     openGoogleMaps: 'Googleマップで地上の徒歩ルートを見る',
@@ -188,5 +204,12 @@ export const ja = {
   },
   language: {
     label: '言語',
+  },
+  weather: {
+    warning: '大阪市に大雨・洪水の警報が出ています。',
+    emergency: '大阪市に大雨特別警報が出ています。',
+    floodAdvice:
+      '地下街は浸水のおそれがあります。館内放送と係員の案内に従い、早めに地上の高い所へ。',
+    floodPlan: '大阪市の浸水対策',
   },
 } as const;

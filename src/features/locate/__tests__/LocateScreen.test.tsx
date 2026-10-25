@@ -59,4 +59,25 @@ describe('LocateScreen estimate card scrolling', () => {
     const scrollIntoView = await estimate();
     expect(scrollIntoView).toHaveBeenCalledWith({ behavior: 'auto', block: 'nearest' });
   });
+
+  it('starts from an exit whose number the user sees on a sign', async () => {
+    const user = userEvent.setup();
+    const onConfirm = vi.fn();
+    const graph = buildGraph(umedaMap);
+    const exits = [...graph.nodes.values()].filter((n) => n.kind === 'exit' && n.exitNo === 'C-60');
+    render(
+      <LocateScreen
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onConfirm={onConfirm}
+      />,
+    );
+    // 全角・小文字・ハイフンなしでも見つかる
+    await user.type(screen.getByLabelText(/出口番号/), 'ｃ６０');
+    const picks = screen.getAllByRole('button', { name: /^C-60 出口のそばにいる/ });
+    expect(picks).toHaveLength(exits.length);
+    await user.click(picks[0]);
+    expect(exits.map((n) => n.id)).toContain(onConfirm.mock.calls[0][0]);
+  });
 });

@@ -10,6 +10,10 @@ export const vi: Resource = {
     dataVersionNote: 'Thông tin cửa hàng và lối ra tính đến {{version}}',
   },
   locate: {
+    exitCodeLabel: 'Số lối ra trên biển vàng gần bạn (nếu thấy)',
+    exitCodePlaceholder: 'VD: D-21, H-49',
+    exitCodePick: 'Tôi đang ở gần lối ra {{exit}}',
+    exitCodeNone: 'Không tìm thấy lối ra số này',
     title: 'Xác định vị trí của bạn',
     description: 'Chọn lối vào bạn đã dùng hoặc cửa hàng nhìn thấy gần đó để ước tính vị trí.',
     entranceLabel: 'Bạn xuống tầng hầm từ đâu? (nếu biết)',
@@ -35,6 +39,7 @@ export const vi: Resource = {
     noCandidates: 'Không ước tính được. Hãy chọn thêm một hoặc hai cửa hàng.',
   },
   search: {
+    kindPoiExit: 'Trên mặt đất · Lối ra {{exit}}',
     placeholder: 'Nhập điểm đến (cửa hàng, lối ra, địa điểm)',
     results: 'Kết quả tìm kiếm',
     count: 'Tìm thấy {{count}} kết quả',
@@ -45,6 +50,10 @@ export const vi: Resource = {
     kindNode: 'Lối ra / Ga',
   },
   place: {
+    share: 'Chia sẻ địa điểm này (để hẹn gặp)',
+    copied: 'Đã sao chép liên kết',
+    shareTitle: 'Umeda Underground Navi: {{name}}',
+    nearestExit: 'Lối ra gần nhất: {{exit}}. ',
     goHere: 'Chỉ đường',
     setHere: 'Tôi đang ở đây',
     aboveGroundNote: 'Địa điểm này ở trên mặt đất. Chúng tôi sẽ dẫn bạn đến lối ra gần nhất.',
@@ -103,6 +112,14 @@ export const vi: Resource = {
     showFirstPerson: 'Góc nhìn thứ nhất',
   },
   route: {
+    rainNote: 'Dự báo có mưa nên chúng tôi dẫn đường dưới lòng đất, không lên mặt đất.',
+    simpleNote:
+      'Đường này ít rẽ hơn (ít hơn {{turns}} lần rẽ, dài hơn đường ngắn nhất khoảng {{extra}} m).',
+    shortestNote:
+      'Đây là đường ngắn nhất (đường ít hơn {{turns}} lần rẽ dài hơn khoảng {{extra}} m).',
+    useShortest: 'Dùng đường ngắn nhất',
+    useSimple: 'Dùng đường ít rẽ',
+    steps: 'khoảng {{steps}} bước',
     title: 'Chỉ đường',
     from: 'Từ: {{name}}',
     to: 'Đến: {{name}}',
@@ -193,5 +210,12 @@ export const vi: Resource = {
   },
   language: {
     label: 'Ngôn ngữ',
+  },
+  weather: {
+    warning: 'Có cảnh báo mưa lớn / lũ lụt tại thành phố Osaka.',
+    emergency: 'Có cảnh báo đặc biệt về mưa lớn tại thành phố Osaka.',
+    floodAdvice:
+      'Khu phố ngầm có thể bị ngập. Hãy làm theo thông báo và nhân viên, sớm lên chỗ cao trên mặt đất.',
+    floodPlan: 'Kế hoạch chống ngập của Osaka',
   },
 };
