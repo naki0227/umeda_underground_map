@@ -24,6 +24,9 @@ const ACTION_ICON: Record<RouteStep['action'], string> = {
   'floor-change': '⇅',
 };
 
+/** 単独で出すときは文の頭なので大文字に（英語の "turn right" → "Turn right"） */
+const capitalize = (text: string) => text.charAt(0).toUpperCase() + text.slice(1);
+
 const ACTION_KEY: Record<RouteStep['action'], string> = {
   straight: 'fpv.actionStraight',
   left: 'fpv.actionLeft',
@@ -156,7 +159,7 @@ export function FirstPersonView({ scene, sideView, step, miniMap }: Props) {
             <span className="fpv-ahead-distance">
               {t('fpv.distance', { distance: Math.round(step.distanceM) })}
             </span>
-            <span className="fpv-ahead-action">{t(ACTION_KEY[step.action])}</span>
+            <span className="fpv-ahead-action">{capitalize(t(ACTION_KEY[step.action]))}</span>
           </span>
         </div>
       </div>

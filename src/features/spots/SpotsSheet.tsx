@@ -31,7 +31,7 @@ export function SpotsSheet({ graph, pois, currentNodeId, onPick, onClose }: Prop
   }, [pois, graph, currentNodeId]);
 
   return (
-    <BottomSheet label={t('spots.title')}>
+    <BottomSheet label={t('spots.title')} onClose={onClose}>
       <div className="sheet-header">
         <h2>{t('spots.title')}</h2>
         <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>

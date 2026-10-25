@@ -227,3 +227,11 @@ export function stepNodeIds(route: Route, step: RouteStep): NodeId[] {
   if (end === -1) return [step.atNodeId];
   return route.nodeIds.slice(start, end + 1);
 }
+
+/**
+ * 案内文に入れる場所の名前。英語の地点名は「In front of …」「Near …」の形で作ってあり、
+ * 「Turn left at {{name}}」に入れると前置詞が重なるので、頭の言い回しを外す
+ */
+export function stepPlaceName(name: string): string {
+  return name.replace(/^(In front of|Near) /, '');
+}

@@ -113,7 +113,7 @@ export const zh: Resource = {
     actionFloorDown: '在“{{name}}”乘{{via}}下到{{floor}}',
     aboveGroundHint: '“{{name}}”在地面上。请从“{{exit}}”上去。',
     notFound: '未找到路线',
-    eta: '到达还需 约{{minutes}}分钟·{{distance}}米',
+    eta: '到达还需约{{minutes}}分钟·{{distance}}米',
     avoidStairs: '避开楼梯',
     finish: '结束',
     floorNow: '当前：{{floor}}',

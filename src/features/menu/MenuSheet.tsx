@@ -12,7 +12,7 @@ interface Props {
 export function MenuSheet({ dataVersion, onClose }: Props) {
   const { t } = useTranslation();
   return (
-    <BottomSheet label={t('tabs.menu')}>
+    <BottomSheet label={t('tabs.menu')} onClose={onClose}>
       <div className="sheet-header">
         <h2>{t('app.title')}</h2>
         <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>

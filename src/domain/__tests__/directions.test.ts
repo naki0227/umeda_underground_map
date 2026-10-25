@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { buildSteps, classifyTurn, stepNodeIds, turnAngleDeg } from '../directions';
+import { buildSteps, classifyTurn, stepNodeIds, turnAngleDeg, stepPlaceName } from '../directions';
 import { buildGraph } from '../graph';
 import { findRoute } from '../route';
 import { testEdges, testNodes } from './fixtures';
@@ -143,5 +143,13 @@ describe('buildSteps with small bends in the passage line', () => {
       ['c', 1, 40],
     ]);
     expect(steps.map((s) => s.action)).toEqual(['arrive']);
+  });
+});
+
+describe('stepPlaceName', () => {
+  it('drops the leading preposition so the step reads "Turn left at Exit C-7"', () => {
+    expect(stepPlaceName('Near Exit C-7')).toBe('Exit C-7');
+    expect(stepPlaceName('In front of Tsurutontan')).toBe('Tsurutontan');
+    expect(stepPlaceName('C-7出口付近')).toBe('C-7出口付近');
   });
 });

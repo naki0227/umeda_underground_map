@@ -38,7 +38,7 @@ export const en: Resource = {
     results: 'Search results',
     kindStation: 'Station',
     kindPoi: 'Above ground',
-    kindShop: 'Shop',
+    kindShop: 'Underground shop',
     kindBuildingShop: 'Shop in a building',
     kindNode: 'Exit / Station',
   },
@@ -153,7 +153,7 @@ export const en: Resource = {
   facilityShort: {
     stairs: 'Stairs',
     escalator: 'Esc.',
-    elevator: 'EV',
+    elevator: 'Lift',
     slope: 'Slope',
   },
   area: {
@@ -186,7 +186,7 @@ export const en: Resource = {
     title: 'Data sources',
     osm: 'Passages, exits, underground shops and above-ground spots:',
     official:
-      'Some shop names are taken from the official websites of each underground mall (Whity Umeda, Diamor Osaka, Hankyu Sanbangai, ekimo Umeda, Dojima Underground Center).',
+      'Some shop names are taken from the official websites of each underground mall (Whity Umeda, Diamor Osaka, Hankyu Sanbangai, ekimo Umeda, Dojima Underground Center “Dotica”).',
   },
   language: {
     label: 'Language',

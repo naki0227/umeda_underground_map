@@ -24,7 +24,7 @@ export const ja = {
     estimatedNear: '{{name}} 付近',
     startHere: 'この位置で案内開始',
     fixedNote:
-      '案内中は位置を固定します（移動しても追跡しません）。ずれてきたら「迷った」で再測位してください。',
+      '案内中は位置を固定します（移動しても追跡しません）。ずれてきたら「迷った」で現在地を選び直してください。',
     candidatesTitle: 'ほかの候補',
     candidateConfidence: '確度 {{percent}}%',
     noCandidates: '推定できませんでした。お店をもう1〜2件選んでみてください。',
@@ -101,8 +101,8 @@ export const ja = {
     from: '現在地: {{name}}',
     to: '目的地: {{name}}',
     stepGo: '約{{distance}}m進む',
-    actionLeft: '「{{name}}」を左へ',
-    actionRight: '「{{name}}」を右へ',
+    actionLeft: '「{{name}}」で左へ',
+    actionRight: '「{{name}}」で右へ',
     actionUturn: '「{{name}}」で引き返す',
     actionArrive: '「{{name}}」に到着',
     actionFloorUp: '「{{name}}」の{{via}}で{{floor}}へ上がる',
@@ -112,7 +112,7 @@ export const ja = {
     eta: '到着まで 約{{minutes}}分・{{distance}}m',
     avoidStairs: '階段を避ける',
     finish: '終了',
-    floorNow: '現在:{{floor}}',
+    floorNow: '現在: {{floor}}',
     floorNext: '次:{{floor}}',
     aboveGroundSuggest:
       '地上を歩いた方が近いかもしれません（地下 約{{underground}}m／直線 約{{straight}}m）',
@@ -129,7 +129,7 @@ export const ja = {
     throughClosed:
       'いまの時間に閉まっている通路・設備を通る経路しか見つかりませんでした。現地の案内に従ってください。',
     alreadyHere: '目的地は現在地です',
-    estimateNote: 'ずれたら「迷った」で現在地を測り直せます。',
+    estimateNote: 'ずれたら「迷った」で現在地を選び直せます。',
   },
   lost: {
     button: '迷った',
@@ -182,7 +182,7 @@ export const ja = {
     title: 'データの出典',
     osm: '通路・出口・地下の店・地上スポットの位置:',
     official:
-      '店名の一部は各地下街の公式サイト掲載情報（ホワイティうめだ・ディアモール大阪・阪急三番街・ekimo梅田・ドージマ地下センター）を参照しています。',
+      '店名の一部は各地下街の公式サイト掲載情報（ホワイティうめだ・ディアモール大阪・阪急三番街・ekimo梅田・ドージマ地下センター〈ドーチカ〉）を参照しています。',
   },
   language: {
     label: '言語',

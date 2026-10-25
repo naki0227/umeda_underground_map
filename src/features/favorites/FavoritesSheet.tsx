@@ -15,7 +15,7 @@ interface Props {
 export function FavoritesSheet({ favorites, onPick, onRemove, onClose }: Props) {
   const { t, i18n } = useTranslation();
   return (
-    <BottomSheet label={t('favorites.title')}>
+    <BottomSheet label={t('favorites.title')} onClose={onClose}>
       <div className="sheet-header">
         <h2>{t('favorites.title')}</h2>
         <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>

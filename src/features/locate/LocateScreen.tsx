@@ -185,8 +185,9 @@ export function LocateScreen({
       </div>
 
       <div className="field">
-        <span>{t('locate.shopsLabel')}</span>
+        <label htmlFor="locate-shop-query">{t('locate.shopsLabel')}</label>
         <input
+          id="locate-shop-query"
           type="search"
           value={shopQuery}
           placeholder={t('locate.shopsPlaceholder')}

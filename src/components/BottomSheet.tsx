@@ -1,4 +1,11 @@
-import { useRef, useState, type PointerEvent, type ReactNode } from 'react';
+import {
+  useEffect,
+  useRef,
+  useState,
+  type KeyboardEvent,
+  type PointerEvent,
+  type ReactNode,
+} from 'react';
 import { useTranslation } from 'react-i18next';
 import { nearestSnap, nextSnap, SNAP_RATIO, type SheetSnap } from './sheetSnap';
 
@@ -8,6 +15,8 @@ const DRAG_THRESHOLD_PX = 8;
 interface Props {
   label: string;
   initialSnap?: SheetSnap;
+  /** Esc キーで閉じる */
+  onClose?: () => void;
   children: ReactNode;
 }
 
@@ -15,7 +24,7 @@ interface Props {
  * 画面下部のシート。上端のハンドルを上下にドラッグして高さを変えられる。
  * ハンドルはボタンでもあり、タップ・Enter・Space で段階を切り替える。
  */
-export function BottomSheet({ label, initialSnap = 'half', children }: Props) {
+export function BottomSheet({ label, initialSnap = 'half', onClose, children }: Props) {
   const { t } = useTranslation();
   const [snap, setSnap] = useState<SheetSnap>(initialSnap);
   // 呼び出し側が既定の高さを変えたとき（一人称⇄地図の切り替え）はそれに合わせる
@@ -28,6 +37,31 @@ export function BottomSheet({ label, initialSnap = 'half', children }: Props) {
   const drag = useRef<{ startY: number; startRatio: number; moved: boolean } | null>(null);
   /** ドラッグの直後に来る click を段階切替と取り違えないための印 */
   const suppressClick = useRef(false);
+
+  // 開いたらシートへフォーカスを移し、閉じたら開く前の場所へ戻す（キーボード・読み上げ向け）。
+  // 入力欄など、すでにフォーカスがある要素から開いたときはそのままにする
+  const sheetRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const opener = document.activeElement;
+    const typing =
+      opener instanceof HTMLInputElement ||
+      opener instanceof HTMLTextAreaElement ||
+      opener instanceof HTMLSelectElement;
+    if (!typing) sheetRef.current?.focus({ preventScroll: true });
+    return () => {
+      const lost = document.activeElement === null || document.activeElement === document.body;
+      if (lost && opener instanceof HTMLElement && opener.isConnected) {
+        opener.focus({ preventScroll: true });
+      }
+    };
+  }, []);
+
+  const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
+    if (e.key === 'Escape' && onClose) {
+      e.stopPropagation();
+      onClose();
+    }
+  };
 
   const viewportHeight = () => globalThis.innerHeight || 800;
 
@@ -69,14 +103,19 @@ export function BottomSheet({ label, initialSnap = 'half', children }: Props) {
     setSnap(nextSnap);
   };
 
-  // タブバー（74px）の上に出すので、その分を差し引く
-  const height = `calc(${Math.round((dragRatio ?? SNAP_RATIO[snap]) * 100)}dvh - 74px)`;
+  // タブバー（74px）の上に出すので、その分を差し引く。横向きの低い画面でも
+  // ボタンが見えるよう、160px（画面に収まる範囲で）より低くはしない
+  const ratio = Math.round((dragRatio ?? SNAP_RATIO[snap]) * 100);
+  const height = `max(min(160px, calc(100dvh - 90px)), calc(${ratio}dvh - 74px))`;
 
   return (
     <div
       className={`sheet snap-${snap}${dragRatio !== null ? ' dragging' : ''}`}
       role="dialog"
       aria-label={label}
+      ref={sheetRef}
+      tabIndex={-1}
+      onKeyDown={onKeyDown}
       data-snap={snap}
       style={{ maxHeight: height }}
     >
