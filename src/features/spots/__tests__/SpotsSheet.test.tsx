@@ -28,6 +28,9 @@ describe('finding facilities', () => {
         onClose={() => {}}
       />,
     );
+    // おすすめスポットが開いている。設備のタブに切り替える
+    expect(screen.queryByRole('button', { name: 'コインロッカー' })).toBeNull();
+    await user.click(screen.getByRole('radio', { name: '設備をさがす' }));
     await user.click(screen.getByRole('button', { name: 'コインロッカー' }));
     const items = screen.getAllByRole('button', { name: /^コインロッカー/ }).slice(1);
     expect(items.length).toBeGreaterThan(0);

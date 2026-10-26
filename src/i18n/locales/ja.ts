@@ -1,10 +1,19 @@
 export const ja = {
   app: {
+    about: 'このアプリについて',
     title: '梅田地下ナビ',
     subtitle: '梅田の地下街専用の道案内',
     dataVersionNote: '店舗・出口情報は {{version}} 時点のものです',
   },
   locate: {
+    methodLabel: 'えらび方',
+    byExit: '出口の番号',
+    byLandmark: '目印・改札',
+    byShop: '見えるお店',
+    exitHelp: '近くの黄色い案内板にある出口番号を入れてください。',
+    landmarkHelp: 'いま近くにある目印を押してください。',
+    shopHelp: '見えているお店を1〜2軒えらぶと、場所を推定します。',
+    moreHints: 'ほかの手がかり（入った場所・GPS）',
     exitCodeLabel: '近くの黄色い案内板の出口番号（わかれば）',
     exitCodePlaceholder: '例: D-21、H-49',
     exitCodePick: '{{exit}} 出口のそばにいる',
@@ -45,6 +54,8 @@ export const ja = {
     kindNode: '出口・駅',
   },
   place: {
+    shareShort: '共有',
+    copiedShort: 'コピー済み',
     share: 'この場所を送る（待ち合わせにも）',
     copied: 'リンクをコピーしました',
     shareTitle: '梅田地下ナビ: {{name}}',
@@ -68,7 +79,7 @@ export const ja = {
   },
   favorites: {
     title: 'お気に入り',
-    empty: 'まだありません。場所の「お気に入りに登録」で追加できます。',
+    empty: 'まだありません。場所の「☆ お気に入り」で追加できます。',
     add: 'お気に入りに登録',
     removeNamed: '{{name}} をお気に入りから外す',
     storageNote: 'お気に入りはこの端末の中にだけ保存されます。',
@@ -109,6 +120,15 @@ export const ja = {
     showFirstPerson: '一人称',
   },
   route: {
+    toName: '{{name}}まで',
+    upAt: '{{exit}} から地上へ',
+    viewMap: '地図で見る',
+    viewFirstPerson: '一人称で見る',
+    options: '経路の設定',
+    accessTitle: '段差',
+    accessNormal: 'ふつう',
+    wayTitle: '道の選び方',
+    allSteps: 'すべての手順（{{count}}）',
     sensorOn: '歩いた分を数える（動きのセンサー）',
     sensorOff: '歩数を数えるのをやめる',
     sensorWalked: 'この区間 約{{walked}}m / {{total}}m 歩きました',

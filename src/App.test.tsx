@@ -30,6 +30,9 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
 
     // 4. 近くの店を2つ選んで推定 → 推定位置カードから案内開始
     const locateSheet = screen.getByRole('dialog', { name: '現在地を確認する' });
+    // 方法は「出口の番号」が開いている。「見えるお店」に切り替える
+    expect(within(locateSheet).getByRole('radio', { name: '出口の番号' })).toBeChecked();
+    await user.click(within(locateSheet).getByRole('radio', { name: '見えるお店' }));
     const shopSearch = within(locateSheet).getByPlaceholderText('店名で検索');
     await user.type(shopSearch, 'スターバックス');
     await user.click(
@@ -48,8 +51,8 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
 
     // 5. 経路シートが表示される（地上ヒント・迷ったボタン付き）
     expect(screen.getByRole('dialog', { name: '道案内' })).toBeInTheDocument();
-    expect(screen.getByText(/目的地: HEP FIVE（赤い観覧車）/)).toBeInTheDocument();
-    expect(screen.getByText(/地上です/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /HEP FIVE（赤い観覧車）まで/ })).toBeInTheDocument();
+    expect(screen.getByText(/から地上へ/)).toBeInTheDocument();
     expect(screen.getByText(/到着まで 約\d+分・\d+m/)).toBeInTheDocument();
     expect(screen.getByTestId('next-step')).toBeInTheDocument();
     expect(screen.getAllByTestId('map-route').length).toBeGreaterThan(0);
@@ -61,11 +64,11 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
     expect(document.querySelector('.app-map')).toHaveClass('fpv-on');
     const miniMap = screen.getByTestId('mini-map');
     expect(miniMap.querySelector('.mini-map-step')).not.toBeNull();
-    // 小さな地図を押すと全体の地図に戻り、「一人称」で一人称の画面に戻る
+    // 小さな地図を押すと全体の地図に戻り、「一人称で見る」で一人称の画面に戻る
     await user.click(miniMap);
     expect(screen.queryByTestId('first-person')).not.toBeInTheDocument();
     expect(document.querySelector('.app-map')).not.toHaveClass('fpv-on');
-    await user.click(screen.getByRole('button', { name: '一人称' }));
+    await user.click(screen.getByRole('button', { name: '一人称で見る' }));
     expect(screen.getByTestId('first-person')).toBeInTheDocument();
 
     // 6. 経路シートを閉じても案内は続き、バナーから再表示できる
@@ -97,6 +100,8 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
     const user = userEvent.setup();
     render(<App />);
     await user.click(screen.getByRole('button', { name: '現在地を設定すると道案内できます' }));
+    await user.click(screen.getByRole('radio', { name: '見えるお店' }));
+    await user.click(screen.getByText('ほかの手がかり（入った場所・GPS）'));
     const select = screen.getByRole('combobox', { name: /どこから地下に入りましたか/ });
     // 大丸とルクアは同じ出口に対応するが、選んだ方が表示される
     await user.selectOptions(select, '大丸梅田店');
@@ -123,7 +128,7 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
 
     // スポットタブ → おすすめスポットのカード一覧
     await user.click(screen.getByRole('button', { name: 'スポット' }));
-    const spots = screen.getByRole('dialog', { name: 'おすすめスポット' });
+    const spots = screen.getByRole('dialog', { name: 'スポット' });
     expect(within(spots).getByRole('button', { name: /HEP FIVE/ })).toBeInTheDocument();
 
     // メニュータブ → 報告リンクと言語切替
@@ -189,7 +194,7 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
     expect(first).toHaveTextContent('駅');
     await user.click(first);
     await user.click(screen.getByRole('button', { name: 'ここへ行く' }));
-    expect(screen.getByText(new RegExp(`目的地: ${gate}`))).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: `${gate}まで` })).toBeInTheDocument();
   });
 
   it('adds a place to favorites and starts directions from the favorites tab', async () => {
@@ -203,7 +208,7 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
 
     await user.click(container.querySelector('[data-node-id="wt-izumi"]') as Element);
     const favButton = within(screen.getByRole('dialog', { name: /泉の広場/ })).getByRole('button', {
-      name: /お気に入りに登録/,
+      name: 'お気に入り',
     });
     await user.click(favButton);
     expect(favButton).toHaveAttribute('aria-pressed', 'true');

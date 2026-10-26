@@ -40,8 +40,6 @@ const renderRoute = (edges: MapEdge[]) =>
       toNodeId="b"
       destinationLabel={null}
       aboveGround={false}
-      avoidStairs={false}
-      onToggleAvoidStairs={() => {}}
       onLost={() => {}}
       onFinish={() => {}}
       onClose={() => {}}
@@ -86,8 +84,6 @@ describe('RouteScreen passage hours', () => {
         toNodeId="b"
         destinationLabel={null}
         aboveGround={false}
-        avoidStairs={false}
-        onToggleAvoidStairs={() => {}}
         onLost={() => {}}
         onFinish={() => {}}
         onClose={() => {}}
@@ -101,9 +97,16 @@ describe('RouteScreen passage hours', () => {
     expect(screen.queryByTestId('closed-warning')).toBeNull();
   });
 
-  it('warns late at night and when the only route uses a closed facility', () => {
-    renderAt('2026-10-20T17:00:00Z'); // 02:00 JST
+  it('notes late night while the escalator still runs', () => {
+    renderAt('2026-10-20T14:10:00Z'); // 23:10 JST
     expect(screen.getByTestId('late-night-note')).toHaveTextContent('夜遅く・早朝は');
+    expect(screen.queryByTestId('closed-warning')).toBeNull();
+  });
+
+  it('warns only about the closed facility when the route goes through one', () => {
+    renderAt('2026-10-20T17:00:00Z'); // 02:00 JST
+    // お知らせは 1 つだけ。閉まっている方が大事
+    expect(screen.queryByTestId('late-night-note')).toBeNull();
     expect(screen.getByTestId('closed-warning')).toHaveTextContent(
       'いまの時間に閉まっている通路・設備を通る経路しか見つかりませんでした',
     );

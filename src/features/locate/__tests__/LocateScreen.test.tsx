@@ -40,6 +40,7 @@ async function estimate() {
       onConfirm={vi.fn()}
     />,
   );
+  await user.click(screen.getByRole('radio', { name: '見えるお店' }));
   const shopSearch = screen.getByPlaceholderText('店名で検索');
   await user.type(shopSearch, 'スターバックス');
   await user.click(screen.getByLabelText(/スターバックスコーヒー ホワイティうめだ店/));
@@ -79,5 +80,44 @@ describe('LocateScreen estimate card scrolling', () => {
     expect(picks).toHaveLength(exits.length);
     await user.click(picks[0]);
     expect(exits.map((n) => n.id)).toContain(onConfirm.mock.calls[0][0]);
+  });
+
+  it('starts right away from a landmark the user picks', async () => {
+    const user = userEvent.setup();
+    const onConfirm = vi.fn();
+    const graph = buildGraph(umedaMap);
+    render(
+      <LocateScreen
+        graph={graph}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onConfirm={onConfirm}
+      />,
+    );
+    // 出口番号の入力だけが開いている
+    expect(screen.queryByPlaceholderText('店名で検索')).toBeNull();
+    await user.click(screen.getByRole('radio', { name: '目印・改札' }));
+    expect(screen.queryByLabelText(/出口番号/)).toBeNull();
+    await user.click(screen.getByRole('button', { name: '円形広場' }));
+    const plaza = [...graph.nodes.values()].find((n) => n.name.ja === '円形広場');
+    expect(onConfirm).toHaveBeenCalledWith(plaza?.id);
+  });
+
+  it('asks for at least one clue before estimating', async () => {
+    const user = userEvent.setup();
+    render(
+      <LocateScreen
+        graph={buildGraph(umedaMap)}
+        shops={umedaMap.shops}
+        pois={umedaMap.pois}
+        onConfirm={vi.fn()}
+      />,
+    );
+    await user.click(screen.getByRole('radio', { name: '見えるお店' }));
+    expect(screen.getByRole('button', { name: '現在地を推定する' })).toBeDisabled();
+    // 入った場所・GPS はたたんである
+    expect(
+      screen.getByText('ほかの手がかり（入った場所・GPS）').closest('details'),
+    ).not.toHaveAttribute('open');
   });
 });

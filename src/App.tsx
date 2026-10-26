@@ -334,16 +334,11 @@ export default function App() {
             toNodeId={targetNodeId ?? nav.destination.nodeId}
             destinationLabel={targetLabel ?? nav.destination.name}
             aboveGround={nav.destination.aboveGround}
-            avoidStairs={avoidStairs}
+            access={access}
+            onAccessChange={setAccess}
             simple={!preferShortest}
+            onSimpleChange={(simple) => setPreferShortest(!simple)}
             rain={weather?.rain === true}
-            onToggleSimple={() => setPreferShortest((v) => !v)}
-            stepFree={stepFree}
-            onToggleAvoidStairs={() =>
-              setAccess((a) =>
-                a === 'normal' ? 'noStairs' : a === 'noStairs' ? 'stepFree' : 'normal',
-              )
-            }
             onLost={nav.markLost}
             onFinish={nav.clearDestination}
             onClose={nav.closeSheet}

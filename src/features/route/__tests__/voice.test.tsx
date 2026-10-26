@@ -40,8 +40,6 @@ const renderRoute = (stepIndex = 0) =>
       toNodeId="ex-C-93"
       destinationLabel={null}
       aboveGround={false}
-      avoidStairs={false}
-      onToggleAvoidStairs={() => {}}
       onLost={() => {}}
       onFinish={() => {}}
       onClose={() => {}}
@@ -72,8 +70,6 @@ describe('voice guidance', () => {
         toNodeId="ex-C-93"
         destinationLabel={null}
         aboveGround={false}
-        avoidStairs={false}
-        onToggleAvoidStairs={() => {}}
         onLost={() => {}}
         onFinish={() => {}}
         onClose={() => {}}

@@ -410,6 +410,8 @@ body {
   flex-direction: column;
   transition: max-height 0.18s ease-out;
   overflow-y: auto;
+  /* 中身の端まで来ても、地図や画面ごとは動かさない */
+  overscroll-behavior: contain;
   background: var(--paper);
   border-radius: var(--radius-card);
   padding: 0 20px 16px;
@@ -658,11 +660,10 @@ button.chip.active {
 }
 
 .choice-list {
+  /* 中だけのスクロールは付けない（シートの中で二重にスクロールしないように） */
   list-style: none;
   margin: 10px 0 0;
   padding: 0;
-  max-height: 260px;
-  overflow-y: auto;
   display: grid;
   gap: 6px;
 }
@@ -1310,22 +1311,6 @@ button.candidate {
   stroke-width: 3px;
 }
 
-.favorite-toggle {
-  margin-left: auto;
-  min-height: 36px;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: var(--bg-soft);
-  color: var(--text-strong);
-  font-size: var(--fs-s);
-}
-
-.favorite-toggle.active {
-  border-color: #f59e0b;
-  color: #b45309;
-  background: #fff7e6;
-}
-
 .favorite-list {
   list-style: none;
   margin: 8px 0;
@@ -1646,17 +1631,6 @@ button.candidate {
   text-underline-offset: 2px;
 }
 
-.nearest-exit {
-  display: block;
-  color: var(--text-strong);
-}
-
-.share-place {
-  display: block;
-  margin: 4px 0 0;
-  min-height: 44px;
-}
-
 .flood-exit {
   display: block;
   width: 100%;
@@ -1692,4 +1666,278 @@ button.candidate {
   color: var(--text-strong);
   background: var(--bg);
   box-shadow: var(--shadow-float);
+}
+
+/*
+ * 道案内シート（2026-10-26 作り直し）。上から「どこへ・あと何分」→ いまの手順 → 前へ/次へ
+ * → お知らせ 1 つ → 見え方・音声・設定のボタン → 閉じた「すべての手順」。設定は開いたときだけ
+ */
+.route-header {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.route-title {
+  min-width: 0;
+}
+
+.sheet .route-title h2 {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.route-sub {
+  margin: 2px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-s);
+  color: var(--text-sub);
+}
+
+.route-sub .route-exit::before {
+  content: ' · ';
+}
+
+.route-sub .route-exit:first-child::before {
+  content: none;
+}
+
+.route-sub .total.eta {
+  font-size: var(--fs-s);
+}
+
+.route-tools,
+.sheet-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.route-tools .tool,
+.sheet-tools .tool {
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 8px 12px;
+  white-space: nowrap;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+
+.route-tools .tool.active,
+.sheet-tools .tool.active {
+  background: var(--text);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.route-options {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-s);
+  background: var(--bg);
+  box-shadow: var(--shadow-card);
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  border: none;
+}
+
+.segmented legend {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-sub);
+}
+
+.segmented label {
+  flex: 1 1 0;
+  min-width: 0;
+  line-height: 1.3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: var(--fs-s);
+  text-align: center;
+  cursor: pointer;
+}
+
+.segmented label.active {
+  background: var(--text);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented label:focus-within {
+  outline: 2px solid var(--action);
+  outline-offset: 2px;
+}
+
+.route-options .hint {
+  margin: 0;
+}
+
+.route-steps {
+  margin-top: 12px;
+}
+
+.route-steps summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-s);
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.route-steps .steps {
+  margin: 4px 0 0;
+}
+
+.route-steps .steps li {
+  padding: 0;
+}
+
+.step-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: var(--fs-m);
+  text-align: left;
+}
+
+/* 現在地をえらぶシート: 方法を 1 つ選び、その入力だけを出す */
+.segmented legend.visually-hidden {
+  width: 1px;
+  margin: 0;
+}
+
+.locate-methods {
+  margin-bottom: 4px;
+}
+
+.locate-panel .description {
+  margin: 8px 0;
+}
+
+.locate-panel > .primary {
+  margin-top: 12px;
+}
+
+.locate-more {
+  margin-top: 8px;
+}
+
+.locate-more summary,
+.menu-about summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-s);
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* たたんだ中身があることを、三角で示す（開くと下を向く） */
+.locate-more summary::before,
+.route-steps summary::before,
+.menu-about summary::before {
+  content: '▸';
+  margin-right: 8px;
+  transition: transform 0.15s;
+}
+
+.locate-more[open] summary::before,
+.route-steps[open] summary::before,
+.menu-about[open] summary::before {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .locate-more summary::before,
+  .route-steps summary::before,
+  .menu-about summary::before {
+    transition: none;
+  }
+}
+
+/* 場所のシート: 名前（2 行まで）と地上の出口 → 「ここへ行く」 → 小さな操作 3 つ */
+.place-header {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.place-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.sheet .place-title h2 {
+  margin: 0;
+  /* 最初の高さ（peek）でも出口と 2 つのボタンが見えるよう、名前は本文より少し太いだけにする */
+  font-size: var(--fs-m);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.place-sub {
+  margin: 2px 0 0;
+  font-size: var(--fs-s);
+  color: var(--text-sub);
+}
+
+.icon-tool {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: var(--fs-l);
+  line-height: 1;
+}
+
+.icon-tool.active {
+  color: #b45309;
+  background: #fff7e6;
+}
+
+.place-header .icon-tool + .close {
+  margin-left: -4px;
 }

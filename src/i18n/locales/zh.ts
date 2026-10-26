@@ -5,11 +5,20 @@ type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> }
 /** 简体中文。地名・店名は src/data/placeNames.ts の中国語、なければ英語表記 */
 export const zh: Resource = {
   app: {
+    about: '关于本应用',
     title: '梅田地下导航',
     subtitle: '梅田地下街专用导航',
     dataVersionNote: '店铺和出口信息截至 {{version}}',
   },
   locate: {
+    methodLabel: '选择方式',
+    byExit: '出口编号',
+    byLandmark: '地标・检票口',
+    byShop: '附近店铺',
+    exitHelp: '请输入附近黄色指示牌上的出口编号。',
+    landmarkHelp: '请点选你身边的地标。',
+    shopHelp: '选择一两家看得到的店铺，即可推测你的位置。',
+    moreHints: '其他线索（进入的地方・GPS）',
     exitCodeLabel: '附近黄色指示牌上的出口编号（如果看得到）',
     exitCodePlaceholder: '例：D-21、H-49',
     exitCodePick: '我在 {{exit}} 出口附近',
@@ -49,6 +58,8 @@ export const zh: Resource = {
     kindNode: '出口·车站',
   },
   place: {
+    shareShort: '分享',
+    copiedShort: '已复制',
     share: '分享这个地点（也可用于约见面）',
     copied: '已复制链接',
     shareTitle: '梅田地下导航：{{name}}',
@@ -72,7 +83,7 @@ export const zh: Resource = {
   },
   favorites: {
     title: '收藏',
-    empty: '还没有收藏。可在地点上点击“加入收藏”。',
+    empty: '还没有收藏。可在地点上点击“☆ 收藏”。',
     add: '加入收藏',
     removeNamed: '将 {{name}} 移出收藏',
     storageNote: '收藏只保存在本设备中。',
@@ -113,6 +124,15 @@ export const zh: Resource = {
     showFirstPerson: '第一人称',
   },
   route: {
+    toName: '前往{{name}}',
+    upAt: '从 {{exit}} 上到地面',
+    viewMap: '看地图',
+    viewFirstPerson: '第一人称',
+    options: '路线设置',
+    accessTitle: '台阶',
+    accessNormal: '不限',
+    wayTitle: '路线类型',
+    allSteps: '全部步骤（{{count}}）',
     sensorOn: '计算步数（动作传感器）',
     sensorOff: '停止计步',
     sensorWalked: '本段已走约{{walked}}米 / {{total}}米',
