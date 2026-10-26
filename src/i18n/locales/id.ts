@@ -5,11 +5,20 @@ type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> }
 /** Bahasa Indonesia. Nama tempat dan toko memakai nama bahasa Inggris */
 export const id: Resource = {
   app: {
+    about: 'Tentang aplikasi ini',
     title: 'Umeda Underground Navi',
     subtitle: 'Navigasi di kawasan bawah tanah Umeda',
     dataVersionNote: 'Data toko dan pintu keluar per {{version}}',
   },
   locate: {
+    methodLabel: 'Cara menentukan',
+    byExit: 'Nomor pintu',
+    byLandmark: 'Penanda',
+    byShop: 'Toko terdekat',
+    exitHelp: 'Ketik nomor pintu keluar pada papan kuning terdekat.',
+    landmarkHelp: 'Ketuk penanda yang ada di dekat Anda.',
+    shopHelp: 'Pilih satu atau dua toko yang terlihat untuk memperkirakan posisi Anda.',
+    moreHints: 'Petunjuk lain (tempat masuk, GPS)',
     exitCodeLabel: 'Nomor pintu keluar di papan kuning terdekat (jika terlihat)',
     exitCodePlaceholder: 'mis. D-21, H-49',
     exitCodePick: 'Saya dekat pintu keluar {{exit}}',
@@ -51,6 +60,8 @@ export const id: Resource = {
     kindNode: 'Pintu keluar / Stasiun',
   },
   place: {
+    shareShort: 'Bagikan',
+    copiedShort: 'Disalin',
     share: 'Bagikan tempat ini (untuk janjian)',
     copied: 'Tautan disalin',
     shareTitle: 'Umeda Underground Navi: {{name}}',
@@ -75,7 +86,7 @@ export const id: Resource = {
   },
   favorites: {
     title: 'Favorit',
-    empty: 'Belum ada. Tambahkan tempat dengan "Simpan ke favorit".',
+    empty: 'Belum ada. Tambahkan tempat dengan "☆ Favorit".',
     add: 'Simpan ke favorit',
     removeNamed: 'Hapus {{name}} dari favorit',
     storageNote: 'Favorit hanya disimpan di perangkat ini.',

@@ -5,11 +5,20 @@ type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> }
 /** 繁體中文（台灣・香港）。地名・店名は src/data/placeNames.ts の繁体字、なければ英語表記 */
 export const zhHant: Resource = {
   app: {
+    about: '關於本應用程式',
     title: '梅田地下導航',
     subtitle: '梅田地下街專用導航',
     dataVersionNote: '店家與出口資訊截至 {{version}}',
   },
   locate: {
+    methodLabel: '選擇方式',
+    byExit: '出口編號',
+    byLandmark: '地標・剪票口',
+    byShop: '附近店家',
+    exitHelp: '請輸入附近黃色指示牌上的出口編號。',
+    landmarkHelp: '請點選你身邊的地標。',
+    shopHelp: '選擇一兩家看得到的店家，即可推測你的位置。',
+    moreHints: '其他線索（進入的地方・GPS）',
     exitCodeLabel: '附近黃色指示牌上的出口編號（如果看得到）',
     exitCodePlaceholder: '例：D-21、H-49',
     exitCodePick: '我在 {{exit}} 出口附近',
@@ -49,6 +58,8 @@ export const zhHant: Resource = {
     kindNode: '出口・車站',
   },
   place: {
+    shareShort: '分享',
+    copiedShort: '已複製',
     share: '分享這個地點（也可用來約碰面）',
     copied: '已複製連結',
     shareTitle: '梅田地下導航：{{name}}',
@@ -72,7 +83,7 @@ export const zhHant: Resource = {
   },
   favorites: {
     title: '收藏',
-    empty: '還沒有收藏。可在地點上點「加入收藏」。',
+    empty: '還沒有收藏。可在地點上點「☆ 收藏」。',
     add: '加入收藏',
     removeNamed: '將 {{name}} 移出收藏',
     storageNote: '收藏只儲存在這台裝置中。',

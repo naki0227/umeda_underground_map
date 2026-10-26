@@ -35,33 +35,48 @@ export function PlaceSheet({
       if (result === 'copied') setShareState('copied');
     });
   };
+  const name = localized(place.name, i18n.language);
+  /** 地上の場所なら「地上・D-21 出口」と、どこから上がるかを添える */
+  const sub = place.aboveGround
+    ? exitNo !== undefined
+      ? t('search.kindPoiExit', { exit: exitNo })
+      : t('search.kindPoi')
+    : null;
   return (
-    <BottomSheet label={localized(place.name, i18n.language)} onClose={onClose} initialSnap="peek">
-      <div className="sheet-header">
-        <h2>{localized(place.name, i18n.language)}</h2>
+    <BottomSheet label={name} onClose={onClose} initialSnap="peek">
+      <div className="sheet-header place-header">
+        <div className="place-title">
+          <h2>{name}</h2>
+          {sub !== null && <p className="place-sub">{sub}</p>}
+        </div>
+        {/* 保存・共有は見出しの横に小さく。押す所の主役は下の 2 つ */}
         <button
           type="button"
-          className={favorite ? 'favorite-toggle active' : 'favorite-toggle'}
+          className={favorite ? 'icon-tool active' : 'icon-tool'}
+          aria-label={t('tabs.favorites')}
           aria-pressed={favorite}
           onClick={onToggleFavorite}
         >
-          <span aria-hidden>{favorite ? '★' : '☆'}</span> {t('favorites.add')}
+          {favorite ? '★' : '☆'}
+        </button>
+        <button
+          type="button"
+          className="icon-tool"
+          aria-label={t('place.shareShort')}
+          title={t('place.share')}
+          onClick={share}
+        >
+          ↗
         </button>
         <button type="button" className="close" aria-label={t('sheet.close')} onClick={onClose}>
           ×
         </button>
       </div>
-      {place.aboveGround && (
-        <p className="hint">
-          {exitNo !== undefined && (
-            <strong className="nearest-exit">{t('place.nearestExit', { exit: exitNo })}</strong>
-          )}
-          {t('place.aboveGroundNote')}
+      {shareState === 'copied' && (
+        <p className="hint ok" role="status">
+          {t('place.copied')}
         </p>
       )}
-      <button type="button" className="link-button share-place" onClick={share}>
-        {shareState === 'copied' ? t('place.copied') : t('place.share')}
-      </button>
       <div className="route-actions sticky-actions">
         <button type="button" className="primary" onClick={onGo}>
           {t('place.goHere')}

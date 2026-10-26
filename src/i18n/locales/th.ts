@@ -5,11 +5,20 @@ type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> }
 /** ภาษาไทย. ชื่อสถานที่และร้านค้าใช้ชื่อภาษาอังกฤษ */
 export const th: Resource = {
   app: {
+    about: 'เกี่ยวกับแอปนี้',
     title: 'Umeda Underground Navi',
     subtitle: 'นำทางในเมืองใต้ดินอุเมดะ',
     dataVersionNote: 'ข้อมูลร้านค้าและทางออก ณ {{version}}',
   },
   locate: {
+    methodLabel: 'วิธีระบุตำแหน่ง',
+    byExit: 'หมายเลขทางออก',
+    byLandmark: 'จุดสังเกต',
+    byShop: 'ร้านใกล้ๆ',
+    exitHelp: 'พิมพ์หมายเลขทางออกจากป้ายสีเหลืองที่อยู่ใกล้ๆ',
+    landmarkHelp: 'แตะจุดสังเกตที่คุณอยู่ใกล้',
+    shopHelp: 'เลือกร้านที่มองเห็น 1–2 ร้าน แล้วเราจะประมาณตำแหน่งของคุณ',
+    moreHints: 'เบาะแสอื่น (ทางที่เข้ามา・GPS)',
     exitCodeLabel: 'หมายเลขทางออกบนป้ายสีเหลืองใกล้ ๆ (ถ้าเห็น)',
     exitCodePlaceholder: 'เช่น D-21, H-49',
     exitCodePick: 'ฉันอยู่ใกล้ทางออก {{exit}}',
@@ -50,6 +59,8 @@ export const th: Resource = {
     kindNode: 'ทางออก / สถานี',
   },
   place: {
+    shareShort: 'แชร์',
+    copiedShort: 'คัดลอกแล้ว',
     share: 'แชร์สถานที่นี้ (ใช้นัดพบได้)',
     copied: 'คัดลอกลิงก์แล้ว',
     shareTitle: 'Umeda Underground Navi: {{name}}',
@@ -73,7 +84,7 @@ export const th: Resource = {
   },
   favorites: {
     title: 'รายการโปรด',
-    empty: 'ยังไม่มีรายการ เพิ่มได้ด้วยปุ่ม "เพิ่มในรายการโปรด"',
+    empty: 'ยังไม่มีรายการ เพิ่มได้ด้วยปุ่ม "☆ รายการโปรด"',
     add: 'เพิ่มในรายการโปรด',
     removeNamed: 'นำ {{name}} ออกจากรายการโปรด',
     storageNote: 'รายการโปรดเก็บไว้ในอุปกรณ์นี้เท่านั้น',

@@ -4,11 +4,20 @@ type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> }
 
 export const en: Resource = {
   app: {
+    about: 'About this app',
     title: 'Umeda Underground Navi',
     subtitle: 'Navigation for the Umeda underground mall',
     dataVersionNote: 'Shop and exit data as of {{version}}',
   },
   locate: {
+    methodLabel: 'How to find you',
+    byExit: 'Exit number',
+    byLandmark: 'Landmark',
+    byShop: 'Shops nearby',
+    exitHelp: 'Type the exit number on a nearby yellow sign.',
+    landmarkHelp: 'Tap the landmark you are next to.',
+    shopHelp: 'Pick one or two shops you can see and we will estimate where you are.',
+    moreHints: 'More hints (where you entered, GPS)',
     exitCodeLabel: 'Exit number on a yellow sign near you (if you see one)',
     exitCodePlaceholder: 'e.g. D-21, H-49',
     exitCodePick: "I'm near exit {{exit}}",
@@ -49,6 +58,8 @@ export const en: Resource = {
     kindNode: 'Exit / Station',
   },
   place: {
+    shareShort: 'Share',
+    copiedShort: 'Copied',
     share: 'Share this place (e.g. to meet up)',
     copied: 'Link copied',
     shareTitle: 'Umeda Underground Navi: {{name}}',
@@ -72,7 +83,7 @@ export const en: Resource = {
   },
   favorites: {
     title: 'Favorites',
-    empty: 'Nothing yet. Add places with "Save to favorites".',
+    empty: 'Nothing yet. Add places with "☆ Favorites".',
     add: 'Save to favorites',
     removeNamed: 'Remove {{name}} from favorites',
     storageNote: 'Favorites are stored only on this device.',

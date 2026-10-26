@@ -1310,22 +1310,6 @@ button.candidate {
   stroke-width: 3px;
 }
 
-.favorite-toggle {
-  margin-left: auto;
-  min-height: 36px;
-  padding: 4px 12px;
-  border-radius: 999px;
-  background: var(--bg-soft);
-  color: var(--text-strong);
-  font-size: var(--fs-s);
-}
-
-.favorite-toggle.active {
-  border-color: #f59e0b;
-  color: #b45309;
-  background: #fff7e6;
-}
-
 .favorite-list {
   list-style: none;
   margin: 8px 0;
@@ -1646,17 +1630,6 @@ button.candidate {
   text-underline-offset: 2px;
 }
 
-.nearest-exit {
-  display: block;
-  color: var(--text-strong);
-}
-
-.share-place {
-  display: block;
-  margin: 4px 0 0;
-  min-height: 44px;
-}
-
 .flood-exit {
   display: block;
   width: 100%;
@@ -1735,14 +1708,16 @@ button.candidate {
   font-size: var(--fs-s);
 }
 
-.route-tools {
+.route-tools,
+.sheet-tools {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: 12px;
 }
 
-.route-tools .tool {
+.route-tools .tool,
+.sheet-tools .tool {
   flex: 1 1 auto;
   display: inline-flex;
   align-items: center;
@@ -1757,7 +1732,8 @@ button.candidate {
   font-size: var(--fs-s);
 }
 
-.route-tools .tool.active {
+.route-tools .tool.active,
+.sheet-tools .tool.active {
   background: var(--text);
   color: #ffffff;
   font-weight: 600;
@@ -1859,4 +1835,108 @@ button.candidate {
   color: inherit;
   font-size: var(--fs-m);
   text-align: left;
+}
+
+/* 現在地をえらぶシート: 方法を 1 つ選び、その入力だけを出す */
+.segmented legend.visually-hidden {
+  width: 1px;
+  margin: 0;
+}
+
+.locate-methods {
+  margin-bottom: 4px;
+}
+
+.locate-panel .description {
+  margin: 8px 0;
+}
+
+.locate-panel > .primary {
+  margin-top: 12px;
+}
+
+.locate-more {
+  margin-top: 8px;
+}
+
+.locate-more summary,
+.menu-about summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-s);
+  color: var(--text);
+  cursor: pointer;
+}
+
+/* たたんだ中身があることを、三角で示す（開くと下を向く） */
+.locate-more summary::before,
+.route-steps summary::before,
+.menu-about summary::before {
+  content: '▸';
+  margin-right: 8px;
+  transition: transform 0.15s;
+}
+
+.locate-more[open] summary::before,
+.route-steps[open] summary::before,
+.menu-about[open] summary::before {
+  transform: rotate(90deg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .locate-more summary::before,
+  .route-steps summary::before,
+  .menu-about summary::before {
+    transition: none;
+  }
+}
+
+/* 場所のシート: 名前（2 行まで）と地上の出口 → 「ここへ行く」 → 小さな操作 3 つ */
+.place-header {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.place-title {
+  min-width: 0;
+  flex: 1;
+}
+
+.sheet .place-title h2 {
+  margin: 0;
+  /* 最初の高さ（peek）でも出口と 2 つのボタンが見えるよう、名前は本文より少し太いだけにする */
+  font-size: var(--fs-m);
+  line-height: 1.4;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.place-sub {
+  margin: 2px 0 0;
+  font-size: var(--fs-s);
+  color: var(--text-sub);
+}
+
+.icon-tool {
+  flex-shrink: 0;
+  width: 44px;
+  height: 44px;
+  padding: 0;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: var(--fs-l);
+  line-height: 1;
+}
+
+.icon-tool.active {
+  color: #b45309;
+  background: #fff7e6;
+}
+
+.place-header .icon-tool + .close {
+  margin-left: -4px;
 }

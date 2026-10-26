@@ -5,11 +5,20 @@ type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> }
 /** Français. Les noms de lieux et de boutiques sont en anglais */
 export const fr: Resource = {
   app: {
+    about: 'À propos de l’application',
     title: 'Umeda Underground Navi',
     subtitle: 'Itinéraires dans les galeries souterraines d’Umeda',
     dataVersionNote: 'Boutiques et sorties à jour au {{version}}',
   },
   locate: {
+    methodLabel: 'Comment vous situer',
+    byExit: 'N° de sortie',
+    byLandmark: 'Repère',
+    byShop: 'Boutiques',
+    exitHelp: 'Saisissez le numéro de sortie d’un panneau jaune proche.',
+    landmarkHelp: 'Touchez le repère près duquel vous êtes.',
+    shopHelp: 'Choisissez une ou deux boutiques visibles pour estimer votre position.',
+    moreHints: 'Autres indices (entrée, GPS)',
     exitCodeLabel: 'Numéro de sortie sur un panneau jaune près de vous (si vous en voyez un)',
     exitCodePlaceholder: 'ex. D-21, H-49',
     exitCodePick: 'Je suis près de la sortie {{exit}}',
@@ -51,6 +60,8 @@ export const fr: Resource = {
     kindNode: 'Sortie / Gare',
   },
   place: {
+    shareShort: 'Partager',
+    copiedShort: 'Copié',
     share: 'Partager ce lieu (pour un rendez-vous)',
     copied: 'Lien copié',
     shareTitle: 'Umeda Underground Navi : {{name}}',
@@ -74,7 +85,7 @@ export const fr: Resource = {
   },
   favorites: {
     title: 'Favoris',
-    empty: 'Rien pour l’instant. Ajoutez des lieux avec « Ajouter aux favoris ».',
+    empty: 'Rien pour l’instant. Ajoutez des lieux avec « ☆ Favoris ».',
     add: 'Ajouter aux favoris',
     removeNamed: 'Retirer {{name}} des favoris',
     storageNote: 'Les favoris sont enregistrés uniquement sur cet appareil.',

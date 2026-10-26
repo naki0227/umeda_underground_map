@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { LATE_NIGHT, WALK_SPEED_M_PER_MIN } from '../../app/config';
 import { stepPlaceName, type RouteStep } from '../../domain/directions';
@@ -6,10 +6,11 @@ import type { Graph } from '../../domain/graph';
 import { isWithin, minuteOfDayInTokyo } from '../../domain/hours';
 import { nodeFloor, type LocalizedText, type NodeId } from '../../domain/types';
 import { localized } from '../../i18n';
+import { NextStepCard } from './NextStepCard';
+import { RouteNotice } from './RouteNotice';
 import { RouteOptions } from './RouteOptions';
 import { RouteStepList } from './RouteStepList';
 import { StepSensor } from './StepSensor';
-import { stepIcon, walkingSteps } from './stepText';
 import { useRoutePlan, type Access } from './useRoutePlan';
 import { useSpeech } from './useSpeech';
 
@@ -83,6 +84,12 @@ export function RouteScreen({
     minute,
   });
   const [optionsOpen, setOptionsOpen] = useState(false);
+  // 一人称 ⇔ 地図を切り替えるとシートの高さが変わる。いまの手順が上に隠れないよう先頭へ戻す
+  const sectionRef = useRef<HTMLElement>(null);
+  useEffect(() => {
+    const sheet = sectionRef.current?.closest('.sheet');
+    if (sheet) sheet.scrollTop = 0;
+  }, [compact]);
 
   const nodeName = (nodeId: NodeId) => {
     const node = graph.nodes.get(nodeId);
@@ -150,34 +157,6 @@ export function RouteScreen({
     setVoiceOn((on) => !on);
   };
 
-  /**
-   * お知らせは大事なものを 1 つだけ。見つからない → 閉まった所を通る → 段差 → もう着いている
-   * → 地上の方がずっと近い → 深夜 → 雨
-   */
-  const notice: { kind: string; text: string; id: string; link?: string } | null = (() => {
-    if (result === null) return { kind: 'warn', text: t('route.notFound'), id: 'not-found' };
-    if (result.throughClosed)
-      return { kind: 'warn', text: t('route.throughClosed'), id: 'closed-warning' };
-    if (result.needsSteps)
-      return { kind: 'warn', text: t('route.needsSteps'), id: 'step-free-warning' };
-    if (result.usesStairs)
-      return { kind: 'warn', text: t('route.usesStairs'), id: 'stairs-warning' };
-    if (steps.length === 0) return { kind: 'ok', text: t('route.alreadyHere'), id: 'already-here' };
-    if (aboveGroundSuggestion !== null && !rain)
-      return {
-        kind: 'info',
-        id: 'above-ground-suggest',
-        text: t('route.aboveGroundSuggest', {
-          underground: aboveGroundSuggestion.undergroundM,
-          straight: aboveGroundSuggestion.straightM,
-        }),
-        link: aboveGroundSuggestion.url,
-      };
-    if (lateNight) return { kind: 'info', text: t('route.lateNight'), id: 'late-night-note' };
-    if (rain) return { kind: 'info', text: t('route.rainNote'), id: 'rain-note' };
-    return null;
-  })();
-
   const eta =
     steps.length > 0
       ? t('route.eta', {
@@ -187,7 +166,7 @@ export function RouteScreen({
       : null;
 
   return (
-    <section className="route-screen">
+    <section className="route-screen" ref={sectionRef}>
       <div className="sheet-header route-header">
         <div className="route-title">
           <h2>{t('route.toName', { name: destinationName })}</h2>
@@ -208,34 +187,14 @@ export function RouteScreen({
       </div>
 
       {next !== null && (
-        <div
-          className={compact ? 'next-step-card visually-hidden' : 'next-step-card'}
-          data-testid="next-step"
-          aria-live="polite"
-        >
-          <span className="step-counter">
-            {t('route.stepCounter', { current: currentIndex + 1, total: lastIndex + 1 })}
-          </span>
-          <span className="next-icon" aria-hidden>
-            {stepIcon(next)}
-          </span>
-          <div className="next-body">
-            <span className="next-distance">
-              {t('route.stepGo', { distance: next.distanceM })}
-              {next.distanceM > 0 &&
-                ` · ${t('route.steps', { steps: walkingSteps(next.distanceM) })}`}
-            </span>
-            <span className="next-action">{actionText(next)}</span>
-          </div>
-          <div className="next-floors">
-            <span className="floor-badge">{t('route.floorNow', { floor: currentFloor })}</span>
-            {next.action === 'floor-change' && next.floorChange !== undefined && (
-              <span className="floor-badge to">
-                {t('route.floorNext', { floor: next.floorChange.to })}
-              </span>
-            )}
-          </div>
-        </div>
+        <NextStepCard
+          step={next}
+          index={currentIndex}
+          total={lastIndex + 1}
+          actionText={actionText(next)}
+          floor={currentFloor}
+          hidden={compact}
+        />
       )}
 
       {next !== null && lastIndex > 0 && onStepChange !== undefined && (
@@ -259,19 +218,13 @@ export function RouteScreen({
         </div>
       )}
 
-      {notice !== null && (
-        <p className={`hint ${notice.kind}`} data-testid={notice.id}>
-          {notice.text}
-          {notice.link !== undefined && (
-            <>
-              {' '}
-              <a href={notice.link} target="_blank" rel="noopener noreferrer">
-                {t('route.openGoogleMaps')}
-              </a>
-            </>
-          )}
-        </p>
-      )}
+      <RouteNotice
+        result={result}
+        stepCount={steps.length}
+        aboveGroundSuggestion={aboveGroundSuggestion}
+        rain={rain}
+        lateNight={lateNight}
+      />
 
       {/* 見え方・音声・設定。よく使う切り替えだけをボタンにし、細かい設定は開いたときだけ */}
       <div className="route-tools">

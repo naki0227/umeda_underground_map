@@ -5,11 +5,20 @@ type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> }
 /** 한국어. 地名・店名は src/data/placeNames.ts の韓国語、なければ英語表記 */
 export const ko: Resource = {
   app: {
+    about: '이 앱에 대하여',
     title: '우메다 지하 내비',
     subtitle: '우메다 지하상가 전용 길 안내',
     dataVersionNote: '가게·출구 정보는 {{version}} 기준입니다',
   },
   locate: {
+    methodLabel: '찾는 방법',
+    byExit: '출구 번호',
+    byLandmark: '랜드마크・개찰구',
+    byShop: '보이는 가게',
+    exitHelp: '가까운 노란색 안내판의 출구 번호를 입력하세요.',
+    landmarkHelp: '지금 가까이 있는 랜드마크를 누르세요.',
+    shopHelp: '보이는 가게를 1~2곳 고르면 위치를 추정합니다.',
+    moreHints: '다른 단서(들어온 곳・GPS)',
     exitCodeLabel: '근처 노란 안내판의 출구 번호 (보이면)',
     exitCodePlaceholder: '예: D-21, H-49',
     exitCodePick: '{{exit}} 출구 근처에 있어요',
@@ -50,6 +59,8 @@ export const ko: Resource = {
     kindNode: '출구·역',
   },
   place: {
+    shareShort: '공유',
+    copiedShort: '복사됨',
     share: '이 장소 보내기 (약속 장소로도)',
     copied: '링크를 복사했습니다',
     shareTitle: '우메다 지하 내비: {{name}}',
@@ -73,7 +84,7 @@ export const ko: Resource = {
   },
   favorites: {
     title: '즐겨찾기',
-    empty: '아직 없습니다. 장소에서 "즐겨찾기에 추가"로 추가하세요.',
+    empty: '아직 없습니다. 장소에서 "☆ 즐겨찾기"로 추가하세요.',
     add: '즐겨찾기에 추가',
     removeNamed: '{{name}}을(를) 즐겨찾기에서 삭제',
     storageNote: '즐겨찾기는 이 기기에만 저장됩니다.',

@@ -5,11 +5,20 @@ type Resource = { [K in keyof typeof ja]: Record<keyof (typeof ja)[K], string> }
 /** Tiếng Việt. Tên địa điểm và cửa hàng dùng tên tiếng Anh */
 export const vi: Resource = {
   app: {
+    about: 'Giới thiệu ứng dụng',
     title: 'Umeda Underground Navi',
     subtitle: 'Chỉ đường trong khu phố ngầm Umeda',
     dataVersionNote: 'Thông tin cửa hàng và lối ra tính đến {{version}}',
   },
   locate: {
+    methodLabel: 'Cách xác định',
+    byExit: 'Số lối ra',
+    byLandmark: 'Địa danh',
+    byShop: 'Cửa hàng gần',
+    exitHelp: 'Nhập số lối ra trên biển báo màu vàng gần đó.',
+    landmarkHelp: 'Chạm vào địa danh bạn đang ở gần.',
+    shopHelp: 'Chọn 1–2 cửa hàng bạn nhìn thấy để ước tính vị trí.',
+    moreHints: 'Gợi ý khác (nơi đi vào, GPS)',
     exitCodeLabel: 'Số lối ra trên biển vàng gần bạn (nếu thấy)',
     exitCodePlaceholder: 'VD: D-21, H-49',
     exitCodePick: 'Tôi đang ở gần lối ra {{exit}}',
@@ -50,6 +59,8 @@ export const vi: Resource = {
     kindNode: 'Lối ra / Ga',
   },
   place: {
+    shareShort: 'Chia sẻ',
+    copiedShort: 'Đã sao chép',
     share: 'Chia sẻ địa điểm này (để hẹn gặp)',
     copied: 'Đã sao chép liên kết',
     shareTitle: 'Umeda Underground Navi: {{name}}',
@@ -73,7 +84,7 @@ export const vi: Resource = {
   },
   favorites: {
     title: 'Yêu thích',
-    empty: 'Chưa có gì. Thêm địa điểm bằng nút "Thêm vào yêu thích".',
+    empty: 'Chưa có gì. Thêm địa điểm bằng nút "☆ Yêu thích".',
     add: 'Thêm vào yêu thích',
     removeNamed: 'Xóa {{name}} khỏi yêu thích',
     storageNote: 'Danh sách yêu thích chỉ được lưu trên thiết bị này.',

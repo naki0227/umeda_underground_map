@@ -1,11 +1,10 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { useState } from 'react';
 import { useTranslation } from 'react-i18next';
-import { matchExitCode } from '../../domain/exitCode';
 import type { Graph } from '../../domain/graph';
-import { locate, type LocationCandidate } from '../../domain/locate';
-import { nodeFloor, type NodeId, type Poi, type Shop } from '../../domain/types';
-import { localized } from '../../i18n';
-import { useGeolocation } from './useGeolocation';
+import type { NodeId, Poi, Shop } from '../../domain/types';
+import { ExitCodeLocate } from './ExitCodeLocate';
+import { LandmarkLocate } from './LandmarkLocate';
+import { ShopLocate } from './ShopLocate';
 
 interface Props {
   graph: Graph;
@@ -18,16 +17,17 @@ interface Props {
   onConfirm: (nodeId: NodeId) => void;
 }
 
+type Method = 'exit' | 'landmark' | 'shop';
+const METHODS: { value: Method; key: string }[] = [
+  { value: 'exit', key: 'locate.byExit' },
+  { value: 'landmark', key: 'locate.byLandmark' },
+  { value: 'shop', key: 'locate.byShop' },
+];
+
 /**
- * 入口セレクトの値。地上スポット同士・出口と同じノードを指すことがあるため、
- * ノードIDではなく「種類:ID」で一意にする。
+ * 現在地をえらぶ。方法（出口の番号・目印・見えるお店）を 1 つ選び、その方法の入力だけを出す。
+ * 出口の番号は地下のどこにでも黄色い案内板があり、いちばん確かなので最初に開いておく
  */
-type EntranceKey = '' | `poi:${string}` | `node:${string}`;
-
-const QUICK_PICK_COUNT = 8;
-/** 店の候補は数百件あるため、入力した文字に合うものだけをこの件数まで出す */
-const MAX_SHOP_RESULTS = 30;
-
 export function LocateScreen({
   graph,
   shops,
@@ -36,262 +36,36 @@ export function LocateScreen({
   initialGps = null,
   onConfirm,
 }: Props) {
-  const { t, i18n } = useTranslation();
-  const gps = useGeolocation();
-  const [entranceKey, setEntranceKey] = useState<EntranceKey>('');
-  const [selectedShopIds, setSelectedShopIds] = useState<string[]>([]);
-  const [shopQuery, setShopQuery] = useState('');
-  // 目の前の案内板の出口番号（黄色い看板の「M-12」など）。選ぶとその出口のそばにいるとして案内を始める
-  const [exitCode, setExitCode] = useState('');
-  const exitMatches = useMemo(
-    () => matchExitCode(graph.nodes.values(), exitCode),
-    [graph, exitCode],
-  );
-  const [located, setLocated] = useState<{ key: string; result: LocationCandidate[] } | null>(null);
-  // 推定に使った入口・店・GPS が変わったら、古い推定結果は出さない
-  const inputKey = [
-    entranceKey,
-    selectedShopIds.join(','),
-    gps.position ? `${gps.position.lat},${gps.position.lng}` : '',
-  ].join('|');
-  const candidates = located?.key === inputKey ? located.result : null;
-  const estimateRef = useRef<HTMLDivElement>(null);
-
-  const entranceNodeId = useMemo(() => {
-    if (entranceKey.startsWith('poi:')) {
-      const poiId = entranceKey.slice('poi:'.length);
-      return pois.find((p) => p.id === poiId)?.nodeId ?? '';
-    }
-    return entranceKey.startsWith('node:') ? entranceKey.slice('node:'.length) : '';
-  }, [entranceKey, pois]);
-
-  // 推定結果カードは画面外に出やすいので、表示されたら見える位置へ寄せる
-  useEffect(() => {
-    if (candidates !== null && candidates.length > 0) {
-      // 「視差効果を減らす」設定ならアニメーションせずに移る
-      const reduceMotion = globalThis.matchMedia?.('(prefers-reduced-motion: reduce)').matches;
-      estimateRef.current?.scrollIntoView?.({
-        behavior: reduceMotion ? 'auto' : 'smooth',
-        block: 'nearest',
-      });
-    }
-  }, [candidates]);
-
-  const entrances = useMemo(
-    () => [...graph.nodes.values()].filter((n) => n.kind === 'exit' || n.kind === 'gate'),
-    [graph],
-  );
-
-  /** よく使う目印: 広場（ランドマーク）を先頭に、続けて改札をチップで出す */
-  const quickPicks = useMemo(() => {
-    const nodes = [...graph.nodes.values()];
-    const landmarks = nodes.filter((n) => n.kind === 'landmark');
-    const gates = nodes.filter((n) => n.kind === 'gate');
-    return [...landmarks, ...gates].slice(0, QUICK_PICK_COUNT);
-  }, [graph]);
-
-  /** 選んだ店（常に表示）＋ 入力に合う店（最大 MAX_SHOP_RESULTS 件） */
-  const filteredShops = useMemo(() => {
-    const query = shopQuery.trim().toLowerCase();
-    const selected = shops.filter((s) => selectedShopIds.includes(s.id));
-    if (query === '') return selected;
-    const matches = shops
-      .filter((s) => !selectedShopIds.includes(s.id))
-      .filter((s) =>
-        Object.values(s.name).some((text: string) => text.toLowerCase().includes(query)),
-      )
-      .slice(0, MAX_SHOP_RESULTS);
-    return [...selected, ...matches];
-  }, [shops, shopQuery, selectedShopIds]);
-
-  const toggleShop = (shopId: string) => {
-    setSelectedShopIds((prev) =>
-      prev.includes(shopId) ? prev.filter((id) => id !== shopId) : [...prev, shopId],
-    );
-  };
-
-  const runLocate = () => {
-    const result = locate(graph, shops, {
-      entranceNodeId: entranceNodeId === '' ? undefined : entranceNodeId,
-      gps: gps.position ?? initialGps ?? undefined,
-      nearbyShopIds: selectedShopIds,
-    });
-    setLocated({ key: inputKey, result });
-  };
-
-  const nodeName = (nodeId: NodeId) => {
-    const node = graph.nodes.get(nodeId);
-    return node ? localized(node.name, i18n.language) : nodeId;
-  };
-
-  const floorOf = (nodeId: NodeId) => {
-    const node = graph.nodes.get(nodeId);
-    return node ? nodeFloor(node) : 'B1';
-  };
-
-  const top = candidates !== null && candidates.length > 0 ? candidates[0] : null;
+  const { t } = useTranslation();
+  const [method, setMethod] = useState<Method>('exit');
 
   return (
-    <section>
+    <section className="locate-screen">
       {lost && <p className="hint warn">{t('lost.description')}</p>}
-      <p className="description">{t('locate.description')}</p>
-
-      <div className="field">
-        <label htmlFor="locate-exit-code">{t('locate.exitCodeLabel')}</label>
-        <input
-          id="locate-exit-code"
-          type="search"
-          inputMode="text"
-          autoCapitalize="characters"
-          value={exitCode}
-          placeholder={t('locate.exitCodePlaceholder')}
-          onChange={(e) => setExitCode(e.target.value)}
+      <fieldset className="segmented locate-methods">
+        <legend className="visually-hidden">{t('locate.methodLabel')}</legend>
+        {METHODS.map(({ value, key }) => (
+          <label key={value} className={method === value ? 'active' : undefined}>
+            <input
+              type="radio"
+              name="locate-method"
+              checked={method === value}
+              onChange={() => setMethod(value)}
+            />
+            {t(key)}
+          </label>
+        ))}
+      </fieldset>
+      {method === 'exit' && <ExitCodeLocate graph={graph} onConfirm={onConfirm} />}
+      {method === 'landmark' && <LandmarkLocate graph={graph} onConfirm={onConfirm} />}
+      {method === 'shop' && (
+        <ShopLocate
+          graph={graph}
+          shops={shops}
+          pois={pois}
+          initialGps={initialGps}
+          onConfirm={onConfirm}
         />
-        {exitMatches.length > 0 && (
-          <ul className="choice-list">
-            {exitMatches.map((node) => (
-              <li key={node.id}>
-                <button type="button" className="exit-code-pick" onClick={() => onConfirm(node.id)}>
-                  {t('locate.exitCodePick', { exit: node.exitNo })}
-                  {/* 同じ番号の出口が 2 か所あるときは、どの地下街かを添える */}
-                  {exitMatches.filter((n) => n.exitNo === node.exitNo).length > 1 &&
-                    `（${t(`area.${node.area}`)}・${nodeFloor(node)}）`}
-                </button>
-              </li>
-            ))}
-          </ul>
-        )}
-        {exitCode.trim() !== '' && exitMatches.length === 0 && (
-          <p className="hint">{t('locate.exitCodeNone')}</p>
-        )}
-      </div>
-
-      <div className="field">
-        <span>{t('locate.quickLabel')}</span>
-        <div className="quick-chips">
-          {quickPicks.map((node) => (
-            <button
-              key={node.id}
-              type="button"
-              className={entranceKey === `node:${node.id}` ? 'chip active' : 'chip'}
-              aria-pressed={entranceKey === `node:${node.id}`}
-              onClick={() =>
-                setEntranceKey((prev) => (prev === `node:${node.id}` ? '' : `node:${node.id}`))
-              }
-            >
-              {localized(node.name, i18n.language)}
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <label className="field">
-        <span>{t('locate.entranceLabel')}</span>
-        <select value={entranceKey} onChange={(e) => setEntranceKey(e.target.value as EntranceKey)}>
-          <option value="">{t('locate.entranceNone')}</option>
-          <optgroup label={t('locate.entrancePoiGroup')}>
-            {pois.map((poi) => (
-              <option key={poi.id} value={`poi:${poi.id}`}>
-                {localized(poi.name, i18n.language)}
-              </option>
-            ))}
-          </optgroup>
-          <optgroup label={t('locate.entranceExitGroup')}>
-            {entrances.map((node) => (
-              <option key={node.id} value={`node:${node.id}`}>
-                {node.exitNo !== undefined ? `${node.exitNo} ` : ''}
-                {localized(node.name, i18n.language)}
-              </option>
-            ))}
-          </optgroup>
-        </select>
-      </label>
-
-      <div className="field">
-        <button
-          type="button"
-          className="secondary"
-          onClick={gps.acquire}
-          disabled={gps.status === 'loading'}
-          aria-busy={gps.status === 'loading'}
-        >
-          {gps.status === 'loading' ? t('locate.gpsLoading') : t('locate.gpsButton')}
-        </button>
-        {gps.status === 'success' && <p className="hint ok">{t('locate.gpsAcquired')}</p>}
-        {gps.status === 'error' && <p className="hint warn">{t('locate.gpsFailed')}</p>}
-      </div>
-
-      <div className="field">
-        <label htmlFor="locate-shop-query">{t('locate.shopsLabel')}</label>
-        <input
-          id="locate-shop-query"
-          type="search"
-          value={shopQuery}
-          placeholder={t('locate.shopsPlaceholder')}
-          onChange={(e) => setShopQuery(e.target.value)}
-        />
-        {shopQuery.trim() === '' && selectedShopIds.length === 0 && (
-          <p className="hint">{t('locate.shopsHint')}</p>
-        )}
-        <ul className="choice-list">
-          {filteredShops.map((shop) => (
-            <li key={shop.id}>
-              <label>
-                <input
-                  type="checkbox"
-                  checked={selectedShopIds.includes(shop.id)}
-                  onChange={() => toggleShop(shop.id)}
-                />
-                {localized(shop.name, i18n.language)}
-              </label>
-            </li>
-          ))}
-        </ul>
-      </div>
-
-      <button type="button" className="primary" onClick={runLocate}>
-        {t('locate.locateButton')}
-      </button>
-
-      {candidates !== null && candidates.length === 0 && (
-        <p className="hint warn">{t('locate.noCandidates')}</p>
-      )}
-      {top !== null && (
-        <div className="estimate-card" ref={estimateRef}>
-          <p className="estimate-title">{t('locate.estimatedTitle')}</p>
-          <p className="estimate-place">
-            {t('locate.estimatedNear', { name: nodeName(top.nodeId) })}
-          </p>
-          <p className="estimate-meta">
-            <span className="floor-badge">{floorOf(top.nodeId)}</span>
-            <span className="confidence">
-              {t('locate.candidateConfidence', { percent: Math.round(top.confidence * 100) })}
-            </span>
-          </p>
-          <button type="button" className="primary" onClick={() => onConfirm(top.nodeId)}>
-            {t('locate.startHere')}
-          </button>
-          <p className="hint">{t('locate.fixedNote')}</p>
-        </div>
-      )}
-      {candidates !== null && candidates.length > 1 && (
-        <div className="candidates">
-          <h3>{t('locate.candidatesTitle')}</h3>
-          <ul className="choice-list">
-            {candidates.slice(1).map((c) => (
-              <li key={c.nodeId}>
-                <button type="button" className="candidate" onClick={() => onConfirm(c.nodeId)}>
-                  <span>{nodeName(c.nodeId)}</span>
-                  <span className="confidence">
-                    {t('locate.candidateConfidence', {
-                      percent: Math.round(c.confidence * 100),
-                    })}
-                  </span>
-                </button>
-              </li>
-            ))}
-          </ul>
-        </div>
       )}
     </section>
   );
