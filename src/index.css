@@ -1693,3 +1693,170 @@ button.candidate {
   background: var(--bg);
   box-shadow: var(--shadow-float);
 }
+
+/*
+ * 道案内シート（2026-10-26 作り直し）。上から「どこへ・あと何分」→ いまの手順 → 前へ/次へ
+ * → お知らせ 1 つ → 見え方・音声・設定のボタン → 閉じた「すべての手順」。設定は開いたときだけ
+ */
+.route-header {
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
+
+.route-title {
+  min-width: 0;
+}
+
+.sheet .route-title h2 {
+  margin: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.route-sub {
+  margin: 2px 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--fs-s);
+  color: var(--text-sub);
+}
+
+.route-sub .route-exit::before {
+  content: ' · ';
+}
+
+.route-sub .route-exit:first-child::before {
+  content: none;
+}
+
+.route-sub .total.eta {
+  font-size: var(--fs-s);
+}
+
+.route-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.route-tools .tool {
+  flex: 1 1 auto;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  min-height: 44px;
+  padding: 8px 12px;
+  white-space: nowrap;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: var(--fs-s);
+}
+
+.route-tools .tool.active {
+  background: var(--text);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.route-options {
+  margin-top: 12px;
+  padding: 12px 14px;
+  border-radius: var(--radius-s);
+  background: var(--bg);
+  box-shadow: var(--shadow-card);
+}
+
+.segmented {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 0 0 12px;
+  padding: 0;
+  border: none;
+}
+
+.segmented legend {
+  width: 100%;
+  margin-bottom: 6px;
+  padding: 0;
+  font-size: var(--fs-xs);
+  color: var(--text-sub);
+}
+
+.segmented label {
+  flex: 1 1 0;
+  min-width: 0;
+  line-height: 1.3;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;
+  padding: 6px 8px;
+  border-radius: 999px;
+  background: var(--bg-soft);
+  color: var(--text);
+  font-size: var(--fs-s);
+  text-align: center;
+  cursor: pointer;
+}
+
+.segmented label.active {
+  background: var(--text);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.segmented input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.segmented label:focus-within {
+  outline: 2px solid var(--action);
+  outline-offset: 2px;
+}
+
+.route-options .hint {
+  margin: 0;
+}
+
+.route-steps {
+  margin-top: 12px;
+}
+
+.route-steps summary {
+  min-height: 44px;
+  display: flex;
+  align-items: center;
+  font-size: var(--fs-s);
+  font-weight: 600;
+  color: var(--text);
+  cursor: pointer;
+}
+
+.route-steps .steps {
+  margin: 4px 0 0;
+}
+
+.route-steps .steps li {
+  padding: 0;
+}
+
+.step-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px 14px;
+  background: transparent;
+  border: none;
+  color: inherit;
+  font-size: var(--fs-m);
+  text-align: left;
+}

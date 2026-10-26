@@ -48,8 +48,8 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
 
     // 5. 経路シートが表示される（地上ヒント・迷ったボタン付き）
     expect(screen.getByRole('dialog', { name: '道案内' })).toBeInTheDocument();
-    expect(screen.getByText(/目的地: HEP FIVE（赤い観覧車）/)).toBeInTheDocument();
-    expect(screen.getByText(/地上です/)).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /HEP FIVE（赤い観覧車）まで/ })).toBeInTheDocument();
+    expect(screen.getByText(/から地上へ/)).toBeInTheDocument();
     expect(screen.getByText(/到着まで 約\d+分・\d+m/)).toBeInTheDocument();
     expect(screen.getByTestId('next-step')).toBeInTheDocument();
     expect(screen.getAllByTestId('map-route').length).toBeGreaterThan(0);
@@ -189,7 +189,7 @@ describe('App map-first user flow', { timeout: 15_000 }, () => {
     expect(first).toHaveTextContent('駅');
     await user.click(first);
     await user.click(screen.getByRole('button', { name: 'ここへ行く' }));
-    expect(screen.getByText(new RegExp(`目的地: ${gate}`))).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: `${gate}まで` })).toBeInTheDocument();
   });
 
   it('adds a place to favorites and starts directions from the favorites tab', async () => {

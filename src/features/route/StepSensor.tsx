@@ -10,6 +10,8 @@ interface Props {
   distanceM: number;
   /** 次のステップがあるか */
   hasNext: boolean;
+  /** オン・オフの切り替えを出すか（経路の設定を開いたときだけ） */
+  showToggle?: boolean;
 }
 
 /**
@@ -17,7 +19,7 @@ interface Props {
  * 知らせる（Jackermeier & Ludwig 2018: 地図から向きを取り、目印で位置を直すと精度が大きく上がる）。
  * 自動では進めない。センサーがない・許可されないときは「次へ」で進めばよい
  */
-export function StepSensor({ stepKey, distanceM, hasNext }: Props) {
+export function StepSensor({ stepKey, distanceM, hasNext, showToggle = true }: Props) {
   const { t } = useTranslation();
   const [sensor, setSensor] = useState<'off' | 'on' | 'denied'>('off');
   const { steps, reset } = useStepCounter(sensor === 'on');
@@ -47,9 +49,11 @@ export function StepSensor({ stepKey, distanceM, hasNext }: Props) {
         </p>
       )}
       {sensor === 'denied' && <p className="hint">{t('route.sensorDenied')}</p>}
-      <button type="button" className="link-button" onClick={() => void toggle()}>
-        {sensor === 'on' ? t('route.sensorOff') : t('route.sensorOn')}
-      </button>
+      {(showToggle || sensor === 'on') && (
+        <button type="button" className="link-button" onClick={() => void toggle()}>
+          {sensor === 'on' ? t('route.sensorOff') : t('route.sensorOn')}
+        </button>
+      )}
     </div>
   );
 }
