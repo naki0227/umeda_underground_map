@@ -92,7 +92,7 @@ iPhone 13 のエミュレーション（タッチ）で確認: 半分 → 上へ
 - `npx tsc -b` 成功
 - `npx oxlint src` 警告なし
 - `npx prettier --check .` 成功
-- `npx vitest run` 304 件成功
+- `npx vitest run` 303 件成功
 - `npm run build` 成功（紹介ページ 1620 件）
 - Playwright（390×844、日本語）で 6 種のシートを撮って目で確認
 
