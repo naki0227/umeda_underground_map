@@ -8,6 +8,7 @@ import {
 } from 'react';
 import { useTranslation } from 'react-i18next';
 import { nearestSnap, nextSnap, SNAP_RATIO, type SheetSnap } from './sheetSnap';
+import { useSheetSwipe } from './useSheetSwipe';
 
 /** これ未満の移動はドラッグではなくタップとみなす */
 const DRAG_THRESHOLD_PX = 8;
@@ -55,6 +56,13 @@ export function BottomSheet({ label, initialSnap = 'half', onClose, children }: 
       }
     };
   }, []);
+
+  // つまみ以外をなぞっても高さを変える。中身をスクロールするのはいちばん高いときだけ
+  useSheetSwipe(sheetRef, snap, setDragRatio, setSnap);
+  // 低くしたら中身は先頭から（低い段階では中身を指でスクロールしないため）
+  useEffect(() => {
+    if (snap !== 'full' && sheetRef.current) sheetRef.current.scrollTop = 0;
+  }, [snap]);
 
   const onKeyDown = (e: KeyboardEvent<HTMLDivElement>) => {
     if (e.key === 'Escape' && onClose) {

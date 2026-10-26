@@ -38,6 +38,25 @@
 - 下のタブの「地図」と道案内の「地図」がぶつかるので、道案内の方は「地図で見る」
 - 長い言語でもボタンが折り返すように（flex-wrap）
 
+### 追記: シートの中のスクロール
+
+オーナーから「ポップアップ内のスクロールが気持ち悪い」。原因は 3 つ:
+
+1. お店・設備の一覧（`.choice-list`）が、シートの中でさらに高さ 260px まででスクロールしていた（二重のスクロール）
+2. 高さを変えられるのは上のつまみだけで、ほかをなぞると小さな枠の中で中身が動いた
+3. 中身の端まで来ると、そのまま画面ごと動いた（overscroll）
+
+地図アプリのシートと同じ動きにした（`src/components/sheetSwipe.ts`・`useSheetSwipe.ts`）:
+
+- シートのどこをなぞっても、いちばん高くなるまでは上へなぞるとシートが伸びる
+- 中身がいちばん上のときに下へなぞるとシートが縮む。途中まで読んでいるときは中身が戻る
+- 大きく動かしたら、少なくともその向きに 1 段進む
+- 横の動き（スポットのカード）はそのまま横スクロール
+- 一覧の中だけのスクロールはやめ、スクロールするのはシート 1 つ。`overscroll-behavior: contain`
+- 低い段階にしたら中身は先頭に戻す
+
+iPhone 13 のエミュレーション（タッチ）で確認: 半分 → 上へ = 全体（中身は動かない）、全体で上へ = 中身がスクロール、下へ = 中身が先頭へ、もう一度下へ = 低くなる。
+
 ## 変更したファイル
 
 - 道案内: `src/features/route/RouteScreen.tsx`（書き直し）、新規 `useRoutePlan.ts`・`RouteOptions.tsx`・`RouteStepList.tsx`・`RouteNotice.tsx`・`NextStepCard.tsx`・`stepText.ts`、`StepSensor.tsx`（切り替えは設定を開いたときだけ）
@@ -63,6 +82,7 @@
 
 - 追加: `src/features/route/__tests__/routeSheetLayout.test.tsx`（見出しと時間、お知らせは 1 つ、設定と手順一覧はたたむ、一覧から手順を選ぶ）
 - 追加: `src/features/map/__tests__/PlaceSheet.test.tsx`（地上の出口の表示、主な操作は 1 つ、☆・↗ はアイコン）
+- 追加: `src/components/__tests__/sheetSwipe.test.tsx`（伸ばす・縮める・スクロールの決め方、大きく動かしたときの段階、中身をなぞって高さが変わる）
 - 追加: `src/features/menu/__tests__/MenuSheet.test.tsx`（言語が先、説明はたたむ、出典はいつも見える）
 - 追加: LocateScreen（目印を押すとすぐ決まる、手がかりがないと推定できない）
 - 更新: App・RouteScreen・voice・SpotsSheet・LocateScreen の既存テストを新しい並びに合わせた（深夜の注意は「閉まっている」警告があるときは出さない、を含む）
@@ -72,7 +92,7 @@
 - `npx tsc -b` 成功
 - `npx oxlint src` 警告なし
 - `npx prettier --check .` 成功
-- `npx vitest run` 295 件成功
+- `npx vitest run` 304 件成功
 - `npm run build` 成功（紹介ページ 1620 件）
 - Playwright（390×844、日本語）で 6 種のシートを撮って目で確認
 

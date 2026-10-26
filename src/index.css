@@ -410,6 +410,8 @@ body {
   flex-direction: column;
   transition: max-height 0.18s ease-out;
   overflow-y: auto;
+  /* 中身の端まで来ても、地図や画面ごとは動かさない */
+  overscroll-behavior: contain;
   background: var(--paper);
   border-radius: var(--radius-card);
   padding: 0 20px 16px;
@@ -658,11 +660,10 @@ button.chip.active {
 }
 
 .choice-list {
+  /* 中だけのスクロールは付けない（シートの中で二重にスクロールしないように） */
   list-style: none;
   margin: 10px 0 0;
   padding: 0;
-  max-height: 260px;
-  overflow-y: auto;
   display: grid;
   gap: 6px;
 }
